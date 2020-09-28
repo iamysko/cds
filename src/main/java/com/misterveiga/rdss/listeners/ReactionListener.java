@@ -1,6 +1,8 @@
 /*
  * Author: {Ruben Veiga}
+ * Contributor: {Liscuate}
  */
+
 package com.misterveiga.rdss.listeners;
 
 import java.time.Instant;
@@ -54,7 +56,8 @@ public class ReactionListener extends ListenerAdapter {
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
 
 	/** The Constant ID_REACTION_MUTE. */
-	private static final String ID_REACTION_MUTE = "452813334429827072"; // 756816303448260708
+	private static final String ID_REACTION_MUTE = "760204798984454175";
+	private static final String ID_REACTION_MUTE2 = "452813334429827072";
 
 	/** The Constant ID_REACTION_MUTE_WITH_HISTORY. */
 	private static final String ID_REACTION_MUTE_WITH_HISTORY = "";
@@ -67,6 +70,7 @@ public class ReactionListener extends ListenerAdapter {
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s 30m %s";
+	private static final String COMMAND_MUTE_USER_DEFAULT2 = ";mute %s 1h %s";
 
 	/** The Constant COMMAND_CLEAN_MESSAGES_USER. */
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
@@ -101,6 +105,14 @@ public class ReactionListener extends ListenerAdapter {
 				muteUser(reactee, messageAuthor, message, commandChannel);
 				clearMessages(messageAuthor, channel);
 				break;
+
+			case ID_REACTION_MUTE2:
+				log.info("[Reaction Command] Quick-Mute executed by {} on {} for Message \"{}\"", reactee,
+						messageAuthor, message);
+				muteUser2(reactee, messageAuthor, message, commandChannel);
+				clearMessages(messageAuthor, channel);
+				break;
+
 			case ID_REACTION_CLEAR_MESSAGES:
 				// clearMessages(messageAuthor, channel);
 				break;
@@ -156,7 +168,48 @@ public class ReactionListener extends ListenerAdapter {
 
 		log.info(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(),
 				String.format(COMMAND_REASON, reactee.getEffectiveName(), message.getContentStripped())));
-	}
+		}
+
+	private void muteUser2(final Member reactee, final Member messageAuthor, final Message message,
+			final TextChannel commandChannel) {
+		System.out.println(messageAuthor.getId() == null ? "getId null"
+				: "" + reactee.getEffectiveName() == null ? "getEffectiveName null"
+						: "" + message.getContentStripped() == null ? "getContentStripped null" : "");
+
+		final String messageContent = message.getContentStripped();
+
+		if (messageContent.replace("\n", " ").length() < 120) {
+			commandChannel
+					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT2, messageAuthor.getId(),
+							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+									messageContent.replace("\n", " "))))
+					.allowedMentions(new ArrayList<MentionType>()).queue();
+		} else {
+			final Pastebin pastebin = pastebinFactory.createPastebin(pastebinApiKey);
+			final String pasteTitle = new StringBuilder().append("Evidence against ")
+					.append(messageAuthor.getEffectiveName()).append(" (").append(messageAuthor.getId()).append(")")
+					.append(" on ").append(Instant.now()).toString();
+			final Paste paste = pastebinFactory.createPaste().setTitle(pasteTitle).setRaw(messageContent)
+					.setMachineFriendlyLanguage("text").setExpire(PasteExpire.Never).setVisiblity(PasteVisiblity.Public)
+					.build();
+			final String pasteKey = pastebin.post(paste).get();
+
+			log.info(String.format("Pastebin \"%s\" posted to %s", pasteTitle, pasteKey));
+
+			commandChannel
+					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT2, messageAuthor.getId(),
+							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+									messageContent.replace("\n", " ").substring(0, 17) + "... Pastebin: " + pasteKey)))
+					.allowedMentions(new ArrayList<MentionType>())
+//					.addFile(message.getContentStripped().getBytes(),
+//							String.format("Message Evidence from %s against %s.txt", reactee.getEffectiveName(),
+//									messageAuthor.getId()))
+					.queue();
+		}
+
+		log.info(String.format(COMMAND_MUTE_USER_DEFAULT2, messageAuthor.getId(),
+				String.format(COMMAND_REASON, reactee.getEffectiveName(), message.getContentStripped())));
+		}
 
 	/**
 	 * Clear messages.
