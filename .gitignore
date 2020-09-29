@@ -82,3 +82,6 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
+.vs/rdss/v15/.suo
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
