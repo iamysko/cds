@@ -78,7 +78,7 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
 
 	/** The Constant COMMAND_REASON. */
-	private static final String COMMAND_REASON = "(By %s) Evidence: %s";f
+	private static final String COMMAND_REASON = "(By %s) Evidence: %s";
 
 	/**
 	 * On message reaction add.
