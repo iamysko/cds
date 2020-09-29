@@ -63,10 +63,13 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String ID_REACTION_MUTE_WITH_HISTORY = "";
 
 	/** The Constant ID_REACTION_BAN. */
-	private static final String ID_REACTION_BAN = "";
+	private static final String ID_REACTION_BAN = "0";
 
 	/** The Constant ID_REACTION_CLEAR_MESSAGES. */
-	private static final String ID_REACTION_CLEAR_MESSAGES = "756816315624325151";
+	private static final String ID_REACTION_CLEAR_MESSAGES = "0";
+
+	/** The Constant COMMAND _BAN_USER_DEFAULT. */
+	private static final String COMMAND_BAN_USER_DEFAULT = "";
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
@@ -75,13 +78,14 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
 
 	/** The Constant COMMAND_REASON. */
-	private static final String COMMAND_REASON = "(By %s) Message Evidence: %s";
+	private static final String COMMAND_REASON = "(By %s) Evidence: %s";
 
 	/**
 	 * On message reaction add.
 	 *
 	 * @param event the event
 	 */
+
 	@Override
 	public void onMessageReactionAdd(final MessageReactionAddEvent event) {
 		final TextChannel commandChannel = event.getGuild().getTextChannelById(Properties.CHANNEL_COMMANDS_ID);
@@ -99,15 +103,8 @@ public class ReactionListener extends ListenerAdapter {
 				|| RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR) != null) {
 
 			switch (emote.getId()) {
-			case ID_REACTION_MUTE: muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-			case ID_REACTION_MUTE2: muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-
-				log.info("[Reaction Command] Quick-Mute executed by {} on {} for Message \"{}\"", reactee,
-					messageAuthor, message);
-					clearMessages(messageAuthor, channel);
-				break;
-
-
+			case ID_REACTION_MUTE: muteUser(reactee, messageAuthor, "30m", message, commandChannel); break;
+			case ID_REACTION_MUTE2: muteUser(reactee, messageAuthor, "1h", message, commandChannel); break;
 			case ID_REACTION_CLEAR_MESSAGES:
 				// clearMessages(messageAuthor, channel);
 				break;
@@ -118,27 +115,28 @@ public class ReactionListener extends ListenerAdapter {
 
 	/**
 	 * Mute user.
-	 *
-	 * @param reactee        the reactee
+	 *  @param reactee        the reactee
 	 * @param messageAuthor  the message author
+	 * @param muteDuration
 	 * @param message        the message
 	 * @param commandChannel the command channel
 	 */
-	private void muteUser(final Member reactee, final Member messageAuthor, final Message message,
-			final TextChannel commandChannel) {
+	private void muteUser(final Member reactee, final Member messageAuthor, final String muteDuration, final Message message,
+						  final TextChannel commandChannel) {
+
+
 		System.out.println(messageAuthor.getId() == null ? "getId null"
 				: "" + reactee.getEffectiveName() == null ? "getEffectiveName null"
-						: "" + message.getContentStripped() == null ? "getContentStripped null" : "");
+				: "" + message.getContentStripped() == null ? "getContentStripped null" : "");
 
 		final String messageContent = message.getContentStripped();
 
 		if (messageContent.replace("\n", " ").length() < 120) {
 			commandChannel
-				.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(),
-						String.format(COMMAND_REASON, reactee.getEffectiveName(),
-								messageContent.replace("\n", " "))))
-				.allowedMentions(new ArrayList<MentionType>()).queue();
-			}
+					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
+							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+									messageContent.replace("\n", " "))))
+					.allowedMentions(new ArrayList<MentionType>()).queue();
 
 		} else {
 			final Pastebin pastebin = pastebinFactory.createPastebin(pastebinApiKey);
@@ -153,7 +151,7 @@ public class ReactionListener extends ListenerAdapter {
 			log.info(String.format("Pastebin \"%s\" posted to %s", pasteTitle, pasteKey));
 
 			commandChannel
-					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(),
+					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
 							String.format(COMMAND_REASON, reactee.getEffectiveName(),
 									messageContent.replace("\n", " ").substring(0, 17) + "... Pastebin: " + pasteKey)))
 					.allowedMentions(new ArrayList<MentionType>())
@@ -161,16 +159,13 @@ public class ReactionListener extends ListenerAdapter {
 //							String.format("Message Evidence from %s against %s.txt", reactee.getEffectiveName(),
 //									messageAuthor.getId()))
 					.queue();
-		}
 
-		switch (emote.getId()) {
-			case ID_REACTION_MUTE:
-			case ID_REACTION_MUTE2:
-
-			log.info(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(),
-						String.format(COMMAND_REASON, reactee.getEffectiveName(), message.getContentStripped())));
-				}
+					//log.info("[Reaction Command] Quick-Mute executed by {} on {} for Message \"{}\"", reactee,
+					//	messageAuthor ,message);
+					//	clearMessages(messageAuthor, channel);
 		}
+	}
+
 
 	/**
 	 * Clear messages.
