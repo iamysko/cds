@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.besaba.revonline.pastebinapi.impl.factory.PastebinFactory;
 import com.misterveiga.rdss.listeners.DiscordDownListener;
 import com.misterveiga.rdss.listeners.DiscordUpListener;
 import com.misterveiga.rdss.listeners.MessageListener;
@@ -66,16 +65,6 @@ public class AppConfig {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_WAIT_JDA);
 		}
 		return null;
-	}
-
-	/**
-	 * Pastebin factory.
-	 *
-	 * @return the pastebin factory
-	 */
-	@Bean
-	PastebinFactory pastebinFactory() {
-		return new PastebinFactory();
 	}
 
 	/**
