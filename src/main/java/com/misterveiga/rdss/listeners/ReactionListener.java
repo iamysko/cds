@@ -11,16 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import com.besaba.revonline.pastebinapi.Pastebin;
-import com.besaba.revonline.pastebinapi.impl.factory.PastebinFactory;
-import com.besaba.revonline.pastebinapi.paste.Paste;
-import com.besaba.revonline.pastebinapi.paste.PasteExpire;
-import com.besaba.revonline.pastebinapi.paste.PasteVisiblity;
 import com.misterveiga.rdss.utils.Properties;
 import com.misterveiga.rdss.utils.RoleUtils;
 
@@ -33,6 +26,7 @@ import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.AttachmentOption;
 
 /**
  * The listener interface for receiving reaction events. The class that is
@@ -46,14 +40,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 @Component
 @PropertySource("classpath:application.properties")
 public class ReactionListener extends ListenerAdapter {
-
-	/** The pastebin api key. */
-	@Value("${pastebin.apikey}")
-	String pastebinApiKey;
-
-	/** The pastebin factory. */
-	@Autowired
-	PastebinFactory pastebinFactory;
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
@@ -134,21 +120,18 @@ public class ReactionListener extends ListenerAdapter {
 									messageContent.replace("\n", " "))))
 					.allowedMentions(new ArrayList<MentionType>()).queue();
 		} else {
-			final Pastebin pastebin = pastebinFactory.createPastebin(pastebinApiKey);
-			final String pasteTitle = new StringBuilder().append("Evidence against ")
-					.append(messageAuthor.getEffectiveName()).append(" (").append(messageAuthor.getId()).append(")")
-					.append(" on ").append(Instant.now()).toString();
-			final Paste paste = pastebinFactory.createPaste().setTitle(pasteTitle).setRaw(messageContent)
-					.setMachineFriendlyLanguage("text").setExpire(PasteExpire.Never).setVisiblity(PasteVisiblity.Public)
-					.build();
-			final String pasteKey = pastebin.post(paste).get();
-
-			log.info(String.format("Pastebin \"%s\" posted to %s", pasteTitle, pasteKey));
+			final String attachmentTitle = new StringBuilder().append("Evidence against ")
+					.append(messageAuthor.getEffectiveName()).append(" (").append(messageAuthor.getId()).append(") on ")
+					.append(Instant.now().toString()).toString();
 
 			commandChannel
 					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
 							String.format(COMMAND_REASON, reactee.getEffectiveName(),
-									messageContent.replace("\n", " ").substring(0, 17) + "... Pastebin: " + pasteKey)))
+									messageContent.replace("\n", " ").substring(0, 17) + "... Full evidence: "
+											+ commandChannel
+													.sendFile(messageContent.getBytes(), attachmentTitle + ".txt",
+															AttachmentOption.SPOILER)
+													.complete().getAttachments().get(0).getUrl())))
 					.allowedMentions(new ArrayList<MentionType>()).queue();
 		}
 
