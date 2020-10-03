@@ -1,8 +1,10 @@
 ![CodeQL](https://github.com/misterveiga/rdss/workflows/CodeQL/badge.svg?branch=master)
-# Roblox Discord Services
-Current plan is to evolve RDSS into a community project called Community Discord Services (CDS), so anyone can add this bot to their own community quickly and easily.
+# Community Discord Services
+CDS is designed by and for Discord Community owners and moderators.
+The vision for this bot is ease of configuration and maintenance, as well as making the lives of moderators easier by automating tasks that are otherwise time-consuming.
 
 This project uses Spring Framework and the JDA Discord API wrapper.
 
-# Contributing
-This project won't be possible without your contribution. Make use of Issues and create your own pull requests if you'd like to add your own piece to this bot!
+# Roblox Discord
+The current versions of this project are designed for use within the Roblox Discord, so many implementations are tied into Rowboat functionality rather than standalone.
+In the future, this project will hold its own solutions for message, user and infraction management.
