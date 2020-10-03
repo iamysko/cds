@@ -1,7 +1,7 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss.telegram;
+package com.misterveiga.cds.telegram;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import com.misterveiga.rdss.utils.Properties;
+import com.misterveiga.cds.utils.Properties;
 
 /**
  * The Class TelegramService.

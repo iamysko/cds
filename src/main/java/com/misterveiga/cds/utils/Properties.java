@@ -1,7 +1,7 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss.utils;
+package com.misterveiga.cds.utils;
 
 /**
  * The Class Properties.

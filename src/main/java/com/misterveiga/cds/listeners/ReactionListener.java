@@ -3,7 +3,7 @@
  * Contributor: {Liscuate}
  */
 
-package com.misterveiga.rdss.listeners;
+package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import com.misterveiga.rdss.utils.Properties;
-import com.misterveiga.rdss.utils.RoleUtils;
+import com.misterveiga.cds.utils.Properties;
+import com.misterveiga.cds.utils.RoleUtils;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;

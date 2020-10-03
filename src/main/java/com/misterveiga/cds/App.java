@@ -1,7 +1,7 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss;
+package com.misterveiga.cds;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

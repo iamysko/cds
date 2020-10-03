@@ -1,4 +1,4 @@
-package com.misterveiga.rdss.utils;
+package com.misterveiga.cds.utils;
 
 public class RegexConstants {
 

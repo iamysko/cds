@@ -1,16 +1,16 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss.listeners;
+package com.misterveiga.cds.listeners;
 
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.misterveiga.rdss.utils.Properties;
-import com.misterveiga.rdss.utils.RegexConstants;
-import com.misterveiga.rdss.utils.RoleUtils;
+import com.misterveiga.cds.utils.Properties;
+import com.misterveiga.cds.utils.RegexConstants;
+import com.misterveiga.cds.utils.RoleUtils;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;

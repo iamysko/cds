@@ -1,7 +1,7 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss.controller;
+package com.misterveiga.cds.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.misterveiga.rdss.listeners.DiscordDownListener;
-import com.misterveiga.rdss.listeners.DiscordUpListener;
-import com.misterveiga.rdss.listeners.MessageListener;
-import com.misterveiga.rdss.listeners.ReactionListener;
+import com.misterveiga.cds.listeners.DiscordDownListener;
+import com.misterveiga.cds.listeners.DiscordUpListener;
+import com.misterveiga.cds.listeners.MessageListener;
+import com.misterveiga.cds.listeners.ReactionListener;
 
 import net.dv8tion.jda.api.JDA;
 

@@ -1,7 +1,7 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss;
+package com.misterveiga.cds;
 
 import java.time.Instant;
 
@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.misterveiga.rdss.listeners.DiscordDownListener;
-import com.misterveiga.rdss.listeners.DiscordUpListener;
-import com.misterveiga.rdss.listeners.MessageListener;
-import com.misterveiga.rdss.listeners.ReactionListener;
-import com.misterveiga.rdss.telegram.TelegramService;
+import com.misterveiga.cds.listeners.DiscordDownListener;
+import com.misterveiga.cds.listeners.DiscordUpListener;
+import com.misterveiga.cds.listeners.MessageListener;
+import com.misterveiga.cds.listeners.ReactionListener;
+import com.misterveiga.cds.telegram.TelegramService;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

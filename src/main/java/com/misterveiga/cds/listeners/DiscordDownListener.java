@@ -1,11 +1,11 @@
 /*
  * Author: {Ruben Veiga}
  */
-package com.misterveiga.rdss.listeners;
+package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
 
-import com.misterveiga.rdss.telegram.TelegramService;
+import com.misterveiga.cds.telegram.TelegramService;
 
 import net.dv8tion.jda.api.events.guild.GuildUnavailableEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
