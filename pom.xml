@@ -7,7 +7,7 @@
     <version>1.2.0</version>
     <packaging>jar</packaging>
 
-	<name>Roblox Discord Supervisor Services</name>
+	<name>Community Discord Services</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
