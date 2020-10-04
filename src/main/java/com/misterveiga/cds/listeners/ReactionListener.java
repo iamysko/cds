@@ -155,7 +155,7 @@ public class ReactionListener extends ListenerAdapter {
 
 		} catch (final IndexOutOfBoundsException e) {
 
-			log.info("Ban request failed due to incorrect request syntax.");
+			log.info("Ban request approval failed due to incorrect request syntax.");
 
 		}
 	}
