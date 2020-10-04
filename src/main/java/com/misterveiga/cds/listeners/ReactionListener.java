@@ -49,11 +49,13 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant ID_REACTION_QM_60. */
 	private static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
 
+	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
 	private static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
+	/** The Constant COMMAND_BAN_USER_DEFAULT. */
 	private static final String COMMAND_BAN_USER_DEFAULT = ";ban %s %s";
 
 	/** The Constant COMMAND_CLEAN_MESSAGES_USER. */
@@ -77,7 +79,7 @@ public class ReactionListener extends ListenerAdapter {
 		final MessageChannel channel = event.getTextChannel();
 
 		final ReactionEmote emote = reaction.getReactionEmote();
-		final Message message = event.getChannel().retrieveMessageById(messageId).complete(); // (reaction.getMessageId()).complete();
+		final Message message = event.getChannel().retrieveMessageById(messageId).complete();
 		final Member messageAuthor = message.getMember();
 
 		switch (emote.getId()) {
@@ -130,6 +132,12 @@ public class ReactionListener extends ListenerAdapter {
 
 	}
 
+	/**
+	 * Ban user.
+	 *
+	 * @param message        the message
+	 * @param commandChannel the command channel
+	 */
 	public void banUser(final Message message, final TextChannel commandChannel) {
 		try {
 
