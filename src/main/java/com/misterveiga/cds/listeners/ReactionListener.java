@@ -26,7 +26,6 @@ import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.AttachmentOption;
 
 /**
  * The listener interface for receiving reaction events. The class that is
@@ -50,8 +49,12 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant ID_REACTION_QM_60. */
 	private static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
 
+	private static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
+
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
+
+	private static final String COMMAND_BAN_USER_DEFAULT = ";ban %s %s";
 
 	/** The Constant COMMAND_CLEAN_MESSAGES_USER. */
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
@@ -77,26 +80,76 @@ public class ReactionListener extends ListenerAdapter {
 		final Message message = event.getChannel().retrieveMessageById(messageId).complete(); // (reaction.getMessageId()).complete();
 		final Member messageAuthor = message.getMember();
 
-		if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER) != null
-				|| RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR) != null) {
+		switch (emote.getId()) {
 
-			switch (emote.getId()) {
-			case ID_REACTION_QM_30:
-				log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
-						messageAuthor, message);
+		case ID_REACTION_QM_30:
+
+			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
 				muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 				clearMessages(messageAuthor, channel);
-				break;
 
-			case ID_REACTION_QM_60:
-				log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
+				log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
 						messageAuthor, message);
+
+			}
+
+			break;
+
+		case ID_REACTION_QM_60:
+
+			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
 				muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 				clearMessages(messageAuthor, channel);
-				break;
+
+				log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
+						messageAuthor, message);
+
 			}
+
+			break;
+
+		case ID_REACTION_APPROVE_BAN_REQUEST:
+
+			if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
+					event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+
+				banUser(message, commandChannel);
+
+				log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})", reactee.getEffectiveName(),
+						reactee.getId(), message.getJumpUrl());
+
+			}
+
+			break;
+
 		}
 
+	}
+
+	public void banUser(final Message message, final TextChannel commandChannel) {
+		try {
+
+			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
+			final StringBuilder sb = new StringBuilder();
+
+			for (Integer i = 2; i < banRequestMessageContent.length; i++) {
+				sb.append(banRequestMessageContent[i]).append(" ");
+			}
+
+			final String evidence = sb.toString();
+			final String userToBan = banRequestMessageContent[1];
+
+			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence)).queue();
+
+		} catch (final IndexOutOfBoundsException e) {
+
+			log.info("Ban request failed due to incorrect request syntax.");
+
+		}
 	}
 
 	/**

@@ -23,6 +23,9 @@ public class Properties {
 	/** The Constant CHANNEL_SUPERVISORS_ID. */
 	public static final Long CHANNEL_SUPERVISORS_ID = 150255535927721984L;
 
+	/** The Constant CHANNEL_BAN_REQUESTS_QUEUE_ID. */
+	public static final Long CHANNEL_BAN_REQUESTS_QUEUE_ID = 592580861543841802L;
+
 	/** The Constant TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT. */
 	public static final Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = 3600000L;
 
@@ -30,7 +33,7 @@ public class Properties {
 	public static Long timeWaitOnlineSupervisorMonitoring = TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT;
 
 	/**
-	 * Setter to change the frequency of supervisor coverage checks.
+	 * Sets the time wait online supervisor monitoring.
 	 *
 	 * @param newTimeWaitOnlineSupervisorMonitoring the new time wait online
 	 *                                              supervisor monitoring
