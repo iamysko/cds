@@ -58,6 +58,9 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant COMMAND_BAN_USER_DEFAULT. */
 	private static final String COMMAND_BAN_USER_DEFAULT = ";ban %s %s";
 
+	/** The Constant COMMAND_FORCEBAN_USER_DEFAULT. */
+	private static final String COMMAND_FORCEBAN_USER_DEFAULT = ";forceban %s %s";
+
 	/** The Constant COMMAND_CLEAN_MESSAGES_USER. */
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
 
@@ -151,7 +154,13 @@ public class ReactionListener extends ListenerAdapter {
 			final String evidence = sb.toString();
 			final String userToBan = banRequestMessageContent[1];
 
-			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence)).queue();
+			if (banRequestMessageContent[0].equalsIgnoreCase(";ban")) {
+				commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence)).queue();
+			} else if (banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
+				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence)).queue();
+			} else {
+				log.info("Ban request approval failed due to incorrect request syntax.");
+			}
 
 		} catch (final IndexOutOfBoundsException e) {
 
