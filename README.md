@@ -1,4 +1,7 @@
 ![CodeQL](https://github.com/misterveiga/rdss/workflows/CodeQL/badge.svg?branch=master)
+# Hacktoberfest 2020
+For Hacktoberfest pull requests, please refer to open Issues. Issues will open every so often for you to collaborate!
+
 # Community Discord Services
 CDS is designed by and for Discord Community owners and moderators.
 The vision for this bot is ease of configuration and maintenance, as well as making the lives of moderators easier by automating tasks that are otherwise time-consuming.
