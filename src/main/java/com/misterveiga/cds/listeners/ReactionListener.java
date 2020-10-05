@@ -85,7 +85,9 @@ public class ReactionListener extends ListenerAdapter {
 		final Message message = event.getChannel().retrieveMessageById(messageId).complete();
 		final Member messageAuthor = message.getMember();
 
-		switch (emote.getId()) {
+		final String emoteId = emote.isEmote() ? emote.getId() : null;
+
+		switch (emoteId) {
 
 		case ID_REACTION_QM_30:
 
@@ -129,6 +131,9 @@ public class ReactionListener extends ListenerAdapter {
 
 			}
 
+			break;
+
+		default:
 			break;
 
 		}
