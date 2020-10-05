@@ -133,9 +133,6 @@ public class ReactionListener extends ListenerAdapter {
 
 			break;
 
-		default:
-			break;
-
 		}
 
 	}
