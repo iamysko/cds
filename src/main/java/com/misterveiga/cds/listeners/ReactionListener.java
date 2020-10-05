@@ -85,55 +85,56 @@ public class ReactionListener extends ListenerAdapter {
 		final Message message = event.getChannel().retrieveMessageById(messageId).complete();
 		final Member messageAuthor = message.getMember();
 
-		if (emote.getId() != null) {
+		final String emoteId = emote.isEmote() ? emote.getId() : null;
 
-			switch (emote.getId()) {
+		switch (emoteId) {
 
-			case ID_REACTION_QM_30:
+		case ID_REACTION_QM_30:
 
-				if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-						RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
 
-					muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-					clearMessages(messageAuthor, channel);
+				muteUser(reactee, messageAuthor, "30m", message, commandChannel);
+				clearMessages(messageAuthor, channel);
 
-					log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
-							messageAuthor, message);
-
-				}
-
-				break;
-
-			case ID_REACTION_QM_60:
-
-				if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-						RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
-
-					muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-					clearMessages(messageAuthor, channel);
-
-					log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
-							messageAuthor, message);
-
-				}
-
-				break;
-
-			case ID_REACTION_APPROVE_BAN_REQUEST:
-
-				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
-
-					banUser(message, commandChannel);
-
-					log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
-							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
-
-				}
-
-				break;
+				log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
+						messageAuthor, message);
 
 			}
+
+			break;
+
+		case ID_REACTION_QM_60:
+
+			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+				muteUser(reactee, messageAuthor, "1h", message, commandChannel);
+				clearMessages(messageAuthor, channel);
+
+				log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
+						messageAuthor, message);
+
+			}
+
+			break;
+
+		case ID_REACTION_APPROVE_BAN_REQUEST:
+
+			if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
+					event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+
+				banUser(message, commandChannel);
+
+				log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})", reactee.getEffectiveName(),
+						reactee.getId(), message.getJumpUrl());
+
+			}
+
+			break;
+
+		default:
+			break;
 
 		}
 
