@@ -207,7 +207,7 @@ public class ReactionListener extends ListenerAdapter {
 		if (messageContent.replace("\n", " ").length() < 120) {
 			commandChannel
 					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
-							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+							String.format(COMMAND_REASON, reactee.getUser().getAsTag(), reactee.getId(),
 									messageContent.replace("\n", " "))))
 					.allowedMentions(new ArrayList<MentionType>()).queue();
 		} else {
