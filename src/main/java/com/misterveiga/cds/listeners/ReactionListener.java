@@ -65,7 +65,7 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
 
 	/** The Constant COMMAND_REASON. */
-	private static final String COMMAND_REASON = "(By %s) Message Evidence: %s";
+	private static final String COMMAND_REASON = "(By %s (%s)) Message Evidence: %s";
 
 	/**
 	 * On message reaction add.
@@ -87,12 +87,23 @@ public class ReactionListener extends ListenerAdapter {
 
 		final String emoteId = emote.isEmote() ? emote.getId() : "";
 
+		if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+			return; // Do nothing.
+		}
+
 		switch (emoteId) {
 
 		case ID_REACTION_QM_30:
 
-			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+			if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+				if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+					commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
+							.append(" you cannot run commands on server staff.")).queue();
+					return; // Do nothing.
+				}
 
 				muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 				clearMessages(messageAuthor, channel);
@@ -106,8 +117,14 @@ public class ReactionListener extends ListenerAdapter {
 
 		case ID_REACTION_QM_60:
 
-			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+			if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+				if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+					commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
+							.append(" you cannot run commands on server staff.")).queue();
+					return; // Do nothing.
+				}
 
 				muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 				clearMessages(messageAuthor, channel);
@@ -124,7 +141,7 @@ public class ReactionListener extends ListenerAdapter {
 			if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
 					event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
-				banUser(message, commandChannel);
+				banUser(reactee, message, commandChannel);
 
 				log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})", reactee.getEffectiveName(),
 						reactee.getId(), message.getJumpUrl());
@@ -143,12 +160,13 @@ public class ReactionListener extends ListenerAdapter {
 	 * @param message        the message
 	 * @param commandChannel the command channel
 	 */
-	public void banUser(final Message message, final TextChannel commandChannel) {
+	public void banUser(final Member reactee, final Message message, final TextChannel commandChannel) {
 		try {
 
 			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
 			final StringBuilder sb = new StringBuilder();
-
+			sb.append("(approved by ").append(reactee.getUser().getAsTag()).append(" (").append(reactee.getId())
+					.append(")) ");
 			for (Integer i = 2; i < banRequestMessageContent.length; i++) {
 				sb.append(banRequestMessageContent[i]).append(" ");
 			}
@@ -161,11 +179,17 @@ public class ReactionListener extends ListenerAdapter {
 			} else if (banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
 				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence)).queue();
 			} else {
+				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+						" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
+						.queue();
 				log.info("Ban request approval failed due to incorrect request syntax.");
 			}
 
 		} catch (final IndexOutOfBoundsException e) {
 
+			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+					" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
+					.queue();
 			log.info("Ban request approval failed due to incorrect request syntax.");
 
 		}
@@ -188,7 +212,7 @@ public class ReactionListener extends ListenerAdapter {
 		if (messageContent.replace("\n", " ").length() < 120) {
 			commandChannel
 					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
-							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+							String.format(COMMAND_REASON, reactee.getUser().getAsTag(), reactee.getId(),
 									messageContent.replace("\n", " "))))
 					.allowedMentions(new ArrayList<MentionType>()).queue();
 		} else {
@@ -198,7 +222,7 @@ public class ReactionListener extends ListenerAdapter {
 
 			commandChannel
 					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
-							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+							String.format(COMMAND_REASON, reactee.getUser().getAsTag(), reactee.getId(),
 									messageContent.replace("\n", " ").substring(0, 17) + "... Full evidence: "
 											+ commandChannel
 													.sendFile(messageContent.getBytes(), attachmentTitle + ".txt")
