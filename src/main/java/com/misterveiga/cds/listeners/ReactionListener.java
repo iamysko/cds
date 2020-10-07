@@ -87,19 +87,25 @@ public class ReactionListener extends ListenerAdapter {
 
 		final String emoteId = emote.isEmote() ? emote.getId() : "";
 
-		if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_SERVER_MANAGER,
+		if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
 				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+			return; // Do nothing.
+		}
+
+		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)
+				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 					.append(" you cannot run commands on server staff.")).queue();
-			return;
+			return; // Do nothing.
 		}
 
 		switch (emoteId) {
 
 		case ID_REACTION_QM_30:
 
-			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+			if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
 
 				muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 				clearMessages(messageAuthor, channel);
@@ -113,8 +119,7 @@ public class ReactionListener extends ListenerAdapter {
 
 		case ID_REACTION_QM_60:
 
-			if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-					RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+			if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
 
 				muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 				clearMessages(messageAuthor, channel);
