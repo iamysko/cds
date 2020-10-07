@@ -65,7 +65,7 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String COMMAND_CLEAN_MESSAGES_USER = ";clean user %s";
 
 	/** The Constant COMMAND_REASON. */
-	private static final String COMMAND_REASON = "(By %s) Message Evidence: %s";
+	private static final String COMMAND_REASON = "(By %s (%s)) Message Evidence: %s";
 
 	/**
 	 * On message reaction add.
@@ -155,7 +155,8 @@ public class ReactionListener extends ListenerAdapter {
 
 			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
 			final StringBuilder sb = new StringBuilder();
-
+			sb.append("(approved by ").append(reactee.getUser().getAsTag()).append(" (").append(reactee.getId())
+					.append(")) ");
 			for (Integer i = 2; i < banRequestMessageContent.length; i++) {
 				sb.append(banRequestMessageContent[i]).append(" ");
 			}
@@ -211,7 +212,7 @@ public class ReactionListener extends ListenerAdapter {
 
 			commandChannel
 					.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, messageAuthor.getId(), muteDuration,
-							String.format(COMMAND_REASON, reactee.getEffectiveName(),
+							String.format(COMMAND_REASON, reactee.getUser().getAsTag(), reactee.getId(),
 									messageContent.replace("\n", " ").substring(0, 17) + "... Full evidence: "
 											+ commandChannel
 													.sendFile(messageContent.getBytes(), attachmentTitle + ".txt")
