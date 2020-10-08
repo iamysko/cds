@@ -43,9 +43,13 @@ public class RoleUtils {
 	 */
 	public static Role findRole(final Member member, final String name) {
 
-		final List<Role> roles = member.getRoles();
+		if (member != null) {
+			final List<Role> roles = member.getRoles();
 
-		return roles.stream().filter(role -> role.getName().equals(name)).findFirst().orElse(null);
+			return roles.stream().filter(role -> role.getName().equals(name)).findFirst().orElse(null);
+		}
+
+		return null;
 
 	}
 
