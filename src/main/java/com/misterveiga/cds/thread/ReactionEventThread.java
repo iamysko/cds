@@ -146,7 +146,7 @@ public class ReactionEventThread implements Runnable {
 	 * @param message        the message
 	 * @param commandChannel the command channel
 	 */
-	public void banUser(final Member reactee, final Message message, final TextChannel commandChannel) {
+	private void banUser(final Member reactee, final Message message, final TextChannel commandChannel) {
 		try {
 
 			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
@@ -227,7 +227,7 @@ public class ReactionEventThread implements Runnable {
 
 	private void clearMessages(final Member messageAuthor, final MessageChannel channel) {
 		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
-				.queue(message -> message.delete().queueAfter(500, TimeUnit.MILLISECONDS));
+				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
 		log.info(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()));
 	}
 
