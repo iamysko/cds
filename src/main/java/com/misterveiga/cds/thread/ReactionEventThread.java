@@ -131,6 +131,9 @@ public class ReactionEventThread implements Runnable {
 
 			break;
 
+		default:
+			return; // Do nothing.
+
 		}
 
 		log.info("Finished reaction thread in {}ms", String.valueOf(System.currentTimeMillis() - startTime));
