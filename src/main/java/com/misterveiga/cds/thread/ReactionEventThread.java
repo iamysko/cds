@@ -89,8 +89,8 @@ public class ReactionEventThread implements Runnable {
 				muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 				clearMessages(messageAuthor, channel);
 
-				log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
-						messageAuthor, message);
+				log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"",
+						reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
 
 			}
 
@@ -110,8 +110,8 @@ public class ReactionEventThread implements Runnable {
 				muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 				clearMessages(messageAuthor, channel);
 
-				log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"", reactee,
-						messageAuthor, message);
+				log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"",
+						reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
 
 			}
 
@@ -168,7 +168,6 @@ public class ReactionEventThread implements Runnable {
 				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
 						" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
 						.queue();
-				log.info("Ban request approval failed due to incorrect request syntax.");
 			}
 
 		} catch (final IndexOutOfBoundsException e) {
@@ -176,7 +175,6 @@ public class ReactionEventThread implements Runnable {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
 					" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
 					.queue();
-			log.info("Ban request approval failed due to incorrect request syntax.");
 
 		}
 	}
@@ -228,7 +226,6 @@ public class ReactionEventThread implements Runnable {
 	private void clearMessages(final Member messageAuthor, final MessageChannel channel) {
 		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
 				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-		log.info(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()));
 	}
 
 }
