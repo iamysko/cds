@@ -60,13 +60,15 @@ public class MessageListener extends ListenerAdapter {
 	}
 
 	private void scanMessage(final Message message, final int i) {
+
 		final String messageText = message.getContentRaw();
-		final Member author = message.getMember();
-		final String authorMention = author.getAsMention();
 
 		if (!messageText.matches(RegexConstants.GENERIC)) { // If not a command, do nothing.
 			return;
 		}
+
+		final Member author = message.getMember();
+		final String authorMention = author.getAsMention();
 
 		log.info("Command received from authorized user {}: {}", author.getEffectiveName(), messageText);
 
