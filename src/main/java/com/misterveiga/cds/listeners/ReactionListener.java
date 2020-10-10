@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -52,6 +53,9 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
 	private static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
 
+	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
+	private static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
+
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
@@ -66,6 +70,8 @@ public class ReactionListener extends ListenerAdapter {
 
 	/** The Constant COMMAND_REASON. */
 	private static final String COMMAND_REASON = "(By %s (%s)) Message Evidence: %s";
+
+	private static final String COMMAND_UNMUTE_USER_DEFAULT = ";unmute %s";
 
 	/**
 	 * On message reaction add.
@@ -140,9 +146,23 @@ public class ReactionListener extends ListenerAdapter {
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
 						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
-					banUser(reactee, message, commandChannel);
+					approveBanRequest(reactee, message, commandChannel);
 
 					log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
+							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
+				}
+
+				break;
+
+			case ID_REACTION_REJECT_BAN_REQUEST:
+
+				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
+						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+
+					rejectBanRequest(reactee, message, commandChannel);
+
+					log.info("[Reaction Command] Ban request rejected by {} ({}) (request: {})",
 							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 				}
@@ -158,13 +178,47 @@ public class ReactionListener extends ListenerAdapter {
 
 	}
 
+	private void rejectBanRequest(final Member reactee, final Message message, final TextChannel commandChannel) {
+		try {
+
+			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
+			final String reportedUserId = banRequestMessageContent[1];
+			final User reportedUser = commandChannel.getJDA().getUserById(reportedUserId);
+
+			final StringBuilder sb = new StringBuilder();
+
+			sb.append(message.getAuthor().getAsMention())
+					.append(commandChannel.getJDA().getEmoteById(ID_REACTION_REJECT_BAN_REQUEST).getAsMention())
+					.append(" Your ban request against ").append(reportedUser.getAsMention()).append(" (")
+					.append(reportedUser.getId()).append(") has been rejected by ").append(reactee.getAsMention())
+					.append(" and the user has been unmuted.\n\nYour ban request evidence: ");
+
+			for (Integer i = 2; i < banRequestMessageContent.length; i++) {
+				sb.append(banRequestMessageContent[i]).append(" ");
+			}
+
+			final String rejectionNoticeString = sb.toString();
+
+			commandChannel.sendMessage(String.format(COMMAND_UNMUTE_USER_DEFAULT, reportedUserId)).queue();
+			commandChannel.sendMessage(rejectionNoticeString).queue();
+
+		} catch (final IndexOutOfBoundsException e) {
+
+			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+					" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
+					.queue();
+
+		}
+	}
+
 	/**
 	 * Ban user.
 	 *
+	 * @param reactee        the reactee
 	 * @param message        the message
 	 * @param commandChannel the command channel
 	 */
-	private void banUser(final Member reactee, final Message message, final TextChannel commandChannel) {
+	private void approveBanRequest(final Member reactee, final Message message, final TextChannel commandChannel) {
 		try {
 
 			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
