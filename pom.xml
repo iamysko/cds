@@ -4,7 +4,7 @@
 
     <groupId>com.misterveiga</groupId>
     <artifactId>CDS</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
     <packaging>jar</packaging>
 
 	<name>Community Discord Services</name>
@@ -29,8 +29,12 @@
 			<artifactId>JDA</artifactId>
 			<version>4.2.0_204</version>
 		</dependency>
-    
+		
     	<!-- Spring Framework -->
+    	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

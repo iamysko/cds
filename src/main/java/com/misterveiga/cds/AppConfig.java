@@ -3,6 +3,7 @@
  */
 package com.misterveiga.cds;
 
+import java.net.UnknownHostException;
 import java.time.Instant;
 
 import javax.security.auth.login.LoginException;
@@ -13,12 +14,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.misterveiga.cds.listeners.DiscordDownListener;
 import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.telegram.TelegramService;
+import com.mongodb.MongoClient;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -33,6 +36,9 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 @EnableConfigurationProperties
 @PropertySource("classpath:application.properties")
 public class AppConfig {
+
+	@Value("${spring.data.mongodb.database}")
+	public String mongoDatabase;
 
 	/**
 	 * Jda.
@@ -105,6 +111,11 @@ public class AppConfig {
 	@Bean
 	DiscordDownListener discordDownListener() {
 		return new DiscordDownListener();
+	}
+
+	@Bean
+	MongoTemplate mongoTemplate() throws UnknownHostException {
+		return new MongoTemplate(new MongoClient("127.0.0.1"), "rdss");
 	}
 
 }

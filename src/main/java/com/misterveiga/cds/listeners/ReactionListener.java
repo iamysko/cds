@@ -6,14 +6,19 @@
 package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import com.misterveiga.cds.data.CdsDataImpl;
+import com.misterveiga.cds.entities.CommandActionDTO;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -40,6 +45,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 @Component
 @PropertySource("classpath:application.properties")
 public class ReactionListener extends ListenerAdapter {
+
+	@Autowired
+	public CdsDataImpl cdsData;
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
@@ -97,6 +105,11 @@ public class ReactionListener extends ListenerAdapter {
 				return; // Do nothing.
 			}
 
+			final CommandActionDTO commandAction = new CommandActionDTO();
+			commandAction.setActionDate(LocalDateTime.now(ZoneOffset.UTC));
+			commandAction.setAuthorId(reactee.getId());
+			commandAction.setAuthorDiscordTag(reactee.getUser().getAsTag());
+
 			switch (emoteId) {
 
 			case ID_REACTION_QM_30:
@@ -112,7 +125,7 @@ public class ReactionListener extends ListenerAdapter {
 
 					muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 					clearMessages(messageAuthor, channel);
-
+					commandAction.setActionType("REACTION_QM_30");
 					log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"",
 							reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
 
@@ -133,7 +146,7 @@ public class ReactionListener extends ListenerAdapter {
 
 					muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 					clearMessages(messageAuthor, channel);
-
+					commandAction.setActionType("REACTION_QM_60");
 					log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"",
 							reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
 
@@ -147,7 +160,7 @@ public class ReactionListener extends ListenerAdapter {
 						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					approveBanRequest(reactee, message, commandChannel);
-
+					commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
 					log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
 							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
@@ -161,7 +174,7 @@ public class ReactionListener extends ListenerAdapter {
 						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					rejectBanRequest(reactee, message, commandChannel);
-
+					commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
 					log.info("[Reaction Command] Ban request rejected by {} ({}) (request: {})",
 							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
@@ -173,6 +186,8 @@ public class ReactionListener extends ListenerAdapter {
 				return; // Do nothing.
 
 			}
+
+			cdsData.insertAction(commandAction);
 
 		});
 
