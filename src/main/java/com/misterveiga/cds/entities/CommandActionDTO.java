@@ -6,7 +6,6 @@ package com.misterveiga.cds.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -21,7 +20,6 @@ public class CommandActionDTO implements Serializable {
 	private static final long serialVersionUID = 5567535364045755080L;
 
 	/** The author id. */
-	@Id
 	private String authorId;
 
 	/** The author discord tag. */
