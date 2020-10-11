@@ -4,7 +4,7 @@
 
     <groupId>com.misterveiga</groupId>
     <artifactId>CDS</artifactId>
-    <version>1.4.5</version>
+    <version>1.4.6</version>
     <packaging>jar</packaging>
 
 	<name>Community Discord Services</name>
@@ -28,6 +28,12 @@
 			<groupId>net.dv8tion</groupId>
 			<artifactId>JDA</artifactId>
 			<version>4.2.0_204</version>
+		</dependency>
+		
+		<!-- Jackson -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
 		</dependency>
 		
     	<!-- Spring Framework -->

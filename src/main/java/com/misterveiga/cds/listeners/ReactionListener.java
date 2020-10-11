@@ -6,9 +6,10 @@
 package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import com.misterveiga.cds.data.CdsDataImpl;
-import com.misterveiga.cds.entities.CommandActionDTO;
+import com.misterveiga.cds.entities.Action;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -105,10 +106,10 @@ public class ReactionListener extends ListenerAdapter {
 				return; // Do nothing.
 			}
 
-			final CommandActionDTO commandAction = new CommandActionDTO();
-			commandAction.setActionDate(LocalDateTime.now(ZoneOffset.UTC));
-			commandAction.setAuthorId(reactee.getId());
-			commandAction.setAuthorDiscordTag(reactee.getUser().getAsTag());
+			final Action commandAction = new Action();
+			commandAction.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+			commandAction.setUser(reactee.getUser().getAsTag());
+			commandAction.setDiscordId(reactee.getIdLong());
 
 			switch (emoteId) {
 
@@ -125,6 +126,8 @@ public class ReactionListener extends ListenerAdapter {
 
 					muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 					clearMessages(messageAuthor, channel);
+					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+					commandAction.setOffendingUserId(messageAuthor.getIdLong());
 					commandAction.setActionType("REACTION_QM_30");
 					log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"",
 							reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
@@ -146,6 +149,8 @@ public class ReactionListener extends ListenerAdapter {
 
 					muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 					clearMessages(messageAuthor, channel);
+					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+					commandAction.setOffendingUserId(messageAuthor.getIdLong());
 					commandAction.setActionType("REACTION_QM_60");
 					log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"",
 							reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());

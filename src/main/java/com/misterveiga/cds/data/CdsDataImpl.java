@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import com.misterveiga.cds.entities.CommandActionDTO;
+import com.misterveiga.cds.entities.Action;
 
 @Component
 public class CdsDataImpl {
@@ -19,7 +19,7 @@ public class CdsDataImpl {
 	public CdsDataImpl() {
 	}
 
-	public void insertAction(final CommandActionDTO commandAction) {
+	public void insertAction(final Action commandAction) {
 		this.mongoTemplate.insert(commandAction);
 		log.info("Perstisted action {}", commandAction);
 	}
