@@ -16,7 +16,7 @@ jobs:
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
             echo Killing CDS...
-            pkill -f CDS-*.*.jar || echo "Nothing to kill. Process was not running."
+            kill -15 -1 || echo "Nothing to kill. Process was not running."
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
