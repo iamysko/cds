@@ -16,7 +16,8 @@ jobs:
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
             echo Killing CDS...
-            kill -15 -1 || echo "Nothing to kill. Process was not running."
+            pkill -15 -f CDS-*.*.java || echo "Nothing to kill. Process was not running."
+            exit 0
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -37,3 +38,4 @@ jobs:
             echo Running executable...
             nohup java -jar /var/rdss/git/target/CDS-*.*.jar > /var/rdss/rdss.log 2>&1 &
             echo Deploy Complete
+            exit 0
