@@ -15,12 +15,4 @@ jobs:
           key: ${{ secrets.MISTERVEIGA_SSH }}
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
-            pkill -f 'java.*CDS'
-            cd /var/git/rdss
-            git pull origin master
-            git status
-            mvn clean install
-            rm -r /var/rdss
-            mv /src/target/CDS-*.*.jar /var/rdss
-            chmod +x /var/rdss/CDS-*.*.jar
-            nohup java -jar /var/rdss/CDS-*.*.jar > rdss.log 2>&1 &
+            echo hello world
