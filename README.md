@@ -1,3 +1,4 @@
+![Production Deploy](https://github.com/misterveiga/cds/workflows/Production%20Deploy/badge.svg)
 ![CodeQL](https://github.com/misterveiga/rdss/workflows/CodeQL/badge.svg?branch=master)
 # Hacktoberfest 2020
 For Hacktoberfest pull requests, please refer to open Issues. Issues will open every so often for you to collaborate!
