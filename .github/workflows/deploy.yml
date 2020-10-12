@@ -10,7 +10,7 @@ jobs:
       - name: deploy
         uses: appleboy/ssh-action@master
         with:
-          host: misterveiga.com
+          host: ${{ secrets.MISTERVEIGA }}
           username: ${{ secrets.MISTERVEIGA_USER }}
           key: ${{ secrets.MISTERVEIGA_SSH }}
           port: ${{ secrets.MISTERVEIGA_PORT }}
