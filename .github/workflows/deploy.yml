@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.MISTERVEIGA_SSH }}
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
-            kill -9 CDS-*.*
+            pkill -9 CDS-*.*
             cd /var/git/rdss
             git pull origin master
             git status
