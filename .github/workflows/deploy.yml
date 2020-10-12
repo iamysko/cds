@@ -7,7 +7,7 @@ jobs:
     name: Production Deploy
     runs-on: ubuntu-20.04
     steps:
-      - name: deploy
+      - name: Kill
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.MISTERVEIGA }}
@@ -17,6 +17,14 @@ jobs:
           script: |
             echo Killing CDS...
             pkill -f CDS-*.*.jar
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.MISTERVEIGA }}
+          username: ${{ secrets.MISTERVEIGA_USER }}
+          key: ${{ secrets.MISTERVEIGA_SSH }}
+          port: ${{ secrets.MISTERVEIGA_PORT }}
+          script: |
             echo Entering repo...
             cd /var/rdss/git
             echo Pulling latest from master...
@@ -28,3 +36,4 @@ jobs:
             chmod +x /var/rdss/git/target/CDS-*.*.jar
             echo Running executable...
             nohup java -jar /var/rdss/git/target/CDS-*.*.jar > /var/rdss/rdss.log 2>&1 &
+            echo Deploy Complete
