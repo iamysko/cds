@@ -16,11 +16,9 @@ jobs:
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
             pkill -f CDS-*.*.jar &
-            BACK_PID = $!
-            while kill -0 $BACK_PID ; do
-                echo "Killing process..."
-                sleep 1
-            done
+            BACK_PID=$!
+            while kill -0 $BACK_PID ; do echo Killing process...; sleep 1; done
+            exit 0
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
