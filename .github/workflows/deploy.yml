@@ -12,13 +12,13 @@ jobs:
         with:
           command: /var/rdss/scripts/uninstall.sh
           host: ${{ secrets.MISTERVEIGA }}
-          username: ${{ secrets.MISTERVEIGA_USER }}
+          user: ${{ secrets.MISTERVEIGA_USER }}
           key: ${{ secrets.MISTERVEIGA_SSH }}
       - name: Deploy
         uses: fifsky/ssh-action@master
         with:
           command: /var/rdss/scripts/install.sh
           host: ${{ secrets.MISTERVEIGA }}
-          username: ${{ secrets.MISTERVEIGA_USER }}
+          user: ${{ secrets.MISTERVEIGA_USER }}
           key: ${{ secrets.MISTERVEIGA_SSH }}
             
