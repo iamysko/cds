@@ -16,7 +16,6 @@ jobs:
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
             backpid=$(echo $(ps -A | grep -m 1 java | awk '{print $1}')); if [ ! -z $backpid ]; then kill -9 $backpid; if [ ! $? -eq 0 ]; then echo Process is already killed or does not exist. Exiting...; else while kill -0 $backpid ; do echo Waiting for process to be killed...; sleep 0.1; done; fi; else echo Process is not running. Exiting...; fi;
-            exit 0
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -36,6 +35,4 @@ jobs:
             chmod +x /var/rdss/git/target/CDS-*.*.jar
             echo Running executable...
             nohup java -jar /var/rdss/git/target/CDS-*.*.jar > /var/rdss/rdss.log 2>&1 &
-            disown
             echo Deploy Complete
-            exit 0
