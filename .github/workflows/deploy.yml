@@ -16,7 +16,7 @@ jobs:
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
             echo Killing CDS...
-            pkill -f CDS-*.*.java &
+            pkill -f CDS-*.*.jar &
             exit 0
       - name: Deploy
         uses: appleboy/ssh-action@master
