@@ -24,5 +24,4 @@ jobs:
           key: ${{ secrets.MISTERVEIGA_SSH }}
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
-            sudo /var/rdss/scripts/install.sh
-            disown
+            nohup /var/rdss/scripts/install.sh &
