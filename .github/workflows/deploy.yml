@@ -24,4 +24,4 @@ jobs:
           key: ${{ secrets.MISTERVEIGA_SSH }}
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
-            su - root -c /var/rdss/scripts/install.sh
+            /var/rdss/scripts/install.sh
