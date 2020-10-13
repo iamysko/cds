@@ -36,5 +36,6 @@ jobs:
             chmod +x /var/rdss/git/target/CDS-*.*.jar
             echo Running executable...
             nohup java -jar /var/rdss/git/target/CDS-*.*.jar > /var/rdss/rdss.log 2>&1 &
+            disown
             echo Deploy Complete
             exit 0
