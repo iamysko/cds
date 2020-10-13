@@ -8,17 +8,17 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Undeploy
-        uses: garygrossgarten/github-action-ssh@release
+        uses: fifsky/ssh-action@master
         with:
           command: /var/rdss/scripts/uninstall.sh
           host: ${{ secrets.MISTERVEIGA }}
           username: ${{ secrets.MISTERVEIGA_USER }}
-          privateKey: ${{ secrets.MISTERVEIGA_SSH }}
+          key: ${{ secrets.MISTERVEIGA_SSH }}
       - name: Deploy
-        uses: garygrossgarten/github-action-ssh@release
+        uses: fifsky/ssh-action@master
         with:
           command: /var/rdss/scripts/install.sh
           host: ${{ secrets.MISTERVEIGA }}
           username: ${{ secrets.MISTERVEIGA_USER }}
-          privateKey: ${{ secrets.MISTERVEIGA_SSH }}
+          key: ${{ secrets.MISTERVEIGA_SSH }}
             
