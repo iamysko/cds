@@ -15,9 +15,9 @@ jobs:
           key: ${{ secrets.MISTERVEIGA_SSH }}
           port: ${{ secrets.MISTERVEIGA_PORT }}
           script: |
-            ps -A | grep java | awk '{print $1}' | xargs kill -9 $1
             backpid=$(echo $(pgrep -f CDS-*.*.jar))
-            if [ ! -z $backpid ]; then while kill -0 $backpid ; do echo Waiting for process to be killed...; sleep 1; done; fi
+            ps -A | grep java | awk '{print $1}' | xargs kill -9 $1
+            while kill -0 $backpid ; do echo Waiting for process to be killed...; sleep 1; done
             exit 0
       - name: Deploy
         uses: appleboy/ssh-action@master
