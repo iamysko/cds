@@ -1,0 +1,24 @@
+name: Production Deploy
+on:
+  push:
+    branches: [master]
+jobs:
+  job_one:
+    name: Production Deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Undeploy
+        uses: fifsky/ssh-action@master
+        with:
+          command: /var/rdss/scripts/uninstall.sh
+          host: ${{ secrets.MISTERVEIGA }}
+          user: ${{ secrets.MISTERVEIGA_USER }}
+          key: ${{ secrets.MISTERVEIGA_SSH }}
+      - name: Deploy
+        uses: fifsky/ssh-action@master
+        with:
+          command: /var/rdss/scripts/install.sh
+          host: ${{ secrets.MISTERVEIGA }}
+          user: ${{ secrets.MISTERVEIGA_USER }}
+          key: ${{ secrets.MISTERVEIGA_SSH }}
+            
