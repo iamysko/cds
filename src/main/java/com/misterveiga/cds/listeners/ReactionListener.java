@@ -209,8 +209,10 @@ public class ReactionListener extends ListenerAdapter {
 
 			sb.append(message.getAuthor().getAsMention())
 					.append(commandChannel.getJDA().getEmoteById(ID_REACTION_REJECT_BAN_REQUEST).getAsMention())
-					.append(" Your ban request against ").append(reportedUser.getAsMention()).append(" (")
-					.append(reportedUser.getId()).append(") has been rejected by ").append(reactee.getAsMention())
+					.append(" Your ban request against ")
+					.append(reportedUser == null ? "the user " : reportedUser.getAsMention()).append(" (")
+					.append(reportedUser == null ? "who has left the server" : reportedUser.getId())
+					.append(") has been rejected by ").append(reactee.getAsMention())
 					.append(" and the user has been unmuted.\n\nYour ban request evidence: ");
 
 			for (Integer i = 2; i < banRequestMessageContent.length; i++) {
