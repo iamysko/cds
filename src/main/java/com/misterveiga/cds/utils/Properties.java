@@ -56,37 +56,37 @@ public class Properties {
 	}
 
 	@Value("${properties.id.telegram}")
-	public static void setTelegramChatId(final String telegramChatId) {
+	public void setTelegramChatId(final String telegramChatId) {
 		TELEGRAM_CHAT_ID = telegramChatId;
 	}
 
 	@Value("${properties.id.robloxdiscord}")
-	public static void setRobloxDiscordId(final Long id) {
+	public void setRobloxDiscordId(final Long id) {
 		GUILD_ROBLOX_DISCORD_ID = id;
 	}
 
 	@Value("${properties.id.role_supervisor}")
-	public static void setCommunitySupervisorId(final Long id) {
+	public void setCommunitySupervisorId(final Long id) {
 		ROLE_COMMUNITY_SUPERVISOR_ID = id;
 	}
 
 	@Value("${properties.id.channel_commands}")
-	public static void setChannelCommandsId(final Long id) {
+	public void setChannelCommandsId(final Long id) {
 		CHANNEL_COMMANDS_ID = id;
 	}
 
 	@Value("${properties.id.channel_supervisors}")
-	public static void setChannelSupervisorsId(final Long id) {
+	public void setChannelSupervisorsId(final Long id) {
 		CHANNEL_SUPERVISORS_ID = id;
 	}
 
 	@Value("${properties.id.ban_request}")
-	public static void setChannelBanRequestsQueueId(final Long id) {
+	public void setChannelBanRequestsQueueId(final Long id) {
 		CHANNEL_BAN_REQUESTS_QUEUE_ID = id;
 	}
 
 	@Value("${properties.time_wait}")
-	public static void setSupervisorMonitoringWait(final Long time) {
+	public void setSupervisorMonitoringWait(final Long time) {
 		TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = time;
 	}
 

@@ -5,28 +5,35 @@
 
 package com.misterveiga.cds.listeners;
 
-import com.misterveiga.cds.data.CdsDataImpl;
-import com.misterveiga.cds.entities.Action;
-import com.misterveiga.cds.utils.Properties;
-import com.misterveiga.cds.utils.RoleUtils;
-import com.misterveiga.cds.utils.enums.CDSRole;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.Message.MentionType;
-import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.misterveiga.cds.data.CdsDataImpl;
+import com.misterveiga.cds.entities.Action;
+import com.misterveiga.cds.utils.Properties;
+import com.misterveiga.cds.utils.RoleUtils;
+import com.misterveiga.cds.utils.enums.CDSRole;
+
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Message.MentionType;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * The listener interface for receiving reaction events. The class that is
@@ -47,23 +54,23 @@ public class ReactionListener extends ListenerAdapter {
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
 
 	/** The Constant ID_REACTION_QM_30. */
-	@Value("${reaction.listener.qm30}")
-	public static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
+
+	public static String ID_REACTION_QM_30; // 30 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_QM_60. */
-	@Value("${reaction.listener.qm60}")
-	public static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
+
+	public static String ID_REACTION_QM_60; // 60 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
-	@Value("${reaction.listener.ban.approve}")
-	public static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
+
+	public static String ID_REACTION_APPROVE_BAN_REQUEST; // Ban request approval emoji
 
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
-	@Value("${reaction.listener.ban.reject}")
-	public static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
+
+	public static String ID_REACTION_REJECT_BAN_REQUEST; // Ban request rejection emoji
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
-	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
+	private static String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
 	/** The Constant COMMAND_BAN_USER_DEFAULT. */
 	private static final String COMMAND_BAN_USER_DEFAULT = ";ban %s %s";
@@ -108,9 +115,7 @@ public class ReactionListener extends ListenerAdapter {
 			commandAction.setUser(reactee.getUser().getAsTag());
 			commandAction.setDiscordId(reactee.getIdLong());
 
-			switch (emoteId) {
-
-				case (ID_REACTION_QM_30):
+			if (emoteId == ID_REACTION_QM_30) {
 
 				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
@@ -131,9 +136,7 @@ public class ReactionListener extends ListenerAdapter {
 
 				}
 
-				break;
-
-			case ID_REACTION_QM_60:
+			} else if (emoteId == ID_REACTION_QM_60) {
 
 				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
@@ -154,9 +157,7 @@ public class ReactionListener extends ListenerAdapter {
 
 				}
 
-				break;
-
-			case ID_REACTION_APPROVE_BAN_REQUEST:
+			} else if (emoteId == ID_REACTION_APPROVE_BAN_REQUEST) {
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
 						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
@@ -168,9 +169,7 @@ public class ReactionListener extends ListenerAdapter {
 
 				}
 
-				break;
-
-			case ID_REACTION_REJECT_BAN_REQUEST:
+			} else if (emoteId == ID_REACTION_REJECT_BAN_REQUEST) {
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
 						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
@@ -181,11 +180,6 @@ public class ReactionListener extends ListenerAdapter {
 							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 				}
-
-				break;
-
-			default:
-				return; // Do nothing.
 
 			}
 
@@ -317,6 +311,26 @@ public class ReactionListener extends ListenerAdapter {
 	private void clearMessages(final Member messageAuthor, final MessageChannel channel) {
 		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
 				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+	}
+
+	@Value("${reaction.listener.qm30}")
+	public void setQM30(final String id) {
+		ID_REACTION_QM_30 = id;
+	}
+
+	@Value("${reaction.listener.qm60}")
+	public void setQM60(final String id) {
+		ID_REACTION_QM_60 = id;
+	}
+
+	@Value("${reaction.listener.ban.approve}")
+	public void setABR(final String id) {
+		ID_REACTION_APPROVE_BAN_REQUEST = id;
+	}
+
+	@Value("${reaction.listener.ban.reject}")
+	public void setRBR(final String id) {
+		ID_REACTION_REJECT_BAN_REQUEST = id;
 	}
 
 }
