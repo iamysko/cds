@@ -35,20 +35,16 @@ public class TelegramService {
 	private static Logger log = LoggerFactory.getLogger(TelegramService.class);
 
 	/** The Constant DOWNTIME_ALERT. */
-	@Value("${alerts.downtime}")
-	public static String DOWNTIME_ALERT;
+	public static final String DOWNTIME_ALERT = "**Downtime Alert** | The Roblox Discord is currently experiencing downtime.";
 
 	/** The Constant DISCORD_UP. */
-	@Value("${alerts.discordup}")
-	public static String DISCORD_UP;
+	public static final String DISCORD_UP = "**Status Update** | The Roblox Discord is back up!";
 
 	/** The Constant ERROR_UNKNOWN. */
-	@Value("${alerts.unknown}")
-	public static String ERROR_UNKNOWN;
+	public static final String ERROR_UNKNOWN = "Unknown error.";
 
 	/** The Constant ERROR_WAIT_JDA. */
-	@Value("${alerts.wait_jda}")
-	public static String ERROR_WAIT_JDA;
+	public static final String ERROR_WAIT_JDA = "Error awaiting JDA.";
 
 	/**
 	 * Send to telegram.

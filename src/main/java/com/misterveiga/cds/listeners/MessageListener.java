@@ -11,11 +11,9 @@ import org.slf4j.LoggerFactory;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
-import com.misterveiga.cds.utils.enums.CDSRole;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -44,18 +42,19 @@ public class MessageListener extends ListenerAdapter {
 			return;
 		}
 
-		boolean hasSentMessage = false;
-
-		for (final CDSRole cdsRole : CDSRole.values()) {
-			final Role role = RoleUtils.findRole(event.getMember(), cdsRole);
-			if (role != null) {
-				log.debug("Message received from a " + RoleUtils.extractRoleName(cdsRole));
-				scanMessage(event.getMessage(), RoleUtils.roleMap.get(cdsRole));
-				hasSentMessage = true;
-				break;
-			}
-		}
-		if (!hasSentMessage) {
+		if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER) != null) {
+			log.debug("Message received from a server manager.");
+			scanMessage(event.getMessage(), 3);
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR) != null) {
+			log.debug("Message received from a senior community supervisor.");
+			scanMessage(event.getMessage(), 2);
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR) != null) {
+			log.debug("Message received from a community supervisor.");
+			scanMessage(event.getMessage(), 1);
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_SUPERVISOR) != null) {
+			log.debug("Message received from a trial supervisor.");
+			scanMessage(event.getMessage(), 0);
+		} else {
 			scanMessage(event.getMessage(), -1);
 		}
 	}
@@ -84,9 +83,11 @@ public class MessageListener extends ListenerAdapter {
 			} else {
 				sendUnknownCommandMessage(message, authorMention);
 			}
+			break;
 		case 2: // SCS
 		case 1: // CS
 		case 0: // TS
+			break;
 		case -1: // Member with no command roles.
 			break;
 		}

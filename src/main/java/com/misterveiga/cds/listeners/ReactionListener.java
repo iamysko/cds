@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,6 @@ import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.entities.Action;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
-import com.misterveiga.cds.utils.enums.CDSRole;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -56,23 +54,19 @@ public class ReactionListener extends ListenerAdapter {
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
 
 	/** The Constant ID_REACTION_QM_30. */
-
-	public static String ID_REACTION_QM_30; // 30 minute quick-mute emoji
+	private static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_QM_60. */
-
-	public static String ID_REACTION_QM_60; // 60 minute quick-mute emoji
+	private static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
-
-	public static String ID_REACTION_APPROVE_BAN_REQUEST; // Ban request approval emoji
+	private static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
 
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
-
-	public static String ID_REACTION_REJECT_BAN_REQUEST; // Ban request rejection emoji
+	private static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
-	private static String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
+	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
 	/** The Constant COMMAND_BAN_USER_DEFAULT. */
 	private static final String COMMAND_BAN_USER_DEFAULT = ";ban %s %s";
@@ -107,8 +101,8 @@ public class ReactionListener extends ListenerAdapter {
 		event.retrieveMessage().queue(message -> {
 			final Member messageAuthor = message.getMember();
 
-			if (!RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
-					CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+			if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+					RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 				return; // Do nothing.
 			}
 
@@ -117,12 +111,14 @@ public class ReactionListener extends ListenerAdapter {
 			commandAction.setUser(reactee.getUser().getAsTag());
 			commandAction.setDiscordId(reactee.getIdLong());
 
-			if (emoteId == ID_REACTION_QM_30) {
+			switch (emoteId) {
 
-				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
+			case ID_REACTION_QM_30:
 
-					if (RoleUtils.isAnyRole(messageAuthor, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
-							CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 								.append(" you cannot run commands on server staff.")).queue();
 						return; // Do nothing.
@@ -138,12 +134,14 @@ public class ReactionListener extends ListenerAdapter {
 
 				}
 
-			} else if (emoteId == ID_REACTION_QM_60) {
+				break;
 
-				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
+			case ID_REACTION_QM_60:
 
-					if (RoleUtils.isAnyRole(messageAuthor, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
-							CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 								.append(" you cannot run commands on server staff.")).queue();
 						return; // Do nothing.
@@ -159,10 +157,12 @@ public class ReactionListener extends ListenerAdapter {
 
 				}
 
-			} else if (emoteId == ID_REACTION_APPROVE_BAN_REQUEST) {
+				break;
+
+			case ID_REACTION_APPROVE_BAN_REQUEST:
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					approveBanRequest(reactee, message, commandChannel);
 					commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
@@ -171,10 +171,12 @@ public class ReactionListener extends ListenerAdapter {
 
 				}
 
-			} else if (emoteId == ID_REACTION_REJECT_BAN_REQUEST) {
+				break;
+
+			case ID_REACTION_REJECT_BAN_REQUEST:
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					rejectBanRequest(reactee, message, commandChannel);
 					commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
@@ -182,6 +184,11 @@ public class ReactionListener extends ListenerAdapter {
 							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 				}
+
+				break;
+
+			default:
+				return; // Do nothing.
 
 			}
 
@@ -313,26 +320,6 @@ public class ReactionListener extends ListenerAdapter {
 	private void clearMessages(final Member messageAuthor, final MessageChannel channel) {
 		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
 				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
-	}
-
-	@Value("${reaction.listener.qm30}")
-	public void setQM30(final String id) {
-		ID_REACTION_QM_30 = id;
-	}
-
-	@Value("${reaction.listener.qm60}")
-	public void setQM60(final String id) {
-		ID_REACTION_QM_60 = id;
-	}
-
-	@Value("${reaction.listener.ban.approve}")
-	public void setABR(final String id) {
-		ID_REACTION_APPROVE_BAN_REQUEST = id;
-	}
-
-	@Value("${reaction.listener.ban.reject}")
-	public void setRBR(final String id) {
-		ID_REACTION_REJECT_BAN_REQUEST = id;
 	}
 
 }
