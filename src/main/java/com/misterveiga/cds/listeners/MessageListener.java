@@ -5,6 +5,8 @@ package com.misterveiga.cds.listeners;
 
 import java.util.concurrent.TimeUnit;
 
+import com.misterveiga.cds.utils.enums.CDSRole;
+import net.dv8tion.jda.api.entities.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,21 +44,19 @@ public class MessageListener extends ListenerAdapter {
 			return;
 		}
 
-		if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER) != null) {
-			log.debug("Message received from a server manager.");
-			scanMessage(event.getMessage(), 3);
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR) != null) {
-			log.debug("Message received from a senior community supervisor.");
-			scanMessage(event.getMessage(), 2);
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR) != null) {
-			log.debug("Message received from a community supervisor.");
-			scanMessage(event.getMessage(), 1);
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_SUPERVISOR) != null) {
-			log.debug("Message received from a trial supervisor.");
-			scanMessage(event.getMessage(), 0);
-		} else {
-			scanMessage(event.getMessage(), -1);
+		boolean hasSentMessage = false;
+
+		for(CDSRole cdsRole: CDSRole.values()){
+			Role role = RoleUtils.findRole(event.getMember(), cdsRole);
+			if(role != null){
+				log.debug("Message received from a " + RoleUtils.extractRoleName(cdsRole));
+				scanMessage(event.getMessage(), RoleUtils.roleMap.get(cdsRole));
+				hasSentMessage = true;
+				break;
+			}
 		}
+		if(!hasSentMessage)
+			scanMessage(event.getMessage(), -1);
 	}
 
 	private void scanMessage(final Message message, final int i) {

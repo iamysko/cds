@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import com.misterveiga.cds.utils.enums.CDSRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -106,8 +108,8 @@ public class ReactionListener extends ListenerAdapter {
 		event.retrieveMessage().queue(message -> {
 			final Member messageAuthor = message.getMember();
 
-			if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-					RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+			if (!RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
+					CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 				return; // Do nothing.
 			}
 
@@ -120,10 +122,10 @@ public class ReactionListener extends ListenerAdapter {
 
 			case ID_REACTION_QM_30:
 
-				if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
-					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+					if (RoleUtils.isAnyRole(messageAuthor, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
+							CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 								.append(" you cannot run commands on server staff.")).queue();
 						return; // Do nothing.
@@ -143,10 +145,10 @@ public class ReactionListener extends ListenerAdapter {
 
 			case ID_REACTION_QM_60:
 
-				if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
-					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+					if (RoleUtils.isAnyRole(messageAuthor, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
+							CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 								.append(" you cannot run commands on server staff.")).queue();
 						return; // Do nothing.
@@ -167,7 +169,7 @@ public class ReactionListener extends ListenerAdapter {
 			case ID_REACTION_APPROVE_BAN_REQUEST:
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					approveBanRequest(reactee, message, commandChannel);
 					commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
@@ -181,7 +183,7 @@ public class ReactionListener extends ListenerAdapter {
 			case ID_REACTION_REJECT_BAN_REQUEST:
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					rejectBanRequest(reactee, message, commandChannel);
 					commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
