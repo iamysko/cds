@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import com.misterveiga.cds.data.CdsDataImpl;
@@ -45,6 +46,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @see ReactionEvent
  */
 @Component
+@PropertySource("classpath:application.properties")
 public class ReactionListener extends ListenerAdapter {
 
 	@Autowired

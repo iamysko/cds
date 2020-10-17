@@ -51,7 +51,7 @@ public class AppConfig {
 	 * @return the jda
 	 */
 	@Bean
-	JDA jda(@Qualifier("discordUpListner") final DiscordUpListener discordUpListener,
+	JDA jda(@Qualifier("discordUpListener") final DiscordUpListener discordUpListener,
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
@@ -99,7 +99,7 @@ public class AppConfig {
 	 * @return the discord up listener
 	 */
 	@Bean
-	DiscordUpListener discordUpListner() {
+	DiscordUpListener discordUpListener() {
 		return new DiscordUpListener();
 	}
 
