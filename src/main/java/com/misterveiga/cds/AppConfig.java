@@ -74,6 +74,16 @@ public class AppConfig {
 	}
 
 	/**
+	 * Reaction listener.
+	 *
+	 * @return the reaction listener
+	 */
+	@Bean
+	ReactionListener reactionListener() {
+		return new ReactionListener();
+	}
+
+	/**
 	 * Message listener.
 	 *
 	 * @return the message listener
