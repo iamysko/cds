@@ -74,7 +74,7 @@ public class RoleUtils {
 	 * @return role name
 	 */
 	public static String extractRoleName(CDSRole role){
-		return Stream.of(role.toString().split("_")).map(word -> (word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase()))
+		return Stream.of(role.toString().replace("ROLE_","").split("_")).map(word -> (word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase()))
 				.collect(Collectors.joining());
 	}
 
