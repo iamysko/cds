@@ -1,0 +1,11 @@
+package com.misterveiga.cds.utils.enums;
+
+public enum CDSRole {
+    ROLE_TRIAL_SUPERVISOR,
+    ROLE_COMMUNITY_SUPERVISOR,
+    ROLE_SENIOR_COMMUNITY_SUPERVISOR,
+    ROLE_SERVER_MANAGER,
+    ROLE_LEAD,
+    ROLE_PUBLIC_SECTOR,
+    ROLE_INFRASTRUCTURE
+}

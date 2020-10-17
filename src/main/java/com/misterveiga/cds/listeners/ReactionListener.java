@@ -5,34 +5,28 @@
 
 package com.misterveiga.cds.listeners;
 
+import com.misterveiga.cds.data.CdsDataImpl;
+import com.misterveiga.cds.entities.Action;
+import com.misterveiga.cds.utils.Properties;
+import com.misterveiga.cds.utils.RoleUtils;
+import com.misterveiga.cds.utils.enums.CDSRole;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Message.MentionType;
+import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
-
-import com.misterveiga.cds.data.CdsDataImpl;
-import com.misterveiga.cds.entities.Action;
-import com.misterveiga.cds.utils.Properties;
-import com.misterveiga.cds.utils.RoleUtils;
-
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Message.MentionType;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * The listener interface for receiving reaction events. The class that is
@@ -44,7 +38,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @see ReactionEvent
  */
 @Component
-@PropertySource("classpath:application.properties")
 public class ReactionListener extends ListenerAdapter {
 
 	@Autowired
@@ -54,16 +47,20 @@ public class ReactionListener extends ListenerAdapter {
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
 
 	/** The Constant ID_REACTION_QM_30. */
-	private static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
+	@Value("${reaction.listener.qm30}")
+	public static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_QM_60. */
-	private static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
+	@Value("${reaction.listener.qm60}")
+	public static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
-	private static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
+	@Value("${reaction.listener.ban.approve}")
+	public static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
 
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
-	private static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
+	@Value("${reaction.listener.ban.reject}")
+	public static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
@@ -101,8 +98,8 @@ public class ReactionListener extends ListenerAdapter {
 		event.retrieveMessage().queue(message -> {
 			final Member messageAuthor = message.getMember();
 
-			if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-					RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+			if (!RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
+					CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 				return; // Do nothing.
 			}
 
@@ -113,12 +110,12 @@ public class ReactionListener extends ListenerAdapter {
 
 			switch (emoteId) {
 
-			case ID_REACTION_QM_30:
+				case (ID_REACTION_QM_30):
 
-				if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
-					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+					if (RoleUtils.isAnyRole(messageAuthor, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
+							CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 								.append(" you cannot run commands on server staff.")).queue();
 						return; // Do nothing.
@@ -138,10 +135,10 @@ public class ReactionListener extends ListenerAdapter {
 
 			case ID_REACTION_QM_60:
 
-				if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
-					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+					if (RoleUtils.isAnyRole(messageAuthor, CDSRole.ROLE_COMMUNITY_SUPERVISOR,
+							CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 								.append(" you cannot run commands on server staff.")).queue();
 						return; // Do nothing.
@@ -162,7 +159,7 @@ public class ReactionListener extends ListenerAdapter {
 			case ID_REACTION_APPROVE_BAN_REQUEST:
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					approveBanRequest(reactee, message, commandChannel);
 					commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
@@ -176,7 +173,7 @@ public class ReactionListener extends ListenerAdapter {
 			case ID_REACTION_REJECT_BAN_REQUEST:
 
 				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						event.getMember(), CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 					rejectBanRequest(reactee, message, commandChannel);
 					commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
