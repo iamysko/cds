@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -49,19 +48,19 @@ public class ReactionListener extends ListenerAdapter {
 
 	/** The Constant ID_REACTION_QM_30. */
 	@Value("${reaction.listener.qm30}")
-	private static String ID_REACTION_QM_30; // 30 minute quick-mute emoji
+	public static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_QM_60. */
 	@Value("${reaction.listener.qm60}")
-	private static String ID_REACTION_QM_60; // 60 minute quick-mute emoji
+	public static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
 	@Value("${reaction.listener.ban.approve}")
-	private static String ID_REACTION_APPROVE_BAN_REQUEST; // Ban request approval emoji
+	public static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
 
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
 	@Value("${reaction.listener.ban.reject}")
-	private static String ID_REACTION_REJECT_BAN_REQUEST; // Ban request rejection emoji
+	public static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
@@ -111,7 +110,7 @@ public class ReactionListener extends ListenerAdapter {
 
 			switch (emoteId) {
 
-			case ID_REACTION_QM_30:
+				case (ID_REACTION_QM_30):
 
 				if (RoleUtils.isAnyRole(reactee, CDSRole.ROLE_SERVER_MANAGER, CDSRole.ROLE_COMMUNITY_SUPERVISOR)) {
 
