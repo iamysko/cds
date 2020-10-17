@@ -5,37 +5,29 @@
 
 package com.misterveiga.cds.listeners;
 
+import com.misterveiga.cds.data.CdsDataImpl;
+import com.misterveiga.cds.entities.Action;
+import com.misterveiga.cds.utils.Properties;
+import com.misterveiga.cds.utils.RoleUtils;
+import com.misterveiga.cds.utils.enums.CDSRole;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Message.MentionType;
+import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
-import com.misterveiga.cds.utils.enums.CDSRole;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
-
-import com.misterveiga.cds.data.CdsDataImpl;
-import com.misterveiga.cds.entities.Action;
-import com.misterveiga.cds.utils.Properties;
-import com.misterveiga.cds.utils.RoleUtils;
-
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Message.MentionType;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * The listener interface for receiving reaction events. The class that is
@@ -47,7 +39,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @see ReactionEvent
  */
 @Component
-@PropertySource("classpath:application.properties")
 public class ReactionListener extends ListenerAdapter {
 
 	@Autowired

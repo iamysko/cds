@@ -3,34 +3,47 @@
  */
 package com.misterveiga.cds.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
 /**
  * The Class Properties.
  */
+@Configuration
+@PropertySource("classpath:application.properties")
 public class Properties {
 
 	/** The Constant TELEGRAM_CHAT_ID. */
-	public static final String TELEGRAM_CHAT_ID = "-1001446733742";
+	@Value("${properties.id.telegram}")
+	public static String TELEGRAM_CHAT_ID;
 
 	/** The Constant GUILD_ROBLOX_DISCORD_ID. */
-	public static final Long GUILD_ROBLOX_DISCORD_ID = 150074202727251969L;
+	@Value("${properties.id.robloxdiscord}")
+	public static Long GUILD_ROBLOX_DISCORD_ID;
 
 	/** The Constant ROLE_COMMUNITY_SUPERVISOR_ID. */
-	public static final Long ROLE_COMMUNITY_SUPERVISOR_ID = 150093661231775744L;
+	@Value("${properties.id.role_supervisor}")
+	public static Long ROLE_COMMUNITY_SUPERVISOR_ID;
 
 	/** The Constant CHANNEL_COMMANDS_ID. */
-	public static final Long CHANNEL_COMMANDS_ID = 150250250471342080L;
+	@Value("${properties.id.channel_commands}")
+	public static Long CHANNEL_COMMANDS_ID;
 
 	/** The Constant CHANNEL_SUPERVISORS_ID. */
-	public static final Long CHANNEL_SUPERVISORS_ID = 150255535927721984L;
+	@Value("${properties.id.channel_supervisors}")
+	public static Long CHANNEL_SUPERVISORS_ID;
 
 	/** The Constant CHANNEL_BAN_REQUESTS_QUEUE_ID. */
-	public static final Long CHANNEL_BAN_REQUESTS_QUEUE_ID = 592580861543841802L;
+	@Value("${properties.id.ban_request}")
+	public static Long CHANNEL_BAN_REQUESTS_QUEUE_ID;
 
 	/** The Constant TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT. */
-	public static final Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = 3600000L;
+	@Value("${properties.time_wait}")
+	public static Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT;
 
 	/** The time wait online supervisor monitoring. */
-	public static Long timeWaitOnlineSupervisorMonitoring = TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT;
+	public static Long timeWaitOnlineSupervisorMonitoring = 3600000L;
 
 	/**
 	 * Sets the time wait online supervisor monitoring.
