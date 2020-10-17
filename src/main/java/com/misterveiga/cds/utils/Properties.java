@@ -15,31 +15,31 @@ import org.springframework.context.annotation.PropertySource;
 public class Properties {
 
 	/** The Constant TELEGRAM_CHAT_ID. */
-	@Value("${properties.id.telegram}")
+
 	public static String TELEGRAM_CHAT_ID;
 
 	/** The Constant GUILD_ROBLOX_DISCORD_ID. */
-	@Value("${properties.id.robloxdiscord}")
+
 	public static Long GUILD_ROBLOX_DISCORD_ID;
 
 	/** The Constant ROLE_COMMUNITY_SUPERVISOR_ID. */
-	@Value("${properties.id.role_supervisor}")
+
 	public static Long ROLE_COMMUNITY_SUPERVISOR_ID;
 
 	/** The Constant CHANNEL_COMMANDS_ID. */
-	@Value("${properties.id.channel_commands}")
+
 	public static Long CHANNEL_COMMANDS_ID;
 
 	/** The Constant CHANNEL_SUPERVISORS_ID. */
-	@Value("${properties.id.channel_supervisors}")
+
 	public static Long CHANNEL_SUPERVISORS_ID;
 
 	/** The Constant CHANNEL_BAN_REQUESTS_QUEUE_ID. */
-	@Value("${properties.id.ban_request}")
+
 	public static Long CHANNEL_BAN_REQUESTS_QUEUE_ID;
 
 	/** The Constant TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT. */
-	@Value("${properties.time_wait}")
+
 	public static Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT;
 
 	/** The time wait online supervisor monitoring. */
@@ -53,6 +53,41 @@ public class Properties {
 	 */
 	public static void setTimeWaitOnlineSupervisorMonitoring(final Long newTimeWaitOnlineSupervisorMonitoring) {
 		timeWaitOnlineSupervisorMonitoring = newTimeWaitOnlineSupervisorMonitoring;
+	}
+
+	@Value("${properties.id.telegram}")
+	public static void setTelegramChatId(final String telegramChatId) {
+		TELEGRAM_CHAT_ID = telegramChatId;
+	}
+
+	@Value("${properties.id.robloxdiscord}")
+	public static void setRobloxDiscordId(final Long id) {
+		GUILD_ROBLOX_DISCORD_ID = id;
+	}
+
+	@Value("${properties.id.role_supervisor}")
+	public static void setCommunitySupervisorId(final Long id) {
+		ROLE_COMMUNITY_SUPERVISOR_ID = id;
+	}
+
+	@Value("${properties.id.channel_commands}")
+	public static void setChannelCommandsId(final Long id) {
+		CHANNEL_COMMANDS_ID = id;
+	}
+
+	@Value("${properties.id.channel_supervisors}")
+	public static void setChannelSupervisorsId(final Long id) {
+		CHANNEL_SUPERVISORS_ID = id;
+	}
+
+	@Value("${properties.id.ban_request}")
+	public static void setChannelBanRequestsQueueId(final Long id) {
+		CHANNEL_BAN_REQUESTS_QUEUE_ID = id;
+	}
+
+	@Value("${properties.time_wait}")
+	public static void setSupervisorMonitoringWait(final Long time) {
+		TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = time;
 	}
 
 }
