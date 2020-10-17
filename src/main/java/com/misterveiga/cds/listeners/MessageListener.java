@@ -5,17 +5,17 @@ package com.misterveiga.cds.listeners;
 
 import java.util.concurrent.TimeUnit;
 
-import com.misterveiga.cds.utils.enums.CDSRole;
-import net.dv8tion.jda.api.entities.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
+import com.misterveiga.cds.utils.enums.CDSRole;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -46,17 +46,18 @@ public class MessageListener extends ListenerAdapter {
 
 		boolean hasSentMessage = false;
 
-		for(CDSRole cdsRole: CDSRole.values()){
-			Role role = RoleUtils.findRole(event.getMember(), cdsRole);
-			if(role != null){
+		for (final CDSRole cdsRole : CDSRole.values()) {
+			final Role role = RoleUtils.findRole(event.getMember(), cdsRole);
+			if (role != null) {
 				log.debug("Message received from a " + RoleUtils.extractRoleName(cdsRole));
 				scanMessage(event.getMessage(), RoleUtils.roleMap.get(cdsRole));
 				hasSentMessage = true;
 				break;
 			}
 		}
-		if(!hasSentMessage)
+		if (!hasSentMessage) {
 			scanMessage(event.getMessage(), -1);
+		}
 	}
 
 	private void scanMessage(final Message message, final int i) {
@@ -83,11 +84,9 @@ public class MessageListener extends ListenerAdapter {
 			} else {
 				sendUnknownCommandMessage(message, authorMention);
 			}
-			break;
 		case 2: // SCS
 		case 1: // CS
 		case 0: // TS
-			break;
 		case -1: // Member with no command roles.
 			break;
 		}
