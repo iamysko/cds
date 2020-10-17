@@ -16,6 +16,8 @@ import com.misterveiga.cds.listeners.ReactionListener;
 
 import net.dv8tion.jda.api.JDA;
 
+import static com.misterveiga.cds.utils.ApiMessages.*;
+
 /**
  * The Class Controller.
  */
@@ -50,7 +52,7 @@ public class Controller {
 	 */
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public @ResponseBody String ok() {
-		return "OK";
+		return OK;
 	}
 
 	/**
@@ -63,9 +65,9 @@ public class Controller {
 		if (jda.getRegisteredListeners().contains(discordUpListener)
 				&& jda.getRegisteredListeners().contains(discordDownListener)) {
 			jda.removeEventListener(discordUpListener, discordDownListener);
-			return "Discord uptime/downtime alerts have been disabled.";
+			return DISCORD_UP_DOWN_ALERTS_DISABLED;
 		}
-		return "Discord uptime/downtime alerts are already disabled.";
+		return DISCORD_UP_DOWN_ALERTS_ALREADY_DISABLED;
 	}
 
 	/**
@@ -78,9 +80,9 @@ public class Controller {
 		if (!jda.getRegisteredListeners().contains(discordUpListener)
 				&& !jda.getRegisteredListeners().contains(discordDownListener)) {
 			jda.addEventListener(discordUpListener, discordDownListener);
-			return "Discord uptime/downtime alerts have been enabled.";
+			return DISCORD_UP_DOWN_ALERTS_ENABLED;
 		}
-		return "Discord uptime/downtime alerts are already enabled.";
+		return DISCORD_UP_DOWN_ALERTS_ALREADY_ENABLED;
 	}
 
 	/**
@@ -92,9 +94,9 @@ public class Controller {
 	public @ResponseBody String enableMessageListener() {
 		if (!jda.getRegisteredListeners().contains(messageListener)) {
 			jda.addEventListener(messageListener);
-			return "Message Listener has been enabled.";
+			return MESSAGE_LISTENER_ENABLED;
 		}
-		return "Message Listener is already enabled.";
+		return MESSAGE_LISTENER_ALREADY_ENABLED;
 	}
 
 	/**
@@ -106,9 +108,9 @@ public class Controller {
 	public @ResponseBody String disableMessageListener() {
 		if (jda.getRegisteredListeners().contains(messageListener)) {
 			jda.removeEventListener(messageListener);
-			return "Message Listener has been disabled.";
+			return MESSAGE_LISTENER_DISABLED;
 		}
-		return "Message Listener is already disabled.";
+		return MESSAGE_LISTENER_ALREADY_DISABLED;
 	}
 
 	/**
@@ -120,9 +122,9 @@ public class Controller {
 	public @ResponseBody String enableReactionListener() {
 		if (!jda.getRegisteredListeners().contains(reactionListener)) {
 			jda.addEventListener(reactionListener);
-			return "Reaction Listener has been enabled.";
+			return REACTION_LISTENER_ENABLED;
 		}
-		return "Reaction Listener is already enabled.";
+		return REACTION_LISTENER_ALREADY_ENABLED;
 	}
 
 	/**
@@ -134,9 +136,9 @@ public class Controller {
 	public @ResponseBody String disableReactionListener() {
 		if (jda.getRegisteredListeners().contains(reactionListener)) {
 			jda.removeEventListener(reactionListener);
-			return "Reaction Listener has been disabled.";
+			return REACTION_LISTENER_DISABLED;
 		}
-		return "Reaction Listener is already disabled.";
+		return REACTION_LISTENER_ALREADY_DISABLED;
 	}
 
 }
