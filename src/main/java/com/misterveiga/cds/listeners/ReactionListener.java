@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +125,7 @@ public class ReactionListener extends ListenerAdapter {
 					}
 
 					muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-					clearMessages(messageAuthor, channel);
+					purgeMessagesInChannel(messageAuthor, channel);
 					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 					commandAction.setOffendingUserId(messageAuthor.getIdLong());
 					commandAction.setActionType("REACTION_QM_30");
@@ -147,7 +148,7 @@ public class ReactionListener extends ListenerAdapter {
 					}
 
 					muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-					clearMessages(messageAuthor, channel);
+					purgeMessagesInChannel(messageAuthor, channel);
 					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 					commandAction.setOffendingUserId(messageAuthor.getIdLong());
 					commandAction.setActionType("REACTION_QM_60");
@@ -316,9 +317,12 @@ public class ReactionListener extends ListenerAdapter {
 	 * @param channel       the channel
 	 */
 
-	private void clearMessages(final Member messageAuthor, final MessageChannel channel) {
-//		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
-//				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+	private void purgeMessagesInChannel(final Member messageAuthor, final MessageChannel channel) {
+		final List<Message> messagesToDelete = new ArrayList<>();
+		channel.getIterableHistory().stream()
+				.filter(message -> message.getAuthor().getIdLong() == messageAuthor.getIdLong()).limit(100)
+				.forEach((message) -> messagesToDelete.add(message));
+		channel.purgeMessages(messagesToDelete);
 	}
 
 }
