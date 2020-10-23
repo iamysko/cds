@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -318,8 +317,8 @@ public class ReactionListener extends ListenerAdapter {
 	 */
 
 	private void clearMessages(final Member messageAuthor, final MessageChannel channel) {
-		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
-				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
+//		channel.sendMessage(String.format(COMMAND_CLEAN_MESSAGES_USER, messageAuthor.getId()))
+//				.queue(message -> message.delete().queueAfter(3, TimeUnit.SECONDS));
 	}
 
 }
