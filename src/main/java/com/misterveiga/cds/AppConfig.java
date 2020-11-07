@@ -27,7 +27,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 /**
  * The Class AppConfig.
@@ -61,6 +63,10 @@ public class AppConfig {
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+		builder.disableCache(CacheFlag.ACTIVITY);
+		builder.setChunkingFilter(ChunkingFilter.NONE);
+		builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
+		builder.setLargeThreshold(50);
 		try {
 			final JDA jda = builder.build();
 			jda.awaitReady();
