@@ -319,14 +319,15 @@ public class ReactionListener extends ListenerAdapter {
 
 	private void purgeMessagesInChannel(final Member messageAuthor, final MessageChannel channel) {
 		final List<Message> messagesToDelete = new ArrayList<>();
-		final List<Message> messages = channel.getIterableHistory().takeAsync(200).join();
-		for (final Message message : messages) {
-			if (message.getAuthor().getIdLong() == messageAuthor.getIdLong()) {
-				messagesToDelete.add(message);
+		channel.getIterableHistory().takeAsync(200).thenAccept(messages -> {
+			for (final Message message : messages) {
+				if (message.getAuthor().getIdLong() == messageAuthor.getIdLong()) {
+					messagesToDelete.add(message);
+				}
 			}
-		}
-		log.info("Purging {} messages", messagesToDelete.size());
-		channel.purgeMessages(messagesToDelete);
+			log.info("Purging {} messages", messagesToDelete.size());
+			channel.purgeMessages(messagesToDelete);
+		});
 	}
 
 }
