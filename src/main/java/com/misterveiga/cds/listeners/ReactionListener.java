@@ -209,7 +209,7 @@ public class ReactionListener extends ListenerAdapter {
 		try {
 
 			final String rawMessage = message.getContentRaw();
-			final String offenderId = rawMessage.substring(rawMessage.indexOf('(') + 1, rawMessage.indexOf(')'));
+			final String offenderId = rawMessage.substring(rawMessage.indexOf("(`") + 1, rawMessage.indexOf("`)"));
 			final String offenseReason = rawMessage.split("```")[1];
 
 			final StringBuilder sb = new StringBuilder();
