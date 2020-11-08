@@ -38,6 +38,9 @@ public class MessageListener extends ListenerAdapter {
 	@Value("${cds.version}")
 	public String appVersion;
 
+	@Value("${cds.timestamp}")
+	public String appBuildTimestamp;
+
 	/**
 	 * On message received.
 	 *
@@ -111,7 +114,8 @@ public class MessageListener extends ListenerAdapter {
 	private void sendAboutMessage(final Message message, final String authorMention) {
 		message.getChannel()
 				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | About**")
-						.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion))
+						.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion)
+						.append("(built on ").append(appBuildTimestamp).append(")"))
 				.queue();
 	}
 
