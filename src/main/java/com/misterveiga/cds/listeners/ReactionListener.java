@@ -69,7 +69,8 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
 	/** The Constant COMMAND_BAN_USER_DEFAULT. */
-	private static final String COMMAND_BAN_USER_DEFAULT = ";ban %s %s";
+	private static final String COMMAND_BAN_USER_DEFAULT = ";forceban %s %s"; // XXX: RoSupervisor won't always
+																				// recognise user with ;ban
 
 	/** The Constant COMMAND_FORCEBAN_USER_DEFAULT. */
 	private static final String COMMAND_FORCEBAN_USER_DEFAULT = ";forceban %s %s";
