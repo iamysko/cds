@@ -209,19 +209,29 @@ public class ReactionListener extends ListenerAdapter {
 
 	private void approveCensoredBan(final Member reactee, final Message message, final TextChannel commandChannel) {
 
-		final String rawMessage = message.getContentRaw();
-		final String offenderId = rawMessage.substring(rawMessage.indexOf('(') + 1, rawMessage.indexOf(')'));
-		final String offenseReason = rawMessage.split("```")[1];
+		try {
 
-		final User userToBan = commandChannel.getJDA().getUserById(offenderId);
+			final String rawMessage = message.getContentRaw();
+			final String offenderId = rawMessage.substring(rawMessage.indexOf('(') + 1, rawMessage.indexOf(')'));
+			final String offenseReason = rawMessage.split("```")[1];
 
-		final StringBuilder sb = new StringBuilder();
-		sb.append("(Censored message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
-				.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
-		final String evidence = sb.toString();
+			final User userToBan = commandChannel.getJDA().getUserById(offenderId);
 
-		commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
-				.allowedMentions(new ArrayList<MentionType>()).queue();
+			final StringBuilder sb = new StringBuilder();
+			sb.append("(Censored message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
+					.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
+			final String evidence = sb.toString();
+
+			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
+					.allowedMentions(new ArrayList<MentionType>()).queue();
+
+		} catch (final IndexOutOfBoundsException e) {
+
+			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+					" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
+					.queue();
+
+		}
 
 	}
 
