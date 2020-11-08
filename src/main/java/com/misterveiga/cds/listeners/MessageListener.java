@@ -84,7 +84,6 @@ public class MessageListener extends ListenerAdapter {
 //			if (messageText.matches(RegexConstants.COMMAND_SET_COVERAGE_CHECK_TIMER)) {
 //				commandSetCoverageTimer(message, messageText, authorMention);
 //			} else 
-			break;
 		case 2: // SCS
 		case 1: // CS
 		case 0: // TS
