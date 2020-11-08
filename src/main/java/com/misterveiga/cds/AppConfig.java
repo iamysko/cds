@@ -39,6 +39,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 @PropertySource("classpath:application.properties")
 public class AppConfig {
 
+	/** The mongo database. */
 	@Value("${spring.data.mongodb.database}")
 	public String mongoDatabase;
 
@@ -119,6 +120,12 @@ public class AppConfig {
 		return new DiscordDownListener();
 	}
 
+	/**
+	 * Mongo template.
+	 *
+	 * @return the mongo template
+	 * @throws UnknownHostException the unknown host exception
+	 */
 	@Bean
 	MongoTemplate mongoTemplate() throws UnknownHostException {
 		return new MongoTemplate(new MongoClient("127.0.0.1"), "rdss");

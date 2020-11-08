@@ -161,10 +161,19 @@ public class ReactionListener extends ListenerAdapter {
 
 			case ID_REACTION_APPROVE_BAN_REQUEST:
 
-				if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID && RoleUtils.isAnyRole(
-						event.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+				if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
-					approveBanRequest(reactee, message, commandChannel);
+					if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
+
+						approveBanRequest(reactee, message, commandChannel);
+
+					} else if (event.getChannel().getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID) {
+
+						approveCensoredBan(reactee, message, commandChannel);
+
+					}
+
 					commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
 					log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
 							reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
@@ -195,6 +204,24 @@ public class ReactionListener extends ListenerAdapter {
 			cdsData.insertAction(commandAction);
 
 		});
+
+	}
+
+	private void approveCensoredBan(final Member reactee, final Message message, final TextChannel commandChannel) {
+
+		final String rawMessage = message.getContentRaw();
+		final String offenderId = rawMessage.substring(rawMessage.indexOf('(') + 1, rawMessage.indexOf(')'));
+		final String offenseReason = rawMessage.split("```")[1];
+
+		final User userToBan = commandChannel.getJDA().getUserById(offenderId);
+
+		final StringBuilder sb = new StringBuilder();
+		sb.append("(Censored message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
+				.append(reactee.getId()).append(")) Content: ").append(offenseReason);
+		final String evidence = sb.toString();
+
+		commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
+				.allowedMentions(new ArrayList<MentionType>()).queue();
 
 	}
 
@@ -255,9 +282,11 @@ public class ReactionListener extends ListenerAdapter {
 			final String userToBan = banRequestMessageContent[1];
 
 			if (banRequestMessageContent[0].equalsIgnoreCase(";ban")) {
-				commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence)).queue();
+				commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
+						.allowedMentions(new ArrayList<MentionType>()).queue();
 			} else if (banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
-				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence)).queue();
+				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence))
+						.allowedMentions(new ArrayList<MentionType>()).queue();
 			} else {
 				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
 						" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
@@ -316,7 +345,6 @@ public class ReactionListener extends ListenerAdapter {
 	 * @param messageAuthor the message author
 	 * @param channel       the channel
 	 */
-
 	private void purgeMessagesInChannel(final Member messageAuthor, final MessageChannel channel) {
 		final List<Message> messagesToDelete = new ArrayList<>();
 		channel.getIterableHistory().takeAsync(200).thenAccept(messages -> {
