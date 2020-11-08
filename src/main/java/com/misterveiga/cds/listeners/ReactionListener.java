@@ -217,7 +217,7 @@ public class ReactionListener extends ListenerAdapter {
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("(Censored message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
-				.append(reactee.getId()).append(")) Content: ").append(offenseReason);
+				.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
 		final String evidence = sb.toString();
 
 		commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
