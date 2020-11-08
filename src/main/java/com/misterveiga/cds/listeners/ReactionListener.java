@@ -215,14 +215,12 @@ public class ReactionListener extends ListenerAdapter {
 			final String offenderId = rawMessage.substring(rawMessage.indexOf('(') + 1, rawMessage.indexOf(')'));
 			final String offenseReason = rawMessage.split("```")[1];
 
-			final User userToBan = commandChannel.getJDA().getUserById(offenderId);
-
 			final StringBuilder sb = new StringBuilder();
 			sb.append("(Censored message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
 					.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
 			final String evidence = sb.toString();
 
-			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
+			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, offenderId, evidence))
 					.allowedMentions(new ArrayList<MentionType>()).queue();
 
 		} catch (final IndexOutOfBoundsException e) {
