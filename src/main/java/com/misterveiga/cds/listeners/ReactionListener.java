@@ -228,7 +228,7 @@ public class ReactionListener extends ListenerAdapter {
 		} catch (final IndexOutOfBoundsException e) {
 
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-					" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
+					" an unknown error occurred with your censored log ban approval. Please run the command manually."))
 					.queue();
 
 		}
