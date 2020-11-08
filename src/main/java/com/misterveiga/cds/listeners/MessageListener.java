@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
@@ -30,6 +31,12 @@ public class MessageListener extends ListenerAdapter {
 
 	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(MessageListener.class);
+
+	@Value("${cds.name}")
+	public String appName;
+
+	@Value("${cds.version}")
+	public String appVersion;
 
 	/**
 	 * On message received.
@@ -77,16 +84,18 @@ public class MessageListener extends ListenerAdapter {
 //			if (messageText.matches(RegexConstants.COMMAND_SET_COVERAGE_CHECK_TIMER)) {
 //				commandSetCoverageTimer(message, messageText, authorMention);
 //			} else 
-			if (messageText.matches(RegexConstants.COMMAND_HELP)
-					|| messageText.matches(RegexConstants.COMMAND_HELP_ALT)) {
-				sendHelpMessage(message, authorMention);
-			} else {
-				sendUnknownCommandMessage(message, authorMention);
-			}
 			break;
 		case 2: // SCS
 		case 1: // CS
 		case 0: // TS
+			if (messageText.matches(RegexConstants.COMMAND_HELP)
+					|| messageText.matches(RegexConstants.COMMAND_HELP_ALT)) {
+				sendHelpMessage(message, authorMention);
+			} else if (messageText.matches(RegexConstants.COMMAND_ABOUT)) {
+				sendAboutMessage(message, authorMention);
+			} else {
+				sendUnknownCommandMessage(message, authorMention);
+			}
 			break;
 		case -1: // Member with no command roles.
 			break;
@@ -97,6 +106,13 @@ public class MessageListener extends ListenerAdapter {
 		message.getChannel()
 				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
 						.append("\nPrefix for all commands: `rdss:<command>`").append("\nNothing to see here..."))
+				.queue();
+	}
+
+	private void sendAboutMessage(final Message message, final String authorMention) {
+		message.getChannel()
+				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | About**")
+						.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion))
 				.queue();
 	}
 
