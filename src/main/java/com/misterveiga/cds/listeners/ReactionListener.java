@@ -75,9 +75,6 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant COMMAND_FORCEBAN_USER_DEFAULT. */
 	private static final String COMMAND_FORCEBAN_USER_DEFAULT = ";forceban %s %s";
 
-	/** The Constant COMMAND_CLEAN_MESSAGES_USER. */
-	private static final String COMMAND_CLEAN_MESSAGES_USER = "-purge user %s";
-
 	/** The Constant COMMAND_REASON. */
 	private static final String COMMAND_REASON = "(By %s (%s)) Message Evidence: %s";
 
