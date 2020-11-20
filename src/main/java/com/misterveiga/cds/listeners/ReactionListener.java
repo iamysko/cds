@@ -11,6 +11,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -351,13 +352,11 @@ public class ReactionListener extends ListenerAdapter {
 	 * @param channel       the channel
 	 */
 	private void purgeMessagesInChannel(final Member messageAuthor, final MessageChannel channel) {
-		final List<Message> messagesToDelete = new ArrayList<>();
 		channel.getIterableHistory().takeAsync(200).thenAccept(messages -> {
-			for (final Message message : messages) {
-				if (message.getAuthor().getIdLong() == messageAuthor.getIdLong()) {
-					messagesToDelete.add(message);
-				}
-			}
+			final List<Message> messagesToDelete = messages.stream()
+					.filter(msg -> msg.getAuthor().getIdLong() == messageAuthor.getIdLong())
+					.collect(Collectors.toList());
+
 			log.debug("Purging {} messages", messagesToDelete.size());
 			channel.purgeMessages(messagesToDelete);
 		});
