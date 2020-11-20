@@ -126,8 +126,8 @@ public class ReactionListener extends ListenerAdapter {
 					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 					commandAction.setOffendingUserId(messageAuthor.getIdLong());
 					commandAction.setActionType("REACTION_QM_30");
-					log.info("[Reaction Command] 30m Quick-Mute executed by {} on {} for Message\"{}\"",
-							reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
+					log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}", reactee.getUser().getAsTag(),
+							messageAuthor.getUser().getAsTag());
 
 				}
 
@@ -149,8 +149,8 @@ public class ReactionListener extends ListenerAdapter {
 					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 					commandAction.setOffendingUserId(messageAuthor.getIdLong());
 					commandAction.setActionType("REACTION_QM_60");
-					log.info("[Reaction Command] 1h Quick-Mute executed by {} on {} for Message\"{}\"",
-							reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag(), message.getContentRaw());
+					log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}", reactee.getUser().getAsTag(),
+							messageAuthor.getUser().getAsTag());
 
 				}
 
@@ -358,7 +358,7 @@ public class ReactionListener extends ListenerAdapter {
 					messagesToDelete.add(message);
 				}
 			}
-			log.info("Purging {} messages", messagesToDelete.size());
+			log.debug("Purging {} messages", messagesToDelete.size());
 			channel.purgeMessages(messagesToDelete);
 		});
 	}

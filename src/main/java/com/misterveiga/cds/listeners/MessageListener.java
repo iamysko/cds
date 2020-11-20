@@ -3,13 +3,10 @@
  */
 package com.misterveiga.cds.listeners;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -81,9 +78,6 @@ public class MessageListener extends ListenerAdapter {
 
 		switch (i) {
 		case 3: // MGMT
-//			if (messageText.matches(RegexConstants.COMMAND_SET_COVERAGE_CHECK_TIMER)) {
-//				commandSetCoverageTimer(message, messageText, authorMention);
-//			} else 
 		case 2: // SCS
 		case 1: // CS
 		case 0: // TS
@@ -110,8 +104,9 @@ public class MessageListener extends ListenerAdapter {
 
 	private void sendAboutMessage(final Message message, final String authorMention) {
 		message.getChannel()
-				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | About**")
-						.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion))
+				.sendMessage(new StringBuilder().append(authorMention).append(" **Community Discord Services | About**")
+						.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion)
+						.append("\n*Collaborate: https://github.com/misterveiga/cds*"))
 				.queue();
 	}
 
@@ -120,28 +115,6 @@ public class MessageListener extends ListenerAdapter {
 				.sendMessage(new StringBuilder().append(authorMention)
 						.append(" Sorry, I don't know that command.\n*Use rdss:? or rdss:help for assistance.*"))
 				.queue();
-	}
-
-	private void commandSetCoverageTimer(final Message message, final String messageText, final String authorMention) {
-		final String[] contents = messageText.split(" ");
-		try {
-			final Integer newDuration = Integer.parseInt(contents[1]);
-			if (newDuration > 0) {
-				Properties.setTimeWaitOnlineSupervisorMonitoring(TimeUnit.MINUTES.toMillis(newDuration));
-				message.getChannel()
-						.sendMessage(new StringBuilder().append(authorMention)
-								.append(" Supervisor Monitoring check interval set to ").append(newDuration)
-								.append(" minutes. Effective on next check."))
-						.queue();
-			} else {
-				message.getChannel().sendMessage(new StringBuilder().append(authorMention).append(
-						" Supervisor Monitoring check interval must be at least 1 minute.\n[SYNTAX: `rdss:set_coverage_timer 1-9999`"))
-						.queue();
-			}
-		} catch (final NumberFormatException e) {
-			message.getChannel().sendMessage(new StringBuilder().append(authorMention)
-					.append(" Incorrect value. SYNTAX: `rdss:set_coverage_timer 1-9999`")).queue();
-		}
 	}
 
 }

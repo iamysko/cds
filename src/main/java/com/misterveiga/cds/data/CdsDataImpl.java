@@ -21,7 +21,7 @@ public class CdsDataImpl {
 
 	public void insertAction(final Action commandAction) {
 		this.mongoTemplate.insert(commandAction);
-		log.info("Perstisted action {}", commandAction);
+		log.debug("Perstisted action {}", commandAction);
 	}
 
 }
