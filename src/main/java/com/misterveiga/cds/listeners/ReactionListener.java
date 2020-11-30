@@ -66,6 +66,12 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
 	private static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
 
+<<<<<<< Updated upstream
+=======
+	/** The Constant ID_REACTION_PURGE_MESSAGES. */
+	private static final String ID_REACTION_PURGE_MESSAGES = "783030737552670801"; // Purge messages emoji
+
+>>>>>>> Stashed changes
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
