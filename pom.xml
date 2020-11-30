@@ -4,7 +4,7 @@
 
     <groupId>com.misterveiga</groupId>
     <artifactId>CDS</artifactId>
-    <version>1.4.7</version>
+    <version>1.4.8</version>
     <packaging>jar</packaging>
 
 	<name>Community Discord Services</name>
