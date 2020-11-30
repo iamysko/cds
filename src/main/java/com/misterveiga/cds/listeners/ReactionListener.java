@@ -48,6 +48,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 @PropertySource("classpath:application.properties")
 public class ReactionListener extends ListenerAdapter {
 
+	/** The cds data. */
 	@Autowired
 	public CdsDataImpl cdsData;
 
@@ -66,6 +67,9 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
 	private static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
 
+	/** The Constant ID_REACTION_PURGE_MESSAGES. */
+	private static final String ID_REACTION_PURGE_MESSAGES = "783031741072932905"; // Purge messages emoji
+
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";
 
@@ -78,6 +82,7 @@ public class ReactionListener extends ListenerAdapter {
 	/** The Constant COMMAND_REASON. */
 	private static final String COMMAND_REASON = "(By %s (%s)) Message Evidence: %s";
 
+	/** The Constant COMMAND_UNMUTE_USER_DEFAULT. */
 	private static final String COMMAND_UNMUTE_USER_DEFAULT = ";unmute %s";
 
 	/**
@@ -110,6 +115,28 @@ public class ReactionListener extends ListenerAdapter {
 			commandAction.setDiscordId(reactee.getIdLong());
 
 			switch (emoteId) {
+
+			case ID_REACTION_PURGE_MESSAGES:
+
+				if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+						RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+					if (RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+							RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
+								.append(" you cannot run commands on server staff.")).queue();
+						return; // Do nothing.
+					}
+
+					purgeMessagesInChannel(messageAuthor, channel);
+					commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+					commandAction.setOffendingUserId(messageAuthor.getIdLong());
+					commandAction.setActionType("REACTION_PURGE_MESSAGES");
+					log.info("[Reaction Command] Message purge executed by {} on {}", reactee.getUser().getAsTag(),
+							messageAuthor.getUser().getAsTag());
+				}
+
+				break;
 
 			case ID_REACTION_QM_30:
 
@@ -205,6 +232,13 @@ public class ReactionListener extends ListenerAdapter {
 
 	}
 
+	/**
+	 * Approve censored ban.
+	 *
+	 * @param reactee        the reactee
+	 * @param message        the message
+	 * @param commandChannel the command channel
+	 */
 	private void approveCensoredBan(final Member reactee, final Message message, final TextChannel commandChannel) {
 
 		try {
@@ -231,6 +265,13 @@ public class ReactionListener extends ListenerAdapter {
 
 	}
 
+	/**
+	 * Reject ban request.
+	 *
+	 * @param reactee        the reactee
+	 * @param message        the message
+	 * @param commandChannel the command channel
+	 */
 	private void rejectBanRequest(final Member reactee, final Message message, final TextChannel commandChannel) {
 		try {
 
@@ -267,7 +308,7 @@ public class ReactionListener extends ListenerAdapter {
 	}
 
 	/**
-	 * Ban user.
+	 * Approve ban request.
 	 *
 	 * @param reactee        the reactee
 	 * @param message        the message
@@ -346,7 +387,7 @@ public class ReactionListener extends ListenerAdapter {
 	}
 
 	/**
-	 * Clear messages.
+	 * Purge messages in channel.
 	 *
 	 * @param messageAuthor the message author
 	 * @param channel       the channel
