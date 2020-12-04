@@ -34,6 +34,12 @@ public class TelegramService {
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(TelegramService.class);
 
+	/** The Constant CDS_START. */
+	public static final String CDS_START = "CDS is now connected to Discord. Please give me a few seconds to settle in!";
+
+	/** The Constant CDS_END. */
+	public static final String CDS_END = "CDS has disconnected from Discord. If you don't hear from me shortly, please call my dad for help.";
+
 	/** The Constant DOWNTIME_ALERT. */
 	public static final String DOWNTIME_ALERT = "**Downtime Alert** | The Roblox Discord is currently experiencing downtime.";
 

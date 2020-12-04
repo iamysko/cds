@@ -6,6 +6,7 @@ package com.misterveiga.cds;
 import java.net.UnknownHostException;
 import java.time.Instant;
 
+import javax.annotation.PreDestroy;
 import javax.security.auth.login.LoginException;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -21,6 +23,7 @@ import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.telegram.TelegramService;
+import com.misterveiga.cds.utils.Properties;
 import com.mongodb.MongoClient;
 
 import net.dv8tion.jda.api.JDA;
@@ -54,6 +57,7 @@ public class AppConfig {
 	 * @return the jda
 	 */
 	@Bean
+	@DependsOn("telegramService")
 	JDA jda(@Qualifier("discordUpListner") final DiscordUpListener discordUpListener,
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
@@ -71,6 +75,8 @@ public class AppConfig {
 		try {
 			final JDA jda = builder.build();
 			jda.awaitReady();
+			jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).loadMembers();
+			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);
@@ -129,6 +135,11 @@ public class AppConfig {
 	@Bean
 	MongoTemplate mongoTemplate() throws UnknownHostException {
 		return new MongoTemplate(new MongoClient("127.0.0.1"), "rdss");
+	}
+
+	@PreDestroy
+	public void onExit() {
+		TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
 	}
 
 }
