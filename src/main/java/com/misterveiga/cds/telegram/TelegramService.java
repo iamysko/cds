@@ -4,10 +4,8 @@
 package com.misterveiga.cds.telegram;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.time.Instant;
@@ -68,18 +66,13 @@ public class TelegramService {
 			final URL url = new URL(urlString);
 			final URLConnection conn = url.openConnection();
 			final StringBuilder sb = new StringBuilder();
-			try (final InputStream is = new BufferedInputStream(conn.getInputStream());
-					final BufferedReader br = new BufferedReader(new InputStreamReader(is));) {
-				String inputLine = "";
-				while ((inputLine = br.readLine()) != null) {
-					sb.append(inputLine);
-				}
-				final String response = sb.toString();
-				log.info("Received response to Telegram bot: ", response);
+			try (final InputStream is = new BufferedInputStream(conn.getInputStream());) {
+				// Do nothing.
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 }
