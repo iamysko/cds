@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -57,8 +56,7 @@ public class AppConfig {
 	 * @return the jda
 	 */
 	@Bean
-	@DependsOn("telegramService")
-	JDA jda(@Qualifier("discordUpListner") final DiscordUpListener discordUpListener,
+	JDA jda(@Qualifier("discordUpListener") final DiscordUpListener discordUpListener,
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
