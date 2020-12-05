@@ -25,8 +25,11 @@ import com.misterveiga.cds.utils.Properties;
 @PropertySource("classpath:application.properties")
 public class TelegramService {
 
+	@Value("${telegram.token}")
+	private String telegramToken;
+
 	/** The telegram token. */
-	public static String telegramToken;
+	public static String TELEGRAM_TOKEN;
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(TelegramService.class);
@@ -58,7 +61,7 @@ public class TelegramService {
 	public static void sendToTelegram(final Instant instant, final String message) {
 		String urlString = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
 
-		urlString = String.format(urlString, telegramToken, Properties.TELEGRAM_CHAT_ID, message);
+		urlString = String.format(urlString, TelegramService.TELEGRAM_TOKEN, Properties.TELEGRAM_CHAT_ID, message);
 		log.warn("Sending to Telegram: {}", message);
 
 		try {
@@ -74,8 +77,9 @@ public class TelegramService {
 
 	}
 
-	public static void setTelegramToken(@Value("${telegram.token}") final String telegramToken) {
-		TelegramService.telegramToken = telegramToken;
+	@Value("${telegram.token}")
+	public static void setTelegramToken(final String telegramToken) {
+		TelegramService.TELEGRAM_TOKEN = telegramToken;
 	}
 
 }
