@@ -79,6 +79,7 @@ public class TelegramService {
 
 	@Value("${telegram.token}")
 	public static void setTelegramToken(final String telegramToken) {
+		log.info(telegramToken);
 		TelegramService.TELEGRAM_TOKEN = telegramToken;
 	}
 
