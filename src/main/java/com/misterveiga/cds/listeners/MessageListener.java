@@ -180,47 +180,60 @@ public class MessageListener extends ListenerAdapter {
 
 	private void executeBan(final TextChannel commandChannel, final Member author, final String authorMention,
 			final List<String> userIdsToBan, final String reason) {
-		for (final String userId : userIdsToBan) {
-			try {
-				commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
-					final BannedUser bannedUser = new BannedUser();
-					bannedUser.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
-					bannedUser.setModeratorUserId(author.getIdLong());
-					bannedUser.setModeratorDiscordTag(author.getUser().getAsTag());
-					bannedUser.setBannedUserId(Long.valueOf(userId));
-					bannedUser.setBannedUserDiscordTag(
-							commandChannel.getGuild().retrieveMemberById(userId).complete().getUser().getAsTag());
-					bannedUser.setBannedUserReason(reason);
+		try {
+			for (final String userId : userIdsToBan) {
+				final Long id = Long.valueOf(userId);
+				try {
+					commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
+						final BannedUser bannedUser = new BannedUser();
+						bannedUser.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+						bannedUser.setModeratorUserId(author.getIdLong());
+						bannedUser.setModeratorDiscordTag(author.getUser().getAsTag());
+						bannedUser.setBannedUserId(id);
+						bannedUser.setBannedUserDiscordTag(
+								commandChannel.getGuild().retrieveMemberById(userId).complete().getUser().getAsTag());
+						bannedUser.setBannedUserReason(reason);
 
-					member.ban(1, reason).queue(success -> {
-						cdsData.insertBannedUser(bannedUser);
+						member.ban(1, reason).queue(success -> {
+							cdsData.insertBannedUser(bannedUser);
+						});
+
 					});
-
-				});
-			} catch (final ErrorResponseException e) {
-				commandChannel
-						.sendMessage(new StringBuilder().append(authorMention)
-								.append("This user could not be banned (User ID not resolvable): ").append(userId))
-						.queue();
+				} catch (final ErrorResponseException e) {
+					commandChannel
+							.sendMessage(new StringBuilder().append(authorMention)
+									.append("This user could not be banned (User ID not resolvable): ").append(userId))
+							.queue();
+				}
 			}
+		} catch (final NumberFormatException e) {
+			commandChannel.sendMessage(new StringBuilder().append(authorMention)
+					.append("Command parameters incorrect. For more information, see -help or -?")).queue();
 		}
 	}
 
 	private void executeUnban(final TextChannel commandChannel, final String authorMention,
 			final List<String> userIdsToUnban) {
-		for (final String userId : userIdsToUnban) {
-			try {
-				commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
-					commandChannel.getGuild().unban(userId).queue(success -> {
-						cdsData.removeBannedUser(userId);
+		try {
+			for (final String userId : userIdsToUnban) {
+				final Long id = Long.valueOf(userId);
+				try {
+					commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
+						commandChannel.getGuild().unban(userId).queue(success -> {
+							cdsData.removeBannedUser(id);
+							commandChannel.sendMessage("Unbanned user " + userId);
+						});
 					});
-				});
-			} catch (final ErrorResponseException e) {
-				commandChannel
-						.sendMessage(new StringBuilder().append(authorMention)
-								.append("This user could not be banned (User ID not resolvable): ").append(userId))
-						.queue();
+				} catch (final ErrorResponseException e) {
+					commandChannel
+							.sendMessage(new StringBuilder().append(authorMention)
+									.append("This user could not be banned (User ID not resolvable): ").append(userId))
+							.queue();
+				}
 			}
+		} catch (final NumberFormatException e) {
+			commandChannel.sendMessage(new StringBuilder().append(authorMention)
+					.append("Command parameters incorrect. For more information, see -help or -?")).queue();
 		}
 	}
 

@@ -31,7 +31,7 @@ public class CdsDataImpl {
 		this.mongoTemplate.insert(bannedUser);
 	}
 
-	public void removeBannedUser(final String userId) {
+	public void removeBannedUser(final Long userId) {
 		final DBCollection banCollection = this.mongoTemplate.getCollection("bans");
 		final BasicDBObject query = new BasicDBObject();
 		query.append("bannedUserId", userId);
