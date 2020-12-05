@@ -12,21 +12,13 @@ import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 import com.misterveiga.cds.utils.Properties;
 
 /**
  * The Class TelegramService.
  */
-@Component
-@PropertySource("classpath:application.properties")
 public class TelegramService {
-
-	@Value("${telegram.token}")
-	public String telegramToken;
 
 	/** The telegram token. */
 	public static String TELEGRAM_TOKEN;
@@ -52,6 +44,10 @@ public class TelegramService {
 	/** The Constant ERROR_WAIT_JDA. */
 	public static final String ERROR_WAIT_JDA = "Error awaiting JDA.";
 
+	public TelegramService(final String telegramToken) {
+		TelegramService.TELEGRAM_TOKEN = telegramToken;
+	}
+
 	/**
 	 * Send to telegram.
 	 *
@@ -75,11 +71,6 @@ public class TelegramService {
 			log.error(e.getMessage());
 		}
 
-	}
-
-	@Value("${telegram.token}")
-	public static void setTelegramToken(final String telegramToken) {
-		TelegramService.TELEGRAM_TOKEN = telegramToken;
 	}
 
 }

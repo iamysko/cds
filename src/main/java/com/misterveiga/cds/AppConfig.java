@@ -86,15 +86,10 @@ public class AppConfig {
 		return null;
 	}
 
-//	/**
-//	 * Reaction listener.
-//	 *
-//	 * @return the reaction listener
-//	 */
-//	@Bean
-//	ReactionListener reactionListener() {
-//		return new ReactionListener();
-//	}
+	@Bean
+	TelegramService telegramService(@Value("${telegram.token}") final String telegramToken) {
+		return new TelegramService(telegramToken);
+	}
 
 	/**
 	 * Message listener.
