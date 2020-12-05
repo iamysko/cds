@@ -216,7 +216,7 @@ public class ReactionListener extends ListenerAdapter {
 
 				cdsData.insertAction(commandAction);
 
-			}); // message.getMember(); //will not work if not cached. Find a different way.
+			});
 
 		});
 

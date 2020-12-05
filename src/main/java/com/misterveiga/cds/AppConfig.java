@@ -92,36 +92,6 @@ public class AppConfig {
 	}
 
 	/**
-	 * Message listener.
-	 *
-	 * @return the message listener
-	 */
-	@Bean
-	MessageListener messageListener() {
-		return new MessageListener();
-	}
-
-	/**
-	 * Discord up listner.
-	 *
-	 * @return the discord up listener
-	 */
-	@Bean
-	DiscordUpListener discordUpListner() {
-		return new DiscordUpListener();
-	}
-
-	/**
-	 * Discord down listener.
-	 *
-	 * @return the discord down listener
-	 */
-	@Bean
-	DiscordDownListener discordDownListener() {
-		return new DiscordDownListener();
-	}
-
-	/**
 	 * Mongo template.
 	 *
 	 * @return the mongo template

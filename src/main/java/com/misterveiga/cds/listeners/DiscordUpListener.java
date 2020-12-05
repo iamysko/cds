@@ -5,6 +5,8 @@ package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
 
+import org.springframework.stereotype.Component;
+
 import com.misterveiga.cds.telegram.TelegramService;
 import com.misterveiga.cds.utils.Properties;
 
@@ -20,6 +22,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  *
  * @see DiscordUpEvent
  */
+@Component
 public class DiscordUpListener extends ListenerAdapter {
 
 	/**

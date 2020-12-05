@@ -56,7 +56,6 @@ public class TelegramService {
 	 */
 	public static void sendToTelegram(final Instant instant, final String message) {
 		String urlString = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
-		log.info(TelegramService.TELEGRAM_TOKEN);
 		urlString = String.format(urlString, TelegramService.TELEGRAM_TOKEN, Properties.TELEGRAM_CHAT_ID, message);
 		log.warn("Sending to Telegram: {}", message);
 
