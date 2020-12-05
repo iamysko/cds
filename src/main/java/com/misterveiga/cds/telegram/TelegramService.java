@@ -26,7 +26,7 @@ import com.misterveiga.cds.utils.Properties;
 public class TelegramService {
 
 	@Value("${telegram.token}")
-	private String telegramToken;
+	public String telegramToken;
 
 	/** The telegram token. */
 	public static String TELEGRAM_TOKEN;
