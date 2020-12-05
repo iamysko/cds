@@ -86,15 +86,15 @@ public class AppConfig {
 		return null;
 	}
 
-	/**
-	 * Reaction listener.
-	 *
-	 * @return the reaction listener
-	 */
-	@Bean
-	ReactionListener reactionListener() {
-		return new ReactionListener();
-	}
+//	/**
+//	 * Reaction listener.
+//	 *
+//	 * @return the reaction listener
+//	 */
+//	@Bean
+//	ReactionListener reactionListener() {
+//		return new ReactionListener();
+//	}
 
 	/**
 	 * Message listener.
