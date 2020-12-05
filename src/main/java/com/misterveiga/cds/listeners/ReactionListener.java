@@ -107,13 +107,6 @@ public class ReactionListener extends ListenerAdapter {
 				if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
 						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 					return; // Do nothing.
-				} else if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-						RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)
-						&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-								RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
-					commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
-							.append(" you cannot run commands on server staff.")).queue();
-					return; // Do nothing.
 				}
 
 				final Action commandAction = new Action();
@@ -124,6 +117,8 @@ public class ReactionListener extends ListenerAdapter {
 				switch (emoteId) {
 
 				case ID_REACTION_PURGE_MESSAGES:
+
+					blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
 
 					if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
 							RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
@@ -139,6 +134,8 @@ public class ReactionListener extends ListenerAdapter {
 					break;
 
 				case ID_REACTION_QM_30:
+
+					blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
 
 					if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 							RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
@@ -156,6 +153,8 @@ public class ReactionListener extends ListenerAdapter {
 					break;
 
 				case ID_REACTION_QM_60:
+
+					blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
 
 					if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 							RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
@@ -392,6 +391,18 @@ public class ReactionListener extends ListenerAdapter {
 			log.debug("Purging {} messages", messagesToDelete.size());
 			channel.purgeMessages(messagesToDelete);
 		});
+	}
+
+	private void blockIfStaffOnStaff(final Member reactee, final Member messageAuthor,
+			final TextChannel commandChannel) {
+		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)
+				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
+					.append(" you cannot run commands on server staff.")).queue();
+			return; // Do nothing.
+		}
 	}
 
 }
