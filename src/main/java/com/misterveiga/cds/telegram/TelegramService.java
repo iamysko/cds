@@ -26,7 +26,6 @@ import com.misterveiga.cds.utils.Properties;
 public class TelegramService {
 
 	/** The telegram token. */
-	@Value("${telegram.token}")
 	public static String telegramToken;
 
 	/** The log. */
@@ -73,6 +72,10 @@ public class TelegramService {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static void setTelegramToken(@Value("${telegram.token}") final String telegramToken) {
+		TelegramService.telegramToken = telegramToken;
 	}
 
 }
