@@ -72,7 +72,7 @@ public class TelegramService {
 				// Do nothing.
 			}
 		} catch (final IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 
 	}
