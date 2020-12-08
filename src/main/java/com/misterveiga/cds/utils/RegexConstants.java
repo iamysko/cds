@@ -20,6 +20,8 @@ public class RegexConstants {
 
 	public static final String COMMAND_MUTE = "^-m\\s.*$";
 
+	public static final String COMMAND_UNMUTE = "^-um\\s.*$";
+
 	public static final String SHOW_BANNED_USERS = "^-show_bans$";
 
 }

@@ -11,6 +11,9 @@ public class Properties {
 	/** The Constant TELEGRAM_CHAT_ID. */
 	public static final String TELEGRAM_CHAT_ID = "-1001446733742";
 
+	/** The Constant ALERT_MODS_COOLDOWN. */
+	public static final Long ALERT_MODS_COOLDOWN = 30L; // Seconds
+
 	/** The Constant GUILD_ROBLOX_DISCORD_ID. */
 	public static final Long GUILD_ROBLOX_DISCORD_ID = 150074202727251969L;
 
@@ -28,6 +31,9 @@ public class Properties {
 
 	/** The Constant CHANNEL_CENSORED_AND_SPAM_LOGS_ID. */
 	public static final Long CHANNEL_CENSORED_AND_SPAM_LOGS_ID = 366624802024325120L;
+
+	/** The Constant CHANNEL_MOD_ALERTS_ID. */
+	public static final Long CHANNEL_MOD_ALERTS_ID = 785821764839669791L;
 
 	/** The Constant TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT. */
 	public static final Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = 3600000L;

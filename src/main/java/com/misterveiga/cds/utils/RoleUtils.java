@@ -5,6 +5,7 @@ package com.misterveiga.cds.utils;
 
 import java.util.List;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -33,6 +34,8 @@ public class RoleUtils {
 
 	/** The Constant ROLE_INFRASTRUCTURE. */
 	public static final String ROLE_INFRASTRUCTURE = "Infrastructure";
+
+	public static final String ROLE_MUTED = "Muted";
 
 	/**
 	 * Find role.
@@ -66,6 +69,18 @@ public class RoleUtils {
 		}
 
 		return false;
+
+	}
+
+	public static Role getRoleByName(final Guild guild, final String name) {
+
+		if (guild != null) {
+			final List<Role> roles = guild.getRoles();
+
+			return roles.stream().filter(role -> role.getName().equals(name)).findFirst().orElse(null);
+		}
+
+		return null;
 
 	}
 
