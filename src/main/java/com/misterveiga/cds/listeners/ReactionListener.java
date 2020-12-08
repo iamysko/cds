@@ -6,10 +6,7 @@
 package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,7 +107,7 @@ public class ReactionListener extends ListenerAdapter {
 				}
 
 				final Action commandAction = new Action();
-				commandAction.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+				commandAction.setDate(Instant.now());
 				commandAction.setUser(reactee.getUser().getAsTag());
 				commandAction.setDiscordId(reactee.getIdLong());
 

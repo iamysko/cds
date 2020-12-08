@@ -3,10 +3,8 @@
  */
 package com.misterveiga.cds.listeners;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +44,15 @@ public class MessageListener extends ListenerAdapter {
 	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(MessageListener.class);
 
+	/** The app name. */
 	@Value("${cds.name}")
 	public String appName;
 
+	/** The app version. */
 	@Value("${cds.version}")
 	public String appVersion;
 
+	/** The cds data. */
 	@Autowired
 	public CdsDataImpl cdsData;
 
@@ -83,6 +84,12 @@ public class MessageListener extends ListenerAdapter {
 		}
 	}
 
+	/**
+	 * Scan message.
+	 *
+	 * @param message the message
+	 * @param i       the i
+	 */
 	private void scanMessage(final Message message, final int i) {
 
 		final String messageText = message.getContentRaw();
@@ -150,6 +157,7 @@ public class MessageListener extends ListenerAdapter {
 
 			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // UNBAN (-show_bans)
 				// TODO: Show banned users from bans collection.
+
 			}
 
 		case 2: // SCS
@@ -178,6 +186,15 @@ public class MessageListener extends ListenerAdapter {
 		}
 	}
 
+	/**
+	 * Execute ban.
+	 *
+	 * @param commandChannel the command channel
+	 * @param author         the author
+	 * @param authorMention  the author mention
+	 * @param userIdsToBan   the user ids to ban
+	 * @param reason         the reason
+	 */
 	private void executeBan(final TextChannel commandChannel, final Member author, final String authorMention,
 			final List<String> userIdsToBan, final String reason) {
 		try {
@@ -186,7 +203,7 @@ public class MessageListener extends ListenerAdapter {
 				try {
 					commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
 						final BannedUser bannedUser = new BannedUser();
-						bannedUser.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+						bannedUser.setDate(Instant.now());
 						bannedUser.setModeratorUserId(author.getIdLong());
 						bannedUser.setModeratorDiscordTag(author.getUser().getAsTag());
 						bannedUser.setBannedUserId(id);
@@ -212,6 +229,13 @@ public class MessageListener extends ListenerAdapter {
 		}
 	}
 
+	/**
+	 * Execute unban.
+	 *
+	 * @param commandChannel the command channel
+	 * @param authorMention  the author mention
+	 * @param userIdsToUnban the user ids to unban
+	 */
 	private void executeUnban(final TextChannel commandChannel, final String authorMention,
 			final List<String> userIdsToUnban) {
 		try {
@@ -237,6 +261,12 @@ public class MessageListener extends ListenerAdapter {
 		}
 	}
 
+	/**
+	 * Gets the data from ban message.
+	 *
+	 * @param messageText the message text
+	 * @return the data from ban message
+	 */
 	private Map<String, String> getDataFromBanMessage(final String messageText) {
 
 		final Map<String, String> data = new HashMap<>();
@@ -267,6 +297,12 @@ public class MessageListener extends ListenerAdapter {
 		return data;
 	}
 
+	/**
+	 * Gets the data from unban message.
+	 *
+	 * @param messageText the message text
+	 * @return the data from unban message
+	 */
 	private Map<String, String> getDataFromUnbanMessage(final String messageText) {
 
 		final Map<String, String> data = new HashMap<>();
@@ -278,6 +314,12 @@ public class MessageListener extends ListenerAdapter {
 		return data;
 	}
 
+	/**
+	 * Send help message.
+	 *
+	 * @param message       the message
+	 * @param authorMention the author mention
+	 */
 	private void sendHelpMessage(final Message message, final String authorMention) {
 		message.getChannel()
 				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
@@ -287,6 +329,12 @@ public class MessageListener extends ListenerAdapter {
 				.queue();
 	}
 
+	/**
+	 * Send about message.
+	 *
+	 * @param message       the message
+	 * @param authorMention the author mention
+	 */
 	private void sendAboutMessage(final Message message, final String authorMention) {
 		message.getChannel()
 				.sendMessage(new StringBuilder().append(authorMention).append(" **Community Discord Services | About**")
@@ -295,6 +343,12 @@ public class MessageListener extends ListenerAdapter {
 				.queue();
 	}
 
+	/**
+	 * Send unknown command message.
+	 *
+	 * @param message       the message
+	 * @param authorMention the author mention
+	 */
 	private void sendUnknownCommandMessage(final Message message, final String authorMention) {
 		message.getChannel().sendMessage(new StringBuilder().append(authorMention)
 				.append(" Sorry, I don't know that command.\n*Use -? or -help for assistance.*")).queue();
