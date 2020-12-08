@@ -54,7 +54,7 @@ public class ReactionListener extends ListenerAdapter {
 	@Autowired
 	public CdsDataImpl cdsData;
 
-	private final Instant lastAlertTime = Instant.now();
+	private Instant lastAlertTime = Instant.now();
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
@@ -236,6 +236,7 @@ public class ReactionListener extends ListenerAdapter {
 	private void alertMods(final TextChannel alertChannel, final Member reactee, final Message message,
 			final Member messageAuthor, final Instant now) {
 		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
+			lastAlertTime = now;
 			alertChannel
 					.sendMessage(new StringBuilder()
 							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
@@ -244,7 +245,7 @@ public class ReactionListener extends ListenerAdapter {
 									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
 									.getAsMention())
 							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
-							.append(reactee.getId()).append("):\\n").append(message.getJumpUrl()))
+							.append(reactee.getId()).append("):\n").append(message.getJumpUrl()))
 					.queue(msg -> {
 						msg.delete().queueAfter(24, TimeUnit.HOURS);
 					});
