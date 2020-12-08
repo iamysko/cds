@@ -139,7 +139,7 @@ public class MessageListener extends ListenerAdapter {
 
 			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // LIST BANNED USERS (-show_bans)
 				// TODO: Show banned users from bans collection.
-			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_bans)
+			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_mutes)
 				// TODO: Show banned users from bans collection.
 			}
 
@@ -454,10 +454,14 @@ public class MessageListener extends ListenerAdapter {
 		message.getChannel()
 				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
 						.append("\nPrefix for all commands: `-<command>`")
+						.append("\nIf a command doesn't work for you, you may not have permission to run it.")
+						.append("\nHelp: \"-help\" or \"-?\"")
+						.append("\nWarn user(s): \"-w user1,user2,userN warning message (necessary)\"")
 						.append("\nMute user(s): \"-m user1,user2,userN XdXhXm reason (necessary)\"")
-						.append("\nUnmute user(s): \"-um user1,user2,userN\"").append("Help: \"-help\" or \"-?\"")
+						.append("\nUnmute user(s): \"-um user1,user2,userN\"")
 						.append("\nBan user(s): \"-b user1,user2,userN reason (optional)\"")
-						.append("\nUnban user(s): \"-ub user1,user2,userN\"").append("Help: \"-help\" or \"-?\""))
+						.append("\nUnban user(s): \"-ub user1,user2,userN\"")
+						.append("\nShow active bans: \"-show_bans\"").append("\nShow active mutes: \"-show_mutes\""))
 				.queue();
 	}
 
