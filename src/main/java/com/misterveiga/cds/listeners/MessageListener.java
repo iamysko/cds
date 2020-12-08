@@ -137,9 +137,10 @@ public class MessageListener extends ListenerAdapter {
 							.append(" User IDs must be provided to execute bans. For help, run -?")).queue();
 				}
 
-			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // UNBAN (-show_bans)
+			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // LIST BANNED USERS (-show_bans)
 				// TODO: Show banned users from bans collection.
-
+			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_bans)
+				// TODO: Show banned users from bans collection.
 			}
 
 		case 2: // SCS

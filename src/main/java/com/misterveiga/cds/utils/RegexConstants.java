@@ -24,4 +24,6 @@ public class RegexConstants {
 
 	public static final String SHOW_BANNED_USERS = "^-show_bans$";
 
+	public static final String SHOW_MUTED_USERS = "^-show_mutes$";
+
 }
