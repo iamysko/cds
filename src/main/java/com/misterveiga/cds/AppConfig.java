@@ -76,7 +76,7 @@ public class AppConfig {
 			final JDA jda = builder.build();
 			jda.awaitReady();
 			jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).loadMembers();
-			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
+			//TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);
