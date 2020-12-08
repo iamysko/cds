@@ -23,7 +23,6 @@ import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.telegram.TelegramService;
-import com.misterveiga.cds.utils.Properties;
 import com.mongodb.MongoClient;
 
 import net.dv8tion.jda.api.JDA;
@@ -67,7 +66,7 @@ public class AppConfig {
 		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+		builder.setMemberCachePolicy(MemberCachePolicy.NONE);
 		builder.disableCache(CacheFlag.ACTIVITY);
 		builder.setChunkingFilter(ChunkingFilter.NONE);
 		builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
@@ -75,8 +74,7 @@ public class AppConfig {
 		try {
 			final JDA jda = builder.build();
 			jda.awaitReady();
-			jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).loadMembers();
-			//TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
+			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);
