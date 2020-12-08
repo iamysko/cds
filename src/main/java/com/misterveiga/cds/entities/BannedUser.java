@@ -4,7 +4,7 @@
 package com.misterveiga.cds.entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,7 +41,7 @@ public class BannedUser implements Serializable {
 
 	/** The date. */
 	@JsonProperty
-	private Date date;
+	private Instant date;
 
 	/**
 	 * Gets the moderator user id.
@@ -138,7 +138,7 @@ public class BannedUser implements Serializable {
 	 *
 	 * @return the date
 	 */
-	public Date getDate() {
+	public Instant getDate() {
 		return date;
 	}
 
@@ -147,7 +147,7 @@ public class BannedUser implements Serializable {
 	 *
 	 * @param date the new date
 	 */
-	public void setDate(final Date date) {
+	public void setDate(final Instant date) {
 		this.date = date;
 	}
 

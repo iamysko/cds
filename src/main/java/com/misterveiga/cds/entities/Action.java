@@ -4,7 +4,7 @@
 package com.misterveiga.cds.entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,7 +41,7 @@ public class Action implements Serializable {
 
 	/** The action date. */
 	@JsonProperty
-	private Date date;
+	private Instant date;
 
 	public String getUser() {
 		return user;
@@ -83,11 +83,11 @@ public class Action implements Serializable {
 		this.offendingUserId = offendingUserId;
 	}
 
-	public Date getDate() {
+	public Instant getDate() {
 		return date;
 	}
 
-	public void setDate(final Date date) {
+	public void setDate(final Instant date) {
 		this.date = date;
 	}
 
