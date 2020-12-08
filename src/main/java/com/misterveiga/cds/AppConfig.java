@@ -62,7 +62,7 @@ public class AppConfig {
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
-			@Value("${jda.token}") final String jdaToken) {
+			@Value("${jda.token}") final String jdaToken, @Value("${developer.update-notes}") final String devNote) {
 		final JDABuilder builder = JDABuilder.createDefault(jdaToken);
 		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
@@ -76,7 +76,7 @@ public class AppConfig {
 			final JDA jda = builder.build();
 			jda.awaitReady();
 			jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).loadMembers();
-			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START);
+			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);

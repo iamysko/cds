@@ -8,9 +8,11 @@ package com.misterveiga.cds.listeners;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -52,8 +54,12 @@ public class ReactionListener extends ListenerAdapter {
 	@Autowired
 	public CdsDataImpl cdsData;
 
+	private final Instant lastAlertTime = Instant.now();
+
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
+
+	private static final String ID_REACTION_ALERT_MODS = "625429388229345280"; // Alert mods emoji
 
 	/** The Constant ID_REACTION_QM_30. */
 	private static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
@@ -103,6 +109,11 @@ public class ReactionListener extends ListenerAdapter {
 
 		event.retrieveMessage().queue(message -> {
 			event.getGuild().retrieveMemberById(message.getAuthor().getId()).queue(messageAuthor -> {
+
+				if (emoteId.equals(ID_REACTION_ALERT_MODS)) {
+					alertMods(event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee, message,
+							messageAuthor, Instant.now());
+				}
 
 				if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
 						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
@@ -216,10 +227,28 @@ public class ReactionListener extends ListenerAdapter {
 
 				cdsData.insertAction(commandAction);
 
-			}); // message.getMember(); //will not work if not cached. Find a different way.
+			});
 
 		});
 
+	}
+
+	private void alertMods(final TextChannel alertChannel, final Member reactee, final Message message,
+			final Member messageAuthor, final Instant now) {
+		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
+			alertChannel
+					.sendMessage(new StringBuilder()
+							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
+							.append(" ")
+							.append(RoleUtils
+									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+									.getAsMention())
+							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
+							.append(reactee.getId()).append("):\\n").append(message.getJumpUrl()))
+					.queue(msg -> {
+						msg.delete().queueAfter(24, TimeUnit.HOURS);
+					});
+		}
 	}
 
 	/**
