@@ -101,8 +101,8 @@ public class ReactionListener extends ListenerAdapter {
 
 		final String emoteId = emote.isEmote() ? emote.getId() : "";
 
-		event.retrieveMessage().queue(message -> {
-			event.getGuild().retrieveMemberById(message.getAuthor().getId()).queue(messageAuthor -> {
+		event.retrieveMessage().queue((message) -> {
+			event.getGuild().retrieveMemberById(message.getAuthor().getId()).queue((messageAuthor) -> {
 
 				if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
 						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
@@ -216,8 +216,13 @@ public class ReactionListener extends ListenerAdapter {
 
 				cdsData.insertAction(commandAction);
 
+			}, (failure) -> {
+				log.error("An error occurred obtaining a reaction event's message author. Details: {}",
+						failure.getMessage());
 			});
 
+		}, (failure) -> {
+			log.error("An error occurred obtaining a reaction event's message. Details: {}", failure.getMessage());
 		});
 
 	}
