@@ -73,8 +73,6 @@ public class AppConfig {
 		try {
 			final JDA jda = builder.build();
 			jda.awaitReady();
-			jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).loadMembers();
-			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);
@@ -85,8 +83,9 @@ public class AppConfig {
 	}
 
 	@Bean
-	TelegramService telegramService(@Value("${telegram.token}") final String telegramToken) {
-		return new TelegramService(telegramToken);
+	TelegramService telegramService(@Value("${telegram.token}") final String telegramToken,
+			@Value("${developer.update-notes}") final String devNote) {
+		return new TelegramService(telegramToken, devNote);
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class AppConfig {
 
 	@PreDestroy
 	public void onExit() {
-		TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
+		// TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
 	}
 
 }
