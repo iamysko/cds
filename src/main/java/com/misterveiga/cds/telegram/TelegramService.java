@@ -63,7 +63,6 @@ public class TelegramService {
 		try {
 			final URL url = new URL(urlString);
 			final URLConnection conn = url.openConnection();
-			final StringBuilder sb = new StringBuilder();
 			try (final InputStream is = new BufferedInputStream(conn.getInputStream());) {
 				// Do nothing.
 			}

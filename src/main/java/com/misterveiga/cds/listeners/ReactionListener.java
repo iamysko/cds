@@ -68,10 +68,10 @@ public class ReactionListener extends ListenerAdapter {
 	private static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
-	private static final String ID_REACTION_APPROVE_BAN_REQUEST = "762388343253106688"; // Ban request approval emoji
+	private static final String ID_REACTION_APPROVE = "762388343253106688"; // Ban request approval emoji
 
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
-	private static final String ID_REACTION_REJECT_BAN_REQUEST = "764268551473070080"; // Ban request rejection emoji
+	private static final String ID_REACTION_REJECT = "764268551473070080"; // Ban request rejection emoji
 
 	/** The Constant ID_REACTION_PURGE_MESSAGES. */
 	private static final String ID_REACTION_PURGE_MESSAGES = "783030737552670801"; // Purge messages emoji
@@ -182,10 +182,16 @@ public class ReactionListener extends ListenerAdapter {
 
 					break;
 
-				case ID_REACTION_APPROVE_BAN_REQUEST:
+				case ID_REACTION_APPROVE: // Used for ban requests, filtered log bans, and mod alerts.
 
 					if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
 							RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+
+						if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+							clearAlert(commandChannel,
+									event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
+									message, messageAuthor, Instant.now());
+						}
 
 						if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
 
@@ -201,11 +207,18 @@ public class ReactionListener extends ListenerAdapter {
 						log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
 								reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
+					} else if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+							RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+						if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+							clearAlert(commandChannel,
+									event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
+									message, messageAuthor, Instant.now());
+						}
 					}
 
 					break;
 
-				case ID_REACTION_REJECT_BAN_REQUEST:
+				case ID_REACTION_REJECT:
 
 					if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID
 							&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
@@ -247,9 +260,14 @@ public class ReactionListener extends ListenerAdapter {
 							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
 							.append(reactee.getId()).append("):\n").append(message.getJumpUrl()))
 					.queue(msg -> {
-						msg.delete().queueAfter(24, TimeUnit.HOURS);
+						msg.delete().queueAfter(2, TimeUnit.HOURS);
 					});
 		}
+	}
+
+	private void clearAlert(final TextChannel commandChannel, final TextChannel alertChannel, final Member reactee,
+			final Message message, final Member messageAuthor, final Instant now) {
+		message.delete().queue();
 	}
 
 	/**
@@ -302,7 +320,7 @@ public class ReactionListener extends ListenerAdapter {
 			final StringBuilder sb = new StringBuilder();
 
 			sb.append(message.getAuthor().getAsMention())
-					.append(commandChannel.getJDA().getEmoteById(ID_REACTION_REJECT_BAN_REQUEST).getAsMention())
+					.append(commandChannel.getJDA().getEmoteById(ID_REACTION_REJECT).getAsMention())
 					.append(" Your ban request against ")
 					.append(reportedUser == null ? reportedUserId : reportedUser.getAsMention()).append(" (")
 					.append(reportedUser == null ? "who has left the server" : reportedUser.getId())
