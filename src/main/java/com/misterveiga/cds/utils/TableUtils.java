@@ -28,16 +28,20 @@ public class TableUtils {
 		final TableModel model = new DefaultTableModel(data, columnNames);
 
 		final JTable table = new JTable(model);
+		table.setSize(table.getPreferredSize());
 
 		final JTableHeader header = table.getTableHeader();
-		// final int totalWidth = header.getWidth() + table.getWidth();
-		// final int totalHeight = header.getHeight() + table.getHeight();
+		header.setSize(header.getPreferredSize());
 
-		final BufferedImage tableImage = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
+		final int totalWidth = header.getWidth() + table.getWidth();
+		final int totalHeight = header.getHeight() + table.getHeight();
+
+		final BufferedImage tableImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g2D = tableImage.createGraphics();
 		header.paint(g2D);
 		g2D.translate(0, header.getHeight());
 		table.paint(g2D);
+		g2D.dispose();
 
 		return tableImage;
 

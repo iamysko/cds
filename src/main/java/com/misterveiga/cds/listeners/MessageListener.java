@@ -125,7 +125,7 @@ public class MessageListener extends ListenerAdapter {
 				if (!CollectionUtils.isEmpty(userIdsToBan)) {
 					executeBan(commandChannel, author, authorMention, userIdsToBan, reason);
 				} else {
-					commandChannel.sendMessage(new StringBuilder().append(authorMention)
+					message.getChannel().sendMessage(new StringBuilder().append(authorMention)
 							.append(" User IDs must be provided to execute bans. For help, run -?")).queue();
 				}
 
@@ -138,7 +138,7 @@ public class MessageListener extends ListenerAdapter {
 				if (!CollectionUtils.isEmpty(userIdsToUnban)) {
 					executeUnban(commandChannel, authorMention, userIdsToUnban);
 				} else {
-					commandChannel
+					message.getChannel()
 							.sendMessage(new StringBuilder().append(authorMention)
 									.append(" User IDs must be provided to execute bans. For help, run rdss:?"))
 							.queue();
@@ -162,7 +162,7 @@ public class MessageListener extends ListenerAdapter {
 				try {
 					final File generatedImage = new File("banned_users.jpg");
 					ImageIO.write(TableUtils.createImageFromData(tableData, headers), "jpg", generatedImage);
-					commandChannel.sendFile(generatedImage, "banned_users.jpg").queue();
+					message.getChannel().sendFile(generatedImage, "banned_users.jpg").queue();
 				} catch (final IOException e) {
 					log.error("Banned users table image could not be generated. Sending plaintext version.");
 					final StringBuilder sb = new StringBuilder();
@@ -179,7 +179,7 @@ public class MessageListener extends ListenerAdapter {
 								.append(bannedUser.getBannedUserReason());
 					});
 					sb.append("```");
-					commandChannel.sendMessage(sb.toString()).queue();
+					message.getChannel().sendMessage(sb.toString()).queue();
 				}
 
 			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_mutes)
@@ -201,7 +201,7 @@ public class MessageListener extends ListenerAdapter {
 				try {
 					final File generatedImage = new File("muted_users.jpg");
 					ImageIO.write(TableUtils.createImageFromData(tableData, headers), "jpg", generatedImage);
-					commandChannel.sendFile(generatedImage, "muted_users.jpg").queue();
+					message.getChannel().sendFile(generatedImage, "muted_users.jpg").queue();
 				} catch (final IOException e) {
 					log.error("Muted users table image could not be generated. Sending plaintext version.");
 					final StringBuilder sb = new StringBuilder();
@@ -218,7 +218,7 @@ public class MessageListener extends ListenerAdapter {
 								.append(mutedUser.getMuteReason());
 					});
 					sb.append("```");
-					commandChannel.sendMessage(sb.toString()).queue();
+					message.getChannel().sendMessage(sb.toString()).queue();
 				}
 			}
 
@@ -233,7 +233,7 @@ public class MessageListener extends ListenerAdapter {
 				final Map<String, String> data = getDataFromMuteMessage(messageText);
 				final String reason = data.get("reason");
 				if (reason.isEmpty()) {
-					commandChannel.sendMessage(new StringBuilder().append(authorMention)
+					message.getChannel().sendMessage(new StringBuilder().append(authorMention)
 							.append(" Mutes must always include evidence. For more help, run rdss:?")).queue();
 				} else {
 					final List<String> userIdsToMute = Arrays.asList(data.get("users").split(",")).stream().distinct()
@@ -244,13 +244,13 @@ public class MessageListener extends ListenerAdapter {
 						if (!CollectionUtils.isEmpty(userIdsToMute)) {
 							executeMute(commandChannel, author, authorMention, userIdsToMute, muteEndDate, reason);
 						} else {
-							commandChannel
+							message.getChannel()
 									.sendMessage(new StringBuilder().append(authorMention).append(
 											" User IDs must be provided to execute mutes. For help, run rdss:?"))
 									.queue();
 						}
 					} else {
-						commandChannel.sendMessage(new StringBuilder().append(authorMention).append(
+						message.getChannel().sendMessage(new StringBuilder().append(authorMention).append(
 								" Mute duration format must follow \"XdXhXm\" (days, hours, minutes). For more help, run rdss:?"))
 								.queue();
 					}
@@ -262,7 +262,7 @@ public class MessageListener extends ListenerAdapter {
 				if (!CollectionUtils.isEmpty(userIdsToUnmute)) {
 					executeUnmute(commandChannel, authorMention, userIdsToUnmute);
 				} else {
-					commandChannel
+					message.getChannel()
 							.sendMessage(new StringBuilder().append(authorMention)
 									.append(" User IDs must be provided to execute bans. For help, run rdss:?"))
 							.queue();
