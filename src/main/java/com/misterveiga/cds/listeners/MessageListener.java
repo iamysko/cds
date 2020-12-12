@@ -129,6 +129,8 @@ public class MessageListener extends ListenerAdapter {
 							.append(" User IDs must be provided to execute bans. For help, run -?")).queue();
 				}
 
+				break;
+
 			} else if (messageText.matches(RegexConstants.COMMAND_UNBAN)) { // UNBAN (-ub userId,userId2,userIdN)
 
 				final Map<String, String> data = getDataFromUnbanMessage(messageText);
@@ -143,6 +145,8 @@ public class MessageListener extends ListenerAdapter {
 									.append(" User IDs must be provided to execute bans. For help, run rdss:?"))
 							.queue();
 				}
+
+				break;
 
 			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // LIST BANNED USERS (-show_bans)
 				final List<BannedUser> bannedUsers = cdsData.getBannedUsers();
@@ -182,6 +186,8 @@ public class MessageListener extends ListenerAdapter {
 					message.getChannel().sendMessage(sb.toString()).queue();
 				}
 
+				break;
+
 			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_mutes)
 				final List<MutedUser> mutedUsers = cdsData.getMutedUsers();
 				log.info("MongoDB returned {} currently muted users.", mutedUsers.size());
@@ -220,6 +226,7 @@ public class MessageListener extends ListenerAdapter {
 					sb.append("```");
 					message.getChannel().sendMessage(sb.toString()).queue();
 				}
+				break;
 			}
 
 		case 2: // SCS
@@ -228,6 +235,7 @@ public class MessageListener extends ListenerAdapter {
 			if (messageText.matches(RegexConstants.COMMAND_WARN)) { // WARN USER (SENDS A DM TO USER)
 				// final Map<String, String> data = getDataFromMuteMessage(messageText);
 				// TODO: Warn user.
+				break;
 
 			} else if (messageText.matches(RegexConstants.COMMAND_MUTE)) {
 				final Map<String, String> data = getDataFromMuteMessage(messageText);
@@ -255,6 +263,7 @@ public class MessageListener extends ListenerAdapter {
 								.queue();
 					}
 				}
+				break;
 			} else if (messageText.matches(RegexConstants.COMMAND_UNMUTE)) {
 				final Map<String, String> data = getDataFromUnmuteMessage(messageText);
 				final List<String> userIdsToUnmute = Arrays.asList(data.get("users").split(",")).stream().distinct()
@@ -267,17 +276,21 @@ public class MessageListener extends ListenerAdapter {
 									.append(" User IDs must be provided to execute bans. For help, run rdss:?"))
 							.queue();
 				}
+				break;
 			}
 		case 0: // TS
 			if (messageText.matches(RegexConstants.COMMAND_HELP)
 					|| messageText.matches(RegexConstants.COMMAND_HELP_ALT)) {
 				sendHelpMessage(message, authorMention);
+				break;
 			} else if (messageText.matches(RegexConstants.COMMAND_ABOUT)) {
 				sendAboutMessage(message, authorMention);
+				break;
 			} else {
 				sendUnknownCommandMessage(message, authorMention);
+				break;
 			}
-			break;
+
 		case -1: // Member with no command roles.
 			break;
 		}
