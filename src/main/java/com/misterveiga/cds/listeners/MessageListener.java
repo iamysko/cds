@@ -146,11 +146,12 @@ public class MessageListener extends ListenerAdapter {
 
 			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // LIST BANNED USERS (-show_bans)
 				final List<BannedUser> bannedUsers = cdsData.getBannedUsers();
+				log.info("MongoDB returned {} currently banned users.", bannedUsers.size());
 				final String[][] tableData = new String[bannedUsers.size()][6];
 
 				final String[] headers = { "Banned User DiscordTag", "Banned User ID", "Moderator DiscordTag",
 						"Moderator ID", "Ban Date", "Ban Reason" };
-				for (int c = 0; c <= bannedUsers.size(); c++) {
+				for (int c = 0; c < bannedUsers.size(); c++) {
 					tableData[c][0] = bannedUsers.get(c).getBannedUserDiscordTag();
 					tableData[c][1] = String.valueOf(bannedUsers.get(c).getBannedUserId());
 					tableData[c][2] = bannedUsers.get(c).getModeratorDiscordTag();
@@ -183,11 +184,12 @@ public class MessageListener extends ListenerAdapter {
 
 			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_mutes)
 				final List<MutedUser> mutedUsers = cdsData.getMutedUsers();
+				log.info("MongoDB returned {} currently muted users.", mutedUsers.size());
 				final String[][] tableData = new String[mutedUsers.size()][7];
 
 				final String[] headers = { "Muted User DiscordTag", "Muted User ID", "Moderator DiscordTag",
 						"Moderator ID", "Mute Start Date", "Mute End Date", "Mute Reason" };
-				for (int c = 0; c <= mutedUsers.size(); c++) {
+				for (int c = 0; c < mutedUsers.size(); c++) {
 					tableData[c][0] = mutedUsers.get(c).getMutedUserDiscordTag();
 					tableData[c][1] = String.valueOf(mutedUsers.get(c).getMutedUserId());
 					tableData[c][2] = mutedUsers.get(c).getModeratorDiscordTag();
