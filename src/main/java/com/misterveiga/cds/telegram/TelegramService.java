@@ -91,7 +91,8 @@ public class TelegramService {
 	 */
 	@PostConstruct
 	public void onStart() {
-		TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + DEV_NOTE);
+		// TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START +
+		// DEV_NOTE);
 	}
 
 }
