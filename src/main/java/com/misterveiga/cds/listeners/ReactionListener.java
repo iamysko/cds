@@ -6,8 +6,6 @@
 package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +126,7 @@ public class ReactionListener extends ListenerAdapter {
 						}
 
 						final Action commandAction = new Action();
-						commandAction.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+						commandAction.setDate(Instant.now());
 						commandAction.setUser(reactee.getUser().getAsTag());
 						commandAction.setDiscordId(reactee.getIdLong());
 
@@ -473,25 +471,6 @@ public class ReactionListener extends ListenerAdapter {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 					.append(" you cannot run commands on server staff.")).queue();
 			return; // Do nothing.
-		}
-	}
-
-	private void alertMods(final TextChannel alertChannel, final Member reactee, final Message message,
-			final Member messageAuthor, final Instant now) {
-		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
-			lastAlertTime = now;
-			alertChannel
-					.sendMessage(new StringBuilder()
-							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
-							.append(" ")
-							.append(RoleUtils
-									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
-									.getAsMention())
-							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
-							.append(reactee.getId()).append("):\n").append(message.getJumpUrl()))
-					.queue(msg -> {
-						msg.delete().queueAfter(24, TimeUnit.HOURS);
-					});
 		}
 	}
 
