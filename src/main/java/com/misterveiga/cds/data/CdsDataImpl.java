@@ -1,12 +1,12 @@
-/*
- * Author: {Ruben Veiga}
- */
 package com.misterveiga.cds.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,33 +17,20 @@ import com.misterveiga.cds.entities.Action;
 import com.misterveiga.cds.entities.BannedUser;
 import com.misterveiga.cds.entities.MutedUser;
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
 
-/**
- * The Class CdsDataImpl.
- */
 @Component
 public class CdsDataImpl implements CdsData {
 
-	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(CdsDataImpl.class);
 
-	/** The mongo template. */
 	@Autowired
 	public MongoTemplate mongoTemplate;
 
-	/**
-	 * Instantiates a new cds data impl.
-	 */
 	public CdsDataImpl() {
-		// Empty
 	}
 
-	/**
-	 * Insert action.
-	 *
-	 * @param commandAction the command action
-	 */
 	@Override
 	public void insertAction(final Action commandAction) {
 		this.mongoTemplate.insert(commandAction);
@@ -58,6 +45,7 @@ public class CdsDataImpl implements CdsData {
 	@Override
 	public void insertBannedUser(final BannedUser bannedUser) {
 		this.mongoTemplate.insert(bannedUser);
+		log.debug("Perstisted banned user {}", bannedUser);
 	}
 
 	/**
@@ -136,7 +124,11 @@ public class CdsDataImpl implements CdsData {
 		final List<MutedUser> mutedUsers = new ArrayList<>();
 
 		final MongoCollection<Document> muteCollection = this.mongoTemplate.getCollection("bans");
-		muteCollection.find(new BasicDBObject(), MutedUser.class).forEach((mutedUser) -> {
+
+		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+
+		muteCollection.withCodecRegistry(registry).find(new BasicDBObject(), MutedUser.class).forEach((mutedUser) -> {
 			mutedUsers.add(mutedUser);
 		});
 
@@ -153,7 +145,11 @@ public class CdsDataImpl implements CdsData {
 		final List<BannedUser> bannedUsers = new ArrayList<>();
 
 		final MongoCollection<Document> banCollection = this.mongoTemplate.getCollection("bans");
-		banCollection.find(new BasicDBObject(), BannedUser.class).forEach((bannedUser) -> {
+
+		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+
+		banCollection.withCodecRegistry(registry).find(new BasicDBObject(), BannedUser.class).forEach((bannedUser) -> {
 			bannedUsers.add(bannedUser);
 		});
 
