@@ -29,6 +29,8 @@ public class TableUtils {
 
 		final JTable table = new JTable(model);
 
+		table.doLayout();
+
 		final JTableHeader header = table.getTableHeader();
 		final int totalWidth = header.getWidth() + table.getWidth();
 		final int totalHeight = header.getHeight() + table.getHeight();
