@@ -72,9 +72,9 @@ public class AppConfig {
 		builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
 		builder.setLargeThreshold(50);
 		try {
-			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 			final JDA jda = builder.build();
 			jda.awaitReady();
+			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);
@@ -84,7 +84,7 @@ public class AppConfig {
 		return null;
 	}
 
-	@Bean(name = "telegramService")
+	@Bean
 	TelegramService telegramService(@Value("${telegram.token}") final String telegramToken) {
 		return new TelegramService(telegramToken);
 	}
@@ -132,7 +132,7 @@ public class AppConfig {
 
 	@PreDestroy
 	public void onExit() {
-		TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
+		// TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
 	}
 
 }

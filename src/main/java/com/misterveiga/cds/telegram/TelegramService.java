@@ -27,7 +27,7 @@ public class TelegramService {
 	private static Logger log = LoggerFactory.getLogger(TelegramService.class);
 
 	/** The Constant CDS_START. */
-	public static final String CDS_START = "CDS is now connected to Discord. Please give me a few seconds to settle in!%0AUpdates: ";
+	public static final String CDS_START = "CDS has restarted.%0AUpdates: ";
 
 	/** The Constant CDS_END. */
 	public static final String CDS_END = "CDS has disconnected from Discord.";

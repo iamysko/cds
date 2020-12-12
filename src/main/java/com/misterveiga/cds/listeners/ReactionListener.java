@@ -108,139 +108,156 @@ public class ReactionListener extends ListenerAdapter {
 		final String emoteId = emote.isEmote() ? emote.getId() : "";
 
 		event.retrieveMessage().queue(message -> {
-			event.getGuild().retrieveMemberById(message.getAuthor().getId()).queue(messageAuthor -> {
+			// event.getGuild().retrieveMemberById(message.getAuthor().getId()).queue
+			message.getJDA().getGuildById(message.getGuild().getIdLong())
+					.retrieveMemberById(message.getAuthor().getId()).queue(messageAuthor -> {
 
-				if (emoteId.equals(ID_REACTION_ALERT_MODS)) {
-					alertMods(event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee, message,
-							messageAuthor, Instant.now());
-				}
-
-				if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
-					return; // Do nothing.
-				}
-
-				final Action commandAction = new Action();
-				commandAction.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
-				commandAction.setUser(reactee.getUser().getAsTag());
-				commandAction.setDiscordId(reactee.getIdLong());
-
-				switch (emoteId) {
-
-				case ID_REACTION_PURGE_MESSAGES:
-
-					blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
-
-					if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-							RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
-
-						purgeMessagesInChannel(messageAuthor, channel);
-						commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-						commandAction.setOffendingUserId(messageAuthor.getIdLong());
-						commandAction.setActionType("REACTION_PURGE_MESSAGES");
-						log.info("[Reaction Command] Message purge executed by {} on {}", reactee.getUser().getAsTag(),
-								messageAuthor.getUser().getAsTag());
-					}
-
-					break;
-
-				case ID_REACTION_QM_30:
-
-					blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
-
-					if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-							RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
-
-						muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-						purgeMessagesInChannel(messageAuthor, channel);
-						commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-						commandAction.setOffendingUserId(messageAuthor.getIdLong());
-						commandAction.setActionType("REACTION_QM_30");
-						log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}", reactee.getUser().getAsTag(),
-								messageAuthor.getUser().getAsTag());
-
-					}
-
-					break;
-
-				case ID_REACTION_QM_60:
-
-					blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
-
-					if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-							RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
-
-						muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-						purgeMessagesInChannel(messageAuthor, channel);
-						commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-						commandAction.setOffendingUserId(messageAuthor.getIdLong());
-						commandAction.setActionType("REACTION_QM_60");
-						log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}", reactee.getUser().getAsTag(),
-								messageAuthor.getUser().getAsTag());
-
-					}
-
-					break;
-
-				case ID_REACTION_APPROVE: // Used for ban requests, filtered log bans, and mod alerts.
-
-					if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-							RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
-
-						if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
-							clearAlert(commandChannel,
-									event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
+						if (emoteId.equals(ID_REACTION_ALERT_MODS)) {
+							alertMods(event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
 									message, messageAuthor, Instant.now());
 						}
 
-						if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
-
-							approveBanRequest(reactee, message, commandChannel);
-
-						} else if (event.getChannel().getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID) {
-
-							approveCensoredBan(reactee, message, commandChannel);
-
+						if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+								RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR,
+								RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+							return; // Do nothing.
 						}
 
-						commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
-						log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
-								reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+						final Action commandAction = new Action();
+						commandAction.setDate(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+						commandAction.setUser(reactee.getUser().getAsTag());
+						commandAction.setDiscordId(reactee.getIdLong());
 
-					} else if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-							RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
-						if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
-							clearAlert(commandChannel,
-									event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
-									message, messageAuthor, Instant.now());
-						}
-					}
+						switch (emoteId) {
 
-					break;
+						case ID_REACTION_PURGE_MESSAGES:
 
-				case ID_REACTION_REJECT:
+							blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
 
-					if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID
-							&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+								purgeMessagesInChannel(messageAuthor, channel);
+								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+								commandAction.setOffendingUserId(messageAuthor.getIdLong());
+								commandAction.setActionType("REACTION_PURGE_MESSAGES");
+								log.info("[Reaction Command] Message purge executed by {} on {}",
+										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+							}
+
+							break;
+
+						case ID_REACTION_QM_30:
+
+							blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
+
+							if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+								muteUser(reactee, messageAuthor, "30m", message, commandChannel);
+								purgeMessagesInChannel(messageAuthor, channel);
+								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+								commandAction.setOffendingUserId(messageAuthor.getIdLong());
+								commandAction.setActionType("REACTION_QM_30");
+								log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
+										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+
+							}
+
+							break;
+
+						case ID_REACTION_QM_60:
+
+							blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
+
+							if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+
+								muteUser(reactee, messageAuthor, "1h", message, commandChannel);
+								purgeMessagesInChannel(messageAuthor, channel);
+								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+								commandAction.setOffendingUserId(messageAuthor.getIdLong());
+								commandAction.setActionType("REACTION_QM_60");
+								log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
+										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+
+							}
+
+							break;
+
+						case ID_REACTION_APPROVE: // Used for ban requests, filtered log bans, and mod alerts.
+
+							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
 									RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
-						rejectBanRequest(reactee, message, commandChannel);
-						commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
-						log.info("[Reaction Command] Ban request rejected by {} ({}) (request: {})",
-								reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+									clearAlert(commandChannel,
+											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+											reactee, message, messageAuthor, Instant.now());
 
-					}
+									commandAction.setActionType("REACTION_ALERT_DONE");
+									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
-					break;
+								}
 
-				default:
-					return; // Do nothing.
+								if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
 
-				}
+									approveBanRequest(reactee, message, commandChannel);
 
-				cdsData.insertAction(commandAction);
+									commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
+									log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
-			});
+								} else if (event.getChannel()
+										.getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID) {
+
+									approveCensoredBan(reactee, message, commandChannel);
+
+									commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
+									log.info(
+											"[Reaction Command] Censored message ban approved by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
+								}
+
+							} else if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
+									RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+									clearAlert(commandChannel,
+											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+											reactee, message, messageAuthor, Instant.now());
+									commandAction.setActionType("REACTION_ALERT_DONE");
+									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+								}
+							}
+
+							break;
+
+						case ID_REACTION_REJECT:
+
+							if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID
+									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+											RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+
+								rejectBanRequest(reactee, message, commandChannel);
+								commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
+								log.info("[Reaction Command] Ban request rejected by {} ({}) (request: {})",
+										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
+							}
+
+							break;
+
+						default:
+							return; // Do nothing.
+
+						}
+
+						cdsData.insertAction(commandAction);
+
+					});
 
 		});
 
