@@ -6,7 +6,6 @@ package com.misterveiga.cds;
 import java.net.UnknownHostException;
 import java.time.Instant;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.security.auth.login.LoginException;
 
@@ -45,9 +44,6 @@ public class AppConfig {
 	/** The mongo database. */
 	@Value("${spring.data.mongodb.database}")
 	public String mongoDatabase;
-
-	@Value("${developer.update-notes}")
-	public String devNote;
 
 	/**
 	 * Jda.
@@ -88,8 +84,9 @@ public class AppConfig {
 	}
 
 	@Bean
-	TelegramService telegramService(@Value("${telegram.token}") final String telegramToken) {
-		return new TelegramService(telegramToken);
+	TelegramService telegramService(@Value("${telegram.token}") final String telegramToken,
+			@Value("${developer.update-notes}") final String devNote) {
+		return new TelegramService(telegramToken, devNote);
 	}
 
 	/**
@@ -136,11 +133,6 @@ public class AppConfig {
 	@PreDestroy
 	public void onExit() {
 		// TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
-	}
-
-	@PostConstruct
-	public void onStart() {
-		TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 	}
 
 }
