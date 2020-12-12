@@ -29,10 +29,13 @@ public class TableUtils {
 
 		final JTable table = new JTable(model);
 		// table.setSize(table.getPreferredSize());
-		table.setSize(1024, 768);
+		// table.setSize(1024, 768);
+
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table.doLayout();
 
 		final JTableHeader header = table.getTableHeader();
-		header.setSize(1024, 20);
+		// header.setSize(1024, 20);
 		// header.setSize(header.getPreferredSize());
 
 		final int totalWidth = header.getWidth() + table.getWidth();
