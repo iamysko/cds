@@ -3,6 +3,8 @@
  */
 package com.misterveiga.cds.listeners;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +28,7 @@ import com.misterveiga.cds.entities.MutedUser;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
+import com.misterveiga.cds.utils.TableUtils;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -133,14 +138,86 @@ public class MessageListener extends ListenerAdapter {
 				if (!CollectionUtils.isEmpty(userIdsToUnban)) {
 					executeUnban(commandChannel, authorMention, userIdsToUnban);
 				} else {
-					commandChannel.sendMessage(new StringBuilder().append(authorMention)
-							.append(" User IDs must be provided to execute bans. For help, run -?")).queue();
+					commandChannel
+							.sendMessage(new StringBuilder().append(authorMention)
+									.append(" User IDs must be provided to execute bans. For help, run rdss:?"))
+							.queue();
 				}
 
 			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // LIST BANNED USERS (-show_bans)
-				// TODO: Show banned users from bans collection.
+				final List<BannedUser> bannedUsers = cdsData.getBannedUsers();
+				final String[][] tableData = new String[bannedUsers.size()][6];
+
+				final String[] headers = { "Banned User DiscordTag", "Banned User ID", "Moderator DiscordTag",
+						"Moderator ID", "Ban Date", "Ban Reason" };
+				for (int c = 0; c <= bannedUsers.size(); c++) {
+					tableData[c][0] = bannedUsers.get(c).getBannedUserDiscordTag();
+					tableData[c][1] = String.valueOf(bannedUsers.get(c).getBannedUserId());
+					tableData[c][2] = bannedUsers.get(c).getModeratorDiscordTag();
+					tableData[c][3] = String.valueOf(bannedUsers.get(c).getModeratorUserId());
+					tableData[c][4] = bannedUsers.get(c).getDate().toString();
+					tableData[c][5] = bannedUsers.get(c).getBannedUserReason();
+				}
+				try {
+					final File generatedImage = new File("banned_users.jpg");
+					ImageIO.write(TableUtils.createImageFromData(tableData, headers), "jpg", generatedImage);
+					commandChannel.sendFile(generatedImage, "banned_users.jpg").queue();
+				} catch (final IOException e) {
+					log.error("Banned users table image could not be generated. Sending plaintext version.");
+					final StringBuilder sb = new StringBuilder();
+					sb.append("**Currently Banned Users**\n");
+					sb.append(
+							"```Banned User DiscordTag | Banned User ID | Moderator DiscordTag | Moderator ID | Ban Date | Ban Reason```\n");
+					sb.append("```");
+					bannedUsers.forEach(bannedUser -> {
+						sb.append(bannedUser.getBannedUserDiscordTag()).append(" | ")
+								.append(bannedUser.getBannedUserId()).append(" | ")
+								.append(bannedUser.getModeratorDiscordTag()).append(" | ")
+								.append(bannedUser.getModeratorUserId()).append(" | ")
+								.append(bannedUser.getDate().toString()).append(" | ")
+								.append(bannedUser.getBannedUserReason());
+					});
+					sb.append("```");
+					commandChannel.sendMessage(sb.toString()).queue();
+				}
+
 			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_mutes)
-				// TODO: Show banned users from bans collection.
+				final List<MutedUser> mutedUsers = cdsData.getMutedUsers();
+				final String[][] tableData = new String[mutedUsers.size()][7];
+
+				final String[] headers = { "Muted User DiscordTag", "Muted User ID", "Moderator DiscordTag",
+						"Moderator ID", "Mute Start Date", "Mute End Date", "Mute Reason" };
+				for (int c = 0; c <= mutedUsers.size(); c++) {
+					tableData[c][0] = mutedUsers.get(c).getMutedUserDiscordTag();
+					tableData[c][1] = String.valueOf(mutedUsers.get(c).getMutedUserId());
+					tableData[c][2] = mutedUsers.get(c).getModeratorDiscordTag();
+					tableData[c][3] = String.valueOf(mutedUsers.get(c).getModeratorUserId());
+					tableData[c][4] = mutedUsers.get(c).getStartDate().toString();
+					tableData[c][5] = mutedUsers.get(c).getEndDate().toString();
+					tableData[c][6] = mutedUsers.get(c).getMuteReason();
+				}
+				try {
+					final File generatedImage = new File("muted_users.jpg");
+					ImageIO.write(TableUtils.createImageFromData(tableData, headers), "jpg", generatedImage);
+					commandChannel.sendFile(generatedImage, "muted_users.jpg").queue();
+				} catch (final IOException e) {
+					log.error("Muted users table image could not be generated. Sending plaintext version.");
+					final StringBuilder sb = new StringBuilder();
+					sb.append("**Currently Banned Users**\n");
+					sb.append(
+							"```Banned User DiscordTag | Banned User ID | Moderator DiscordTag | Moderator ID | Ban Date | Ban Reason```\n");
+					sb.append("```");
+					mutedUsers.forEach(mutedUser -> {
+						sb.append(mutedUser.getMutedUserDiscordTag()).append(" | ").append(mutedUser.getMutedUserId())
+								.append(" | ").append(mutedUser.getModeratorDiscordTag()).append(" | ")
+								.append(mutedUser.getModeratorUserId()).append(" | ")
+								.append(mutedUser.getStartDate().toString()).append(" | ")
+								.append(mutedUser.getEndDate().toString()).append(" | ")
+								.append(mutedUser.getMuteReason());
+					});
+					sb.append("```");
+					commandChannel.sendMessage(sb.toString()).queue();
+				}
 			}
 
 		case 2: // SCS
@@ -155,7 +232,7 @@ public class MessageListener extends ListenerAdapter {
 				final String reason = data.get("reason");
 				if (reason.isEmpty()) {
 					commandChannel.sendMessage(new StringBuilder().append(authorMention)
-							.append(" Mutes must always include evidence. For more help, run -?")).queue();
+							.append(" Mutes must always include evidence. For more help, run rdss:?")).queue();
 				} else {
 					final List<String> userIdsToMute = Arrays.asList(data.get("users").split(",")).stream().distinct()
 							.collect(Collectors.toList());
@@ -166,13 +243,13 @@ public class MessageListener extends ListenerAdapter {
 							executeMute(commandChannel, author, authorMention, userIdsToMute, muteEndDate, reason);
 						} else {
 							commandChannel
-									.sendMessage(new StringBuilder().append(authorMention)
-											.append(" User IDs must be provided to execute mutes. For help, run -?"))
+									.sendMessage(new StringBuilder().append(authorMention).append(
+											" User IDs must be provided to execute mutes. For help, run rdss:?"))
 									.queue();
 						}
 					} else {
 						commandChannel.sendMessage(new StringBuilder().append(authorMention).append(
-								" Mute duration format must follow \"XdXhXm\" (days, hours, minutes). For more help, run -?"))
+								" Mute duration format must follow \"XdXhXm\" (days, hours, minutes). For more help, run rdss:?"))
 								.queue();
 					}
 				}
@@ -183,8 +260,10 @@ public class MessageListener extends ListenerAdapter {
 				if (!CollectionUtils.isEmpty(userIdsToUnmute)) {
 					executeUnmute(commandChannel, authorMention, userIdsToUnmute);
 				} else {
-					commandChannel.sendMessage(new StringBuilder().append(authorMention)
-							.append(" User IDs must be provided to execute bans. For help, run -?")).queue();
+					commandChannel
+							.sendMessage(new StringBuilder().append(authorMention)
+									.append(" User IDs must be provided to execute bans. For help, run rdss:?"))
+							.queue();
 				}
 			}
 		case 0: // TS
@@ -225,11 +304,13 @@ public class MessageListener extends ListenerAdapter {
 								.queue(success -> {
 									cdsData.insertMutedUser(mutedUser);
 								});
-						commandChannel.sendMessage((new StringBuilder().append(authorMention)
-								.append(" Successfully muted ").append(mutedUser.getMutedUserDiscordTag()).append("(")
-								.append(userId).append(")!\nThe mute will be lifted automatically on ")
-								.append(mutedUser.getEndDate().toString())
-								.append("\nTo unmute this user, use -ub (see -? for help)."))).queue();
+						commandChannel
+								.sendMessage((new StringBuilder().append(authorMention).append(" Successfully muted ")
+										.append(mutedUser.getMutedUserDiscordTag()).append("(").append(userId)
+										.append(")!\nThe mute will be lifted automatically on ")
+										.append(mutedUser.getEndDate().toString())
+										.append("\nTo unmute this user, use rdss:unban (see rdss:? for help).")))
+								.queue();
 
 					});
 				} catch (final ErrorResponseException e) {
@@ -241,7 +322,7 @@ public class MessageListener extends ListenerAdapter {
 			}
 		} catch (final NumberFormatException e) {
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see -help or -?")).queue();
+					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -269,7 +350,7 @@ public class MessageListener extends ListenerAdapter {
 			}
 		} catch (final NumberFormatException e) {
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see -help or -?")).queue();
+					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -312,7 +393,7 @@ public class MessageListener extends ListenerAdapter {
 			}
 		} catch (final NumberFormatException e) {
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see -help or -?")).queue();
+					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -344,7 +425,7 @@ public class MessageListener extends ListenerAdapter {
 			}
 		} catch (final NumberFormatException e) {
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see -help or -?")).queue();
+					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -407,7 +488,7 @@ public class MessageListener extends ListenerAdapter {
 
 		argsRefined[1] = sb.toString(); // "-m userId1,userId2,userIdN <This is an example of evidence.>"
 		if (argsRefined[1] == null) {
-			argsRefined[1] = "";
+			argsRefined[1] = "(none)";
 		}
 
 		data.put("users", argsRefined[0]);
@@ -451,17 +532,16 @@ public class MessageListener extends ListenerAdapter {
 	 * @param authorMention the author mention
 	 */
 	private void sendHelpMessage(final Message message, final String authorMention) {
-		message.getChannel()
-				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
-						.append("\nPrefix for all commands: `-<command>`")
-						.append("\nIf a command doesn't work for you, you may not have permission to run it.")
-						.append("\nHelp: \"-help\" or \"-?\"")
-						.append("\nWarn user(s): \"-w user1,user2,userN warning message (necessary)\"")
-						.append("\nMute user(s): \"-m user1,user2,userN XdXhXm reason (necessary)\"")
-						.append("\nUnmute user(s): \"-um user1,user2,userN\"")
-						.append("\nBan user(s): \"-b user1,user2,userN reason (optional)\"")
-						.append("\nUnban user(s): \"-ub user1,user2,userN\"")
-						.append("\nShow active bans: \"-show_bans\"").append("\nShow active mutes: \"-show_mutes\""))
+		message.getChannel().sendMessage(new StringBuilder().append(authorMention)
+				.append(" **Roblox Discord Services | Help**").append("\nPrefix for all commands: `rdss:<command>`")
+				.append("\nIf a command doesn't work for you, you may not have permission to run it.")
+				.append("\nHelp: \"rdss:help\" or \"rdss:?\"")
+				.append("\nWarn user(s): \"rdss:warn user1,user2,userN warning message\"")
+				.append("\nMute user(s): \"rdss:mute user1,user2,userN XdXhXm reason\"")
+				.append("\nUnmute user(s): \"rdss:unmute user1,user2,userN\"")
+				.append("\nBan user(s): \"rdss:ban user1,user2,userN reason (reason is optional)\"")
+				.append("\nUnban user(s): \"rdss:unban user1,user2,userN\"")
+				.append("\nShow active bans: \"rdss:show_bans\"").append("\nShow active mutes: \"rdss:show_mutes\""))
 				.queue();
 	}
 
@@ -487,7 +567,7 @@ public class MessageListener extends ListenerAdapter {
 	 */
 	private void sendUnknownCommandMessage(final Message message, final String authorMention) {
 		message.getChannel().sendMessage(new StringBuilder().append(authorMention)
-				.append(" Sorry, I don't know that command.\n*Use -? or -help for assistance.*")).queue();
+				.append(" Sorry, I don't know that command.\n*Use rdss:? for assistance.*")).queue();
 	}
 
 	private Instant getEndDateFromDuration(String durationString) {

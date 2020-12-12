@@ -2,28 +2,28 @@ package com.misterveiga.cds.utils;
 
 public class RegexConstants {
 
-	public static final String GENERIC = "^-.*$";
+	public static final String GENERIC = "^rdss:.*$";
 
-	public static final String COMMAND_HELP = "^-help$";
+	public static final String COMMAND_HELP = "^rdss:help$";
 
-	public static final String COMMAND_HELP_ALT = "^-\\?$";
+	public static final String COMMAND_HELP_ALT = "^rdss:\\?$";
 
-	public static final String COMMAND_ABOUT = "^-about$";
+	public static final String COMMAND_ABOUT = "^rdss:about$";
 
-	public static final String COMMAND_SET_COVERAGE_CHECK_TIMER = "^-set_coverage_timer \\d{1,4}$";
+	public static final String COMMAND_SET_COVERAGE_CHECK_TIMER = "^rdss:set_coverage_timer \\d{1,4}$";
 
-	public static final String COMMAND_BAN = "^-b\\s.*$";
+	public static final String COMMAND_BAN = "^rdss:ban\\s.*$";
 
-	public static final String COMMAND_UNBAN = "^-ub\\s.*$";
+	public static final String COMMAND_UNBAN = "^rdss:unban\\s.*$";
 
-	public static final String COMMAND_WARN = "^-w\\s.*$";
+	public static final String COMMAND_WARN = "^rdss:warn\\s.*$";
 
-	public static final String COMMAND_MUTE = "^-m\\s.*$";
+	public static final String COMMAND_MUTE = "^rdss:mute\\s.*$";
 
-	public static final String COMMAND_UNMUTE = "^-um\\s.*$";
+	public static final String COMMAND_UNMUTE = "^rdss:unmute\\s.*$";
 
-	public static final String SHOW_BANNED_USERS = "^-show_bans$";
+	public static final String SHOW_BANNED_USERS = "^rdss:show_bans$";
 
-	public static final String SHOW_MUTED_USERS = "^-show_mutes$";
+	public static final String SHOW_MUTED_USERS = "^rdss:show_mutes$";
 
 }
