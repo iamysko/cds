@@ -29,14 +29,11 @@ public class TableUtils {
 
 		final JTable table = new JTable(model);
 
-		table.validate();
-		table.doLayout();
-
 		final JTableHeader header = table.getTableHeader();
-		final int totalWidth = header.getWidth() + table.getWidth();
-		final int totalHeight = header.getHeight() + table.getHeight();
+		// final int totalWidth = header.getWidth() + table.getWidth();
+		// final int totalHeight = header.getHeight() + table.getHeight();
 
-		final BufferedImage tableImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+		final BufferedImage tableImage = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g2D = tableImage.createGraphics();
 		header.paint(g2D);
 		g2D.translate(0, header.getHeight());
