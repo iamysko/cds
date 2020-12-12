@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -23,7 +22,8 @@ import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.telegram.TelegramService;
-import com.mongodb.MongoClient;
+import com.misterveiga.cds.utils.Properties;
+import com.mongodb.client.MongoClients;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -56,8 +56,7 @@ public class AppConfig {
 	 * @return the jda
 	 */
 	@Bean
-	@DependsOn("telegramService")
-	JDA jda(@Qualifier("discordUpListner") final DiscordUpListener discordUpListener,
+	JDA jda(@Qualifier("discordUpListener") final DiscordUpListener discordUpListener,
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
@@ -90,36 +89,6 @@ public class AppConfig {
 	}
 
 	/**
-	 * Message listener.
-	 *
-	 * @return the message listener
-	 */
-	@Bean
-	MessageListener messageListener() {
-		return new MessageListener();
-	}
-
-	/**
-	 * Discord up listner.
-	 *
-	 * @return the discord up listener
-	 */
-	@Bean
-	DiscordUpListener discordUpListner() {
-		return new DiscordUpListener();
-	}
-
-	/**
-	 * Discord down listener.
-	 *
-	 * @return the discord down listener
-	 */
-	@Bean
-	DiscordDownListener discordDownListener() {
-		return new DiscordDownListener();
-	}
-
-	/**
 	 * Mongo template.
 	 *
 	 * @return the mongo template
@@ -127,7 +96,7 @@ public class AppConfig {
 	 */
 	@Bean
 	MongoTemplate mongoTemplate() throws UnknownHostException {
-		return new MongoTemplate(new MongoClient("127.0.0.1"), "rdss");
+		return new MongoTemplate(MongoClients.create("mongodb://localhost:27017"), "rdss");
 	}
 
 	@PreDestroy

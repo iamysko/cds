@@ -35,6 +35,8 @@ public class RoleUtils {
 	/** The Constant ROLE_INFRASTRUCTURE. */
 	public static final String ROLE_INFRASTRUCTURE = "Infrastructure";
 
+	public static final String ROLE_MUTED = "Muted";
+
 	/**
 	 * Find role.
 	 *

@@ -5,6 +5,8 @@ package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
 
+import org.springframework.stereotype.Component;
+
 import com.misterveiga.cds.telegram.TelegramService;
 
 import net.dv8tion.jda.api.events.guild.GuildUnavailableEvent;
@@ -19,6 +21,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  *
  * @see DiscordDownEvent
  */
+@Component
 public class DiscordDownListener extends ListenerAdapter {
 
 	/**

@@ -32,11 +32,11 @@ public class Properties {
 	/** The Constant CHANNEL_CENSORED_AND_SPAM_LOGS_ID. */
 	public static final Long CHANNEL_CENSORED_AND_SPAM_LOGS_ID = 366624802024325120L;
 
-	/** The Constant TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT. */
-	public static final Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = 3600000L;
-
 	/** The Constant CHANNEL_MOD_ALERTS_ID. */
 	public static final Long CHANNEL_MOD_ALERTS_ID = 785821764839669791L;
+
+	/** The Constant TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT. */
+	public static final Long TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT = 3600000L;
 
 	/** The time wait online supervisor monitoring. */
 	public static Long timeWaitOnlineSupervisorMonitoring = TIME_WAIT_ONLINE_SUPERVISOR_MONITORING_DEFAULT;
