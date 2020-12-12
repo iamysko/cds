@@ -6,6 +6,7 @@ package com.misterveiga.cds;
 import java.net.UnknownHostException;
 import java.time.Instant;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.security.auth.login.LoginException;
 
@@ -45,6 +46,9 @@ public class AppConfig {
 	@Value("${spring.data.mongodb.database}")
 	public String mongoDatabase;
 
+	@Value("${developer.update-notes}")
+	public String devNote;
+
 	/**
 	 * Jda.
 	 *
@@ -61,7 +65,7 @@ public class AppConfig {
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
-			@Value("${jda.token}") final String jdaToken, @Value("${developer.update-notes}") final String devNote) {
+			@Value("${jda.token}") final String jdaToken) {
 		final JDABuilder builder = JDABuilder.createDefault(jdaToken);
 		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
@@ -74,7 +78,6 @@ public class AppConfig {
 		try {
 			final JDA jda = builder.build();
 			jda.awaitReady();
-			TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);
@@ -133,6 +136,11 @@ public class AppConfig {
 	@PreDestroy
 	public void onExit() {
 		// TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_END);
+	}
+
+	@PostConstruct
+	public void onStart() {
+		TelegramService.sendToTelegram(Instant.now(), TelegramService.CDS_START + devNote);
 	}
 
 }
