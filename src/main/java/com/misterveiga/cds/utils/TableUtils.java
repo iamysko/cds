@@ -29,6 +29,7 @@ public class TableUtils {
 
 		final JTable table = new JTable(model);
 
+		table.validate();
 		table.doLayout();
 
 		final JTableHeader header = table.getTableHeader();
