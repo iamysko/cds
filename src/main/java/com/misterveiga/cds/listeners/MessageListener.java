@@ -307,7 +307,7 @@ public class MessageListener extends ListenerAdapter {
 				sb.append(bannedUser.getBannedUserDiscordTag()).append(" | ").append(bannedUser.getBannedUserId())
 						.append(" | ").append(bannedUser.getModeratorDiscordTag()).append(" | ")
 						.append(bannedUser.getModeratorUserId()).append(" | ").append(bannedUser.getDate().toString())
-						.append(" | ").append(bannedUser.getBannedUserReason());
+						.append(" | ").append(bannedUser.getBannedUserReason()).append("\n");
 			});
 			sb.append("```");
 			message.getChannel().sendMessage(sb.toString()).addFile(generatedImage, "banned_users.jpg").queue();
@@ -323,7 +323,7 @@ public class MessageListener extends ListenerAdapter {
 				sb.append(bannedUser.getBannedUserDiscordTag()).append(" | ").append(bannedUser.getBannedUserId())
 						.append(" | ").append(bannedUser.getModeratorDiscordTag()).append(" | ")
 						.append(bannedUser.getModeratorUserId()).append(" | ").append(bannedUser.getDate().toString())
-						.append(" | ").append(bannedUser.getBannedUserReason());
+						.append(" | ").append(bannedUser.getBannedUserReason()).append("\n");
 			});
 			sb.append("```");
 			message.getChannel().sendMessage(sb.toString()).queue();
