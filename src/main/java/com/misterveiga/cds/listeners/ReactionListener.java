@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.entities.Action;
+import com.misterveiga.cds.entities.BannedUser;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -398,9 +399,35 @@ public class ReactionListener extends ListenerAdapter {
 			if (banRequestMessageContent[0].equalsIgnoreCase(";ban")) {
 				commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
 						.allowedMentions(new ArrayList<MentionType>()).queue();
+				try {
+					final BannedUser bannedUser = new BannedUser();
+					bannedUser.setDate(Instant.now());
+					bannedUser.setModeratorUserId(message.getAuthor().getIdLong());
+					bannedUser.setModeratorDiscordTag(message.getAuthor().getAsTag());
+					bannedUser.setBannedUserId(Long.parseLong(userToBan));
+					bannedUser.setBannedUserDiscordTag(
+							commandChannel.getGuild().retrieveMemberById(userToBan).complete().getUser().getAsTag());
+					bannedUser.setBannedUserReason(evidence);
+					cdsData.insertBannedUser(bannedUser);
+				} catch (final Exception e) {
+					// XXX: temp for mongo testing
+				}
 			} else if (banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
 				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence))
 						.allowedMentions(new ArrayList<MentionType>()).queue();
+				try {
+					final BannedUser bannedUser = new BannedUser();
+					bannedUser.setDate(Instant.now());
+					bannedUser.setModeratorUserId(message.getAuthor().getIdLong());
+					bannedUser.setModeratorDiscordTag(message.getAuthor().getAsTag());
+					bannedUser.setBannedUserId(Long.parseLong(userToBan));
+					bannedUser.setBannedUserDiscordTag(
+							commandChannel.getGuild().retrieveMemberById(userToBan).complete().getUser().getAsTag());
+					bannedUser.setBannedUserReason(evidence);
+					cdsData.insertBannedUser(bannedUser);
+				} catch (final Exception e) {
+					// XXX: temp for mongo testing
+				}
 			} else {
 				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
 						" the ban you tried to invoke was not correctly formatted. Please run the command manually."))

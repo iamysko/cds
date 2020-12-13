@@ -3,13 +3,10 @@
  */
 package com.misterveiga.cds.utils;
 
-import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -54,9 +51,6 @@ public class TableUtils {
 			table.getColumnModel().getColumn(i).setPreferredWidth(maxWidths[i]);
 		}
 
-		final JFrame frame = new JFrame();
-		frame.getContentPane().add(new JScrollPane(table), BorderLayout.PAGE_END);
-
 		table.setSize(800, 580);
 
 		final JTableHeader header = table.getTableHeader();
@@ -67,10 +61,9 @@ public class TableUtils {
 
 		final BufferedImage tableImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g2D = tableImage.createGraphics();
-//		header.paint(g2D);
-//		g2D.translate(0, header.getHeight());
-//		table.paint(g2D);
-		frame.paint(g2D);
+		header.paint(g2D);
+		g2D.translate(0, header.getHeight());
+		table.paint(g2D);
 		g2D.dispose();
 
 		return tableImage;
