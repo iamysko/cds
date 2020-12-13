@@ -45,6 +45,20 @@ public class TableUtils {
 			}
 		}
 
+		for (final String[] dataObject : data) {
+			if (maxWidths.length == dataObject.length) {
+				for (int i = 0; i < dataObject.length; i++) {
+					if (maxWidths[i] < dataObject[i].length()) {
+						maxWidths[i] = dataObject[i].length();
+					}
+				}
+			} else {
+				log.warn(
+						"[Image Generation] Possible problem with image generation. maxWidths size: {} / dataObject size: {}",
+						maxWidths.length, dataObject.length);
+			}
+		}
+
 		for (int i = 0; i < maxWidths.length; i++) {
 			for (int c = 0; c < data[i].length; c++) {
 				if (maxWidths[c] < data[i][c].length()) {
