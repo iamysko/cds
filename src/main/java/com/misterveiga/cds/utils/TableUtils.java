@@ -38,7 +38,7 @@ public class TableUtils {
 		}
 
 		for (int i = 0; i < data.length; i++) {
-			for (final int c = 0; c < data[i].length; i++) {
+			for (int c = 0; c < data[i].length; c++) {
 				if (maxWidths[c] < data[i][c].length()) {
 					maxWidths[c] = data[i][c].length();
 				}
