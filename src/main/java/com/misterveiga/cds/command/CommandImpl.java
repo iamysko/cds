@@ -3,6 +3,7 @@ package com.misterveiga.cds.command;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -100,7 +101,7 @@ public class CommandImpl {
 			tableData[c][1] = String.valueOf(bannedUsers.get(c).getBannedUserId());
 			tableData[c][2] = bannedUsers.get(c).getModeratorDiscordTag();
 			tableData[c][3] = String.valueOf(bannedUsers.get(c).getModeratorUserId());
-			tableData[c][4] = bannedUsers.get(c).getDate().toString();
+			tableData[c][4] = bannedUsers.get(c).getDate().truncatedTo(ChronoUnit.DAYS).toString();
 			tableData[c][5] = bannedUsers.get(c).getBannedUserReason();
 		}
 		try {
