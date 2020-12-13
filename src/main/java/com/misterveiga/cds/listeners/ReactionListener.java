@@ -279,9 +279,13 @@ public class ReactionListener extends ListenerAdapter {
 									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
 									.getAsMention())
 							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
-							.append(reactee.getId()).append("):\n").append(message.getJumpUrl()))
+							.append(reactee.getId()).append("):\n").append(message.getJumpUrl())
+							.append("\nPreview:\n> ").append(message.getContentStripped())
+							.append("\n*(Access the jump URL to take action. Once finished, react to this message with :z_approve:)*"))
 					.queue(msg -> {
 						msg.delete().queueAfter(2, TimeUnit.HOURS);
+					}, failure -> {
+						// Do nothing.
 					});
 		}
 	}
