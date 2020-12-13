@@ -405,12 +405,12 @@ public class ReactionListener extends ListenerAdapter {
 					bannedUser.setModeratorUserId(message.getAuthor().getIdLong());
 					bannedUser.setModeratorDiscordTag(message.getAuthor().getAsTag());
 					bannedUser.setBannedUserId(Long.parseLong(userToBan));
-					bannedUser.setBannedUserDiscordTag(
-							commandChannel.getGuild().retrieveMemberById(userToBan).complete().getUser().getAsTag());
+					bannedUser.setBannedUserDiscordTag("THIS IS A TEST");
 					bannedUser.setBannedUserReason(evidence);
 					cdsData.insertBannedUser(bannedUser);
 				} catch (final Exception e) {
 					// XXX: temp for mongo testing
+					log.warn(e.getMessage());
 				}
 			} else if (banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
 				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence))
@@ -421,12 +421,12 @@ public class ReactionListener extends ListenerAdapter {
 					bannedUser.setModeratorUserId(message.getAuthor().getIdLong());
 					bannedUser.setModeratorDiscordTag(message.getAuthor().getAsTag());
 					bannedUser.setBannedUserId(Long.parseLong(userToBan));
-					bannedUser.setBannedUserDiscordTag(
-							commandChannel.getGuild().retrieveMemberById(userToBan).complete().getUser().getAsTag());
+					bannedUser.setBannedUserDiscordTag("THIS IS A TEST");
 					bannedUser.setBannedUserReason(evidence);
 					cdsData.insertBannedUser(bannedUser);
 				} catch (final Exception e) {
 					// XXX: temp for mongo testing
+					log.warn(e.getMessage());
 				}
 			} else {
 				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
