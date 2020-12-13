@@ -25,18 +25,28 @@ public class TableUtils {
 	 */
 	public static BufferedImage createImageFromData(final String[][] data, final String[] columnNames) {
 
+		final int maxWidths[] = new int[columnNames.length];
 		final TableModel model = new DefaultTableModel(data, columnNames);
-
 		final JTable table = new JTable(model);
-		// table.setSize(table.getPreferredSize());
-		// table.setSize(1024, 768);
 
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.doLayout();
+		for (int i = 0; i < data.length; i++) {
+			for (final int c = 0; c < data[i].length; i++) {
+				if (maxWidths[c] < data[i][c].length()) {
+					maxWidths[c] = data[i][c].length();
+				}
+			}
+		}
+
+		for (int i = 0; i < columnNames.length; i++) {
+			table.getColumnModel().getColumn(i).setMinWidth(maxWidths[i]);
+			table.getColumnModel().getColumn(i).setMaxWidth(maxWidths[i]);
+			table.getColumnModel().getColumn(i).setPreferredWidth(maxWidths[i]);
+		}
+
+		table.setSize(800, 580);
 
 		final JTableHeader header = table.getTableHeader();
-		// header.setSize(1024, 20);
-		// header.setSize(header.getPreferredSize());
+		header.setSize(800, 20);
 
 		final int totalWidth = header.getWidth() + table.getWidth();
 		final int totalHeight = header.getHeight() + table.getHeight();
