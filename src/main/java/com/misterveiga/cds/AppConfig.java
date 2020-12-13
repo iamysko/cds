@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.misterveiga.cds.listeners.DiscordDownListener;
 import com.misterveiga.cds.listeners.DiscordUpListener;
@@ -37,6 +38,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
  */
 @Configuration
 @EnableConfigurationProperties
+@EnableScheduling
 @PropertySource("classpath:application.properties")
 public class AppConfig {
 
