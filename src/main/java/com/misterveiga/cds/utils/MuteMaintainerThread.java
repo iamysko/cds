@@ -37,6 +37,8 @@ public class MuteMaintainerThread {
 		log.info("[MuteMaintainerThread] Checking for mutes to expire...");
 
 		final List<MutedUser> mutedUsers = cdsData.getMutedUsers();
+		log.info("[MuteMaintainerThread] Found {} muted users.", mutedUsers.size());
+
 		final List<MutedUser> usersToUnmute = new ArrayList<>();
 
 		for (final MutedUser user : mutedUsers) {
@@ -44,6 +46,7 @@ public class MuteMaintainerThread {
 				usersToUnmute.add(user);
 			}
 		}
+		log.info("[MuteMaintainerThread] Found {} candidates for unmute.", usersToUnmute.size());
 
 		for (final MutedUser user : usersToUnmute) {
 			final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
