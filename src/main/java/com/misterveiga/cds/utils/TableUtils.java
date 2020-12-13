@@ -49,7 +49,7 @@ public class TableUtils {
 			if (maxWidths.length == dataObject.length) {
 				for (int i = 0; i < dataObject.length; i++) {
 					if (maxWidths[i] < dataObject[i].length()) {
-						maxWidths[i] = dataObject[i].length() * 8;
+						maxWidths[i] = dataObject[i].length();
 					}
 				}
 			} else {
