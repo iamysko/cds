@@ -41,7 +41,7 @@ public class TableUtils {
 
 		for (int i = 0; i < columnNames.length; i++) {
 			if (maxWidths[i] < columnNames[i].length()) {
-				maxWidths[i] = columnNames[i].length();
+				maxWidths[i] = columnNames[i].length() * 16;
 			}
 		}
 
@@ -49,7 +49,7 @@ public class TableUtils {
 			if (maxWidths.length == dataObject.length) {
 				for (int i = 0; i < dataObject.length; i++) {
 					if (maxWidths[i] < dataObject[i].length()) {
-						maxWidths[i] = dataObject[i].length();
+						maxWidths[i] = dataObject[i].length() * 16;
 					}
 				}
 			} else {
@@ -61,7 +61,7 @@ public class TableUtils {
 
 		log.info("[Image Generation] Max widths: {}", Arrays.toString(maxWidths));
 
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < maxWidths.length; i++) {
 			table.getColumnModel().getColumn(i).setMinWidth(maxWidths[i]);
 			table.getColumnModel().getColumn(i).setMaxWidth(maxWidths[i]);
 			table.getColumnModel().getColumn(i).setPreferredWidth(maxWidths[i]);
@@ -74,9 +74,9 @@ public class TableUtils {
 		for (final int i : maxWidths) {
 			totalWidth += i;
 		}
-		final int totalHeight = data.length * 10;
+		final int totalHeight = data.length * 16;
 		table.setSize(totalWidth, totalHeight);
-		header.setSize(totalWidth, 10);
+		header.setSize(totalWidth, 16);
 
 		final BufferedImage tableImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g2D = tableImage.createGraphics();
