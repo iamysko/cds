@@ -12,10 +12,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Class TableUtils.
  */
 public class TableUtils {
+
+	private static Logger log = LoggerFactory.getLogger(TableUtils.class);
 
 	/**
 	 * Creates the image from data.
@@ -25,6 +30,9 @@ public class TableUtils {
 	 * @return the buffered image
 	 */
 	public static BufferedImage createImageFromData(final String[][] data, final String[] columnNames) {
+
+		log.info("[Image Generation] Generating image for data {} // {}", Arrays.toString(columnNames),
+				Arrays.toString(data));
 
 		final int maxWidths[] = new int[columnNames.length];
 		Arrays.fill(maxWidths, 0);
@@ -38,13 +46,15 @@ public class TableUtils {
 			}
 		}
 
-		for (int i = 0; i < data.length; i++) {
+		for (int i = 0; i < maxWidths.length; i++) {
 			for (int c = 0; c < data[i].length; c++) {
-				if (maxWidths[c] < data[i][c].length()) {
-					maxWidths[c] = data[i][c].length();
+				if (maxWidths[i] < data[i][c].length()) {
+					maxWidths[i] = data[i][c].length();
 				}
 			}
 		}
+
+		log.info("[Image Generation] Max widths: {}", Arrays.toString(maxWidths));
 
 		for (int i = 0; i < columnNames.length; i++) {
 			table.getColumnModel().getColumn(i).setMinWidth(maxWidths[i]);
@@ -69,6 +79,8 @@ public class TableUtils {
 		g2D.translate(0, header.getHeight());
 		table.paint(g2D);
 		g2D.dispose();
+
+		log.info("[Image Generation] Returning image of dimensions {} x {}", totalWidth, totalHeight);
 
 		return tableImage;
 
