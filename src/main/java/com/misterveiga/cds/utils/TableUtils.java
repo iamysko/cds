@@ -31,8 +31,7 @@ public class TableUtils {
 	 */
 	public static BufferedImage createImageFromData(final String[][] data, final String[] columnNames) {
 
-		log.info("[Image Generation] Generating image for data {} // {}", Arrays.toString(columnNames),
-				Arrays.toString(data));
+		log.info("[Image Generation] Generating image for data {}", Arrays.toString(columnNames));
 
 		final int maxWidths[] = new int[columnNames.length];
 		Arrays.fill(maxWidths, 0);
@@ -48,8 +47,8 @@ public class TableUtils {
 
 		for (int i = 0; i < maxWidths.length; i++) {
 			for (int c = 0; c < data[i].length; c++) {
-				if (maxWidths[i] < data[i][c].length()) {
-					maxWidths[i] = data[i][c].length();
+				if (maxWidths[c] < data[i][c].length()) {
+					maxWidths[c] = data[i][c].length();
 				}
 			}
 		}
