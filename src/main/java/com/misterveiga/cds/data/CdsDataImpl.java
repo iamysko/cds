@@ -123,7 +123,7 @@ public class CdsDataImpl implements CdsData {
 	public List<MutedUser> getMutedUsers() {
 		final List<MutedUser> mutedUsers = new ArrayList<>();
 
-		final MongoCollection<Document> muteCollection = this.mongoTemplate.getCollection("bans");
+		final MongoCollection<Document> muteCollection = this.mongoTemplate.getCollection("mutes");
 
 		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
 				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
