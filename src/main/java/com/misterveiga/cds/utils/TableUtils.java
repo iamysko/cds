@@ -30,6 +30,7 @@ public class TableUtils {
 		Arrays.fill(maxWidths, 0);
 		final TableModel model = new DefaultTableModel(data, columnNames);
 		final JTable table = new JTable(model);
+		final JTableHeader header = table.getTableHeader();
 
 		for (int i = 0; i < columnNames.length; i++) {
 			if (maxWidths[i] < columnNames[i].length()) {
@@ -49,15 +50,18 @@ public class TableUtils {
 			table.getColumnModel().getColumn(i).setMinWidth(maxWidths[i]);
 			table.getColumnModel().getColumn(i).setMaxWidth(maxWidths[i]);
 			table.getColumnModel().getColumn(i).setPreferredWidth(maxWidths[i]);
+			header.getColumnModel().getColumn(i).setMinWidth(maxWidths[i]);
+			header.getColumnModel().getColumn(i).setMaxWidth(maxWidths[i]);
+			header.getColumnModel().getColumn(i).setPreferredWidth(maxWidths[i]);
 		}
 
-		table.setSize(800, 580);
-
-		final JTableHeader header = table.getTableHeader();
-		header.setSize(800, 20);
-
-		final int totalWidth = header.getWidth() + table.getWidth();
-		final int totalHeight = header.getHeight() + table.getHeight();
+		int totalWidth = 0;
+		for (final int i : maxWidths) {
+			totalWidth += i;
+		}
+		final int totalHeight = data.length * 10;
+		table.setSize(totalWidth, totalHeight);
+		header.setSize(totalWidth, 10);
 
 		final BufferedImage tableImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g2D = tableImage.createGraphics();
