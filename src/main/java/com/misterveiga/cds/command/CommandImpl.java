@@ -41,8 +41,8 @@ public class CommandImpl {
 		log.info("MongoDB returned {} currently muted users.", mutedUsers.size());
 		final String[][] tableData = new String[mutedUsers.size()][7];
 
-		final String[] headers = { "Muted User DiscordTag", "Muted User ID", "Moderator DiscordTag", "Moderator ID",
-				"Mute Start Date", "Mute End Date", "Mute Reason" };
+		final String[] headers = { "UserTag", "UserID", "ModTag", "Mod ID", "Start Date", "End Date",
+				"*****Mute Reason*****" };
 
 		for (int c = 0; c < mutedUsers.size(); c++) {
 			tableData[c][0] = mutedUsers.get(c).getMutedUserDiscordTag();
@@ -60,7 +60,7 @@ public class CommandImpl {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("**Currently Banned Users**\n");
 			sb.append(
-					"```Banned User DiscordTag | Banned User ID | Moderator DiscordTag | Moderator ID | Ban Date | Ban Reason\n");
+					"```Muted User DiscordTag | Muted User ID | Moderator DiscordTag | Moderator ID | Mute Start Date | Mute End Date | Mute Reason\n");
 			mutedUsers.forEach(mutedUser -> {
 				sb.append(mutedUser.getMutedUserDiscordTag()).append(" | ").append(mutedUser.getMutedUserId())
 						.append(" | ").append(mutedUser.getModeratorDiscordTag()).append(" | ")
@@ -76,7 +76,7 @@ public class CommandImpl {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("**Currently Banned Users**\n");
 			sb.append(
-					"```Banned User DiscordTag | Banned User ID | Moderator DiscordTag | Moderator ID | Ban Date | Ban Reason\n");
+					"```Muted User DiscordTag | Muted User ID | Moderator DiscordTag | Moderator ID | Mute Start Date | Mute End Date | Mute Reason\n");
 			mutedUsers.forEach(mutedUser -> {
 				sb.append(mutedUser.getMutedUserDiscordTag()).append(" | ").append(mutedUser.getMutedUserId())
 						.append(" | ").append(mutedUser.getModeratorDiscordTag()).append(" | ")
@@ -94,8 +94,7 @@ public class CommandImpl {
 		log.info("MongoDB returned {} currently banned users.", bannedUsers.size());
 		final String[][] tableData = new String[bannedUsers.size()][6];
 
-		final String[] headers = { "Banned User DiscordTag", "Banned User ID", "Moderator DiscordTag", "Moderator ID",
-				"Ban Date", "Ban Reason" };
+		final String[] headers = { "UserTag", "UserID", "ModTag", "Mod ID", "Ban Date", "*****Ban Reason*****" };
 		for (int c = 0; c < bannedUsers.size(); c++) {
 			tableData[c][0] = bannedUsers.get(c).getBannedUserDiscordTag();
 			tableData[c][1] = String.valueOf(bannedUsers.get(c).getBannedUserId());
