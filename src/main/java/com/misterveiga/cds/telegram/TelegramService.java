@@ -14,15 +14,12 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.PropertySource;
 
 import com.misterveiga.cds.utils.Properties;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TelegramService.
  */
-@PropertySource("classpath:application.properties")
 public class TelegramService {
 
 	/** The dev note. */

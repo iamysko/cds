@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import com.misterveiga.cds.command.CommandImpl;
 import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.entities.Action;
-import com.misterveiga.cds.entities.BannedUser;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -321,7 +321,11 @@ public class ReactionListener extends ListenerAdapter {
 			final String evidence = sb.toString();
 
 			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, offenderId, evidence))
-					.allowedMentions(new ArrayList<MentionType>()).queue();
+					.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
+
+			final List<String> usersToBan = new ArrayList<>();
+			usersToBan.add(offenderId);
+			CommandImpl.executeBan(commandChannel, reactee, reactee.getAsMention(), usersToBan, offenseReason);
 
 		} catch (final IndexOutOfBoundsException e) {
 
@@ -396,38 +400,16 @@ public class ReactionListener extends ListenerAdapter {
 			final String evidence = sb.toString();
 			final String userToBan = banRequestMessageContent[1];
 
-			if (banRequestMessageContent[0].equalsIgnoreCase(";ban")) {
+			if (banRequestMessageContent[0].equalsIgnoreCase(";ban")
+					|| banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
+
 				commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
-						.allowedMentions(new ArrayList<MentionType>()).queue();
-				try {
-					final BannedUser bannedUser = new BannedUser();
-					bannedUser.setDate(Instant.now());
-					bannedUser.setModeratorUserId(message.getAuthor().getIdLong());
-					bannedUser.setModeratorDiscordTag(message.getAuthor().getAsTag());
-					bannedUser.setBannedUserId(Long.parseLong(userToBan));
-					bannedUser.setBannedUserDiscordTag("THIS IS A TEST");
-					bannedUser.setBannedUserReason(evidence);
-					cdsData.insertBannedUser(bannedUser);
-				} catch (final Exception e) {
-					// XXX: temp for mongo testing
-					log.warn(e.getMessage());
-				}
-			} else if (banRequestMessageContent[0].equalsIgnoreCase(";forceban")) {
-				commandChannel.sendMessage(String.format(COMMAND_FORCEBAN_USER_DEFAULT, userToBan, evidence))
-						.allowedMentions(new ArrayList<MentionType>()).queue();
-				try {
-					final BannedUser bannedUser = new BannedUser();
-					bannedUser.setDate(Instant.now());
-					bannedUser.setModeratorUserId(message.getAuthor().getIdLong());
-					bannedUser.setModeratorDiscordTag(message.getAuthor().getAsTag());
-					bannedUser.setBannedUserId(Long.parseLong(userToBan));
-					bannedUser.setBannedUserDiscordTag("THIS IS A TEST");
-					bannedUser.setBannedUserReason(evidence);
-					cdsData.insertBannedUser(bannedUser);
-				} catch (final Exception e) {
-					// XXX: temp for mongo testing
-					log.warn(e.getMessage());
-				}
+						.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove when appropriate
+
+				final List<String> usersToBan = new ArrayList<>();
+				usersToBan.add(userToBan);
+				CommandImpl.executeBan(commandChannel, reactee, reactee.getAsMention(), usersToBan, evidence);
+
 			} else {
 				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
 						" the ban you tried to invoke was not correctly formatted. Please run the command manually."))

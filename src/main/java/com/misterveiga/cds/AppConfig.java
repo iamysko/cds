@@ -22,7 +22,6 @@ import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.telegram.TelegramService;
-import com.misterveiga.cds.utils.Properties;
 import com.mongodb.client.MongoClients;
 
 import net.dv8tion.jda.api.JDA;
