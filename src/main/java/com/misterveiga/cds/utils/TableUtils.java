@@ -59,14 +59,6 @@ public class TableUtils {
 			}
 		}
 
-		for (int i = 0; i < maxWidths.length; i++) {
-			for (int c = 0; c < data[i].length; c++) {
-				if (maxWidths[c] < data[i][c].length()) {
-					maxWidths[c] = data[i][c].length();
-				}
-			}
-		}
-
 		log.info("[Image Generation] Max widths: {}", Arrays.toString(maxWidths));
 
 		for (int i = 0; i < columnNames.length; i++) {
