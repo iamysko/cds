@@ -49,7 +49,7 @@ public class TableUtils {
 			if (maxWidths.length == dataObject.length) {
 				for (int i = 0; i < dataObject.length; i++) {
 					if (maxWidths[i] < dataObject[i].length()) {
-						maxWidths[i] = dataObject[i].length() * 16;
+						maxWidths[i] = dataObject[i].length() * 8;
 					}
 				}
 			} else {
@@ -74,7 +74,7 @@ public class TableUtils {
 		for (final int i : maxWidths) {
 			totalWidth += i;
 		}
-		final int totalHeight = data.length * 16;
+		final int totalHeight = data.length * 16 + 16;
 		table.setSize(totalWidth, totalHeight);
 		header.setSize(totalWidth, 16);
 
