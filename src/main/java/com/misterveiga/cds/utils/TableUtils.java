@@ -29,6 +29,12 @@ public class TableUtils {
 		final TableModel model = new DefaultTableModel(data, columnNames);
 		final JTable table = new JTable(model);
 
+		for (int i = 0; i < columnNames.length; i++) {
+			if (maxWidths[i] < columnNames[i].length()) {
+				maxWidths[i] = columnNames[i].length();
+			}
+		}
+
 		for (int i = 0; i < data.length; i++) {
 			for (final int c = 0; c < data[i].length; i++) {
 				if (maxWidths[c] < data[i][c].length()) {
