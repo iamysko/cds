@@ -67,7 +67,8 @@ public class AppConfig {
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 		builder.setMemberCachePolicy(MemberCachePolicy.NONE);
-		builder.disableCache(CacheFlag.ACTIVITY);
+		builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE,
+				CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
 		builder.setChunkingFilter(ChunkingFilter.NONE);
 		builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
 		builder.setLargeThreshold(50);

@@ -39,23 +39,24 @@ public class MuteMaintainerThread {
 		final List<MutedUser> mutedUsers = cdsData.getMutedUsers();
 		log.info("[MuteMaintainerThread] Found {} muted users.", mutedUsers.size());
 
-		final List<MutedUser> usersToUnmute = new ArrayList<>();
-
-		for (final MutedUser user : mutedUsers) {
-			if (Instant.now().isBefore(user.getEndDate())) {
-				usersToUnmute.add(user);
+		if (mutedUsers.size() > 0) {
+			final List<MutedUser> usersToUnmute = new ArrayList<>();
+			for (final MutedUser user : mutedUsers) {
+				if (Instant.now().isBefore(user.getEndDate())) {
+					usersToUnmute.add(user);
+				}
 			}
-		}
-		log.info("[MuteMaintainerThread] Found {} candidates for unmute.", usersToUnmute.size());
+			log.info("[MuteMaintainerThread] Found {} candidates for unmute.", usersToUnmute.size());
 
-		for (final MutedUser user : usersToUnmute) {
-			final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
-			guild.removeRoleFromMember(user.getMutedUserId(), RoleUtils.getRoleByName(guild, "Muted"))
-					.queue(success -> {
-						cdsData.removeMutedUser(user.getMutedUserId());
-						log.info("[MuteMaintainerThread] Unmuted user {} ({})", user.getMutedUserDiscordTag(),
-								user.getMutedUserId());
-					});
+			for (final MutedUser user : usersToUnmute) {
+				final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
+				guild.removeRoleFromMember(user.getMutedUserId(), RoleUtils.getRoleByName(guild, "Muted"))
+						.queue(success -> {
+							cdsData.removeMutedUser(user.getMutedUserId());
+							log.info("[MuteMaintainerThread] Unmuted user {} ({})", user.getMutedUserDiscordTag(),
+									user.getMutedUserId());
+						});
+			}
 		}
 	}
 

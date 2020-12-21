@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.misterveiga.cds.command.CommandImpl;
 import com.misterveiga.cds.data.CdsDataImpl;
+import com.misterveiga.cds.utils.MessageFilter;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
@@ -79,9 +80,20 @@ public class MessageListener extends ListenerAdapter {
 			scanMessage(event.getMessage(), 1);
 		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_SUPERVISOR) != null) {
 			log.debug("Message received from a trial supervisor.");
-			scanMessage(event.getMessage(), 0);
+			if (!MessageFilter.filterMessage()) {
+				log.debug("Message filter triggered. Deleting.");
+				event.getMessage().delete().queue();
+			} else {
+				scanMessage(event.getMessage(), 0);
+			}
+
 		} else {
-			scanMessage(event.getMessage(), -1);
+			if (!MessageFilter.filterMessage()) {
+				log.debug("Message filter triggered. Deleting.");
+				event.getMessage().delete().queue();
+			} else {
+				scanMessage(event.getMessage(), -1);
+			}
 		}
 	}
 
@@ -224,7 +236,7 @@ public class MessageListener extends ListenerAdapter {
 
 		final String[] args = messageText.split(" ");
 
-		final String[] argsRefined = new String[2];
+		final String[] argsRefined = new String[3];
 		argsRefined[0] = args[1]; // "-m <userId1,userId2,userIdN> 1d1h1m1s This is an example of evidence."
 		argsRefined[1] = args[2]; // "-m userId1,userId2,userIdN <1d1h1m1s> This is an example of evidence."
 
