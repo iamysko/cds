@@ -66,7 +66,7 @@ public class AppConfig {
 		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-		builder.setMemberCachePolicy(MemberCachePolicy.NONE);
+		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
 		builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE,
 				CacheFlag.MEMBER_OVERRIDES);
 		builder.setChunkingFilter(ChunkingFilter.NONE);
