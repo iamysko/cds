@@ -243,7 +243,7 @@ public class CommandImpl {
 							log.info("Successfully banned user {} (ban executed by {})",
 									bannedUser.getBannedUserDiscordTag(), bannedUser.getModeratorDiscordTag());
 							commandChannel.sendMessage(new StringBuilder().append(authorMention)
-									.append("Successfully banned user ").append(bannedUser.getBannedUserDiscordTag())
+									.append(" Successfully banned user ").append(bannedUser.getBannedUserDiscordTag())
 									.append(" (").append(bannedUser.getBannedUserId()).append(")")).queue();
 						});
 
