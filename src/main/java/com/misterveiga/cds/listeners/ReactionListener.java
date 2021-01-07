@@ -282,20 +282,19 @@ public class ReactionListener extends ListenerAdapter {
 			lastAlertTime = now;
 			String messageContent = message.getContentStripped();
 			if (messageContent.length() > 200) {
-				messageContent = messageContent.substring(0, 201) + "...";
+				messageContent = messageContent.replace("\n", " ").substring(0, 201) + "...";
 			}
-			alertChannel
-					.sendMessage(new StringBuilder()
-							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
-							.append(" ")
-							.append(RoleUtils
-									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
-									.getAsMention())
-							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
-							.append(reactee.getId()).append("):\n").append(message.getJumpUrl())
-							.append("\nPreview:\n> ").append(messageContent)
-							.append("\n*(Access the jump URL to take action. Once finished, react to this message with :z_approve:)*"))
-					.queue(msg -> {
+			alertChannel.sendMessage(new StringBuilder()
+					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention()).append(" ")
+					.append(RoleUtils.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+							.getAsMention())
+					.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
+					.append(reactee.getId()).append(")\n against user ").append(messageAuthor.getAsMention())
+					.append(" (offender ID: ").append(messageAuthor.getId()).append("):\n").append(message.getJumpUrl())
+					.append("\nPreview:\n> ").append(messageContent)
+					.append("\n*(Access the jump URL to take action. Once finished, react to this message with*")
+					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention()).append("*)*"))
+					.allowedMentions(new ArrayList<MentionType>()).queue(msg -> {
 						msg.delete().queueAfter(2, TimeUnit.HOURS);
 					}, failure -> {
 						// Do nothing.
