@@ -135,11 +135,13 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_PURGE_MESSAGES:
 
-							blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
+							if (isStaffOnStaff(reactee, messageAuthor, commandChannel)
+									|| isInStaffChannel(reactee, commandChannel, event.getChannel())) {
+								return;
+							}
 
 							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
 									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
-
 								purgeMessagesInChannel(messageAuthor, channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
@@ -152,7 +154,10 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_QM_30:
 
-							blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
+							if (isStaffOnStaff(reactee, messageAuthor, commandChannel)
+									|| isInStaffChannel(reactee, commandChannel, event.getChannel())) {
+								return;
+							}
 
 							if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
@@ -171,7 +176,10 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_QM_60:
 
-							blockIfStaffOnStaff(reactee, messageAuthor, commandChannel);
+							if (isStaffOnStaff(reactee, messageAuthor, commandChannel)
+									|| isInStaffChannel(reactee, commandChannel, event.getChannel())) {
+								return;
+							}
 
 							if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
@@ -479,16 +487,32 @@ public class ReactionListener extends ListenerAdapter {
 		});
 	}
 
-	private void blockIfStaffOnStaff(final Member reactee, final Member messageAuthor,
-			final TextChannel commandChannel) {
+	private boolean isStaffOnStaff(final Member reactee, final Member messageAuthor, final TextChannel commandChannel) {
 		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
 				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)
 				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
 						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 					.append(" you cannot run commands on server staff.")).queue();
-			return; // Do nothing.
+			return true;
 		}
+		return false;
+	}
+
+	private boolean isInStaffChannel(final Member reactee, final TextChannel commandChannel,
+			final MessageChannel channel) {
+		final Long[] staffChannelIds = new Long[] { Properties.CHANNEL_MOD_ALERTS_ID, Properties.CHANNEL_COMMANDS_ID,
+				Properties.CHANNEL_SUPERVISORS_ID, Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID,
+				Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID };
+		final Long channelId = channel.getIdLong();
+		for (final Long id : staffChannelIds) {
+			if (channelId == id) {
+				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
+						.append(" you cannot run punishment commands in staff channels.")).queue();
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
