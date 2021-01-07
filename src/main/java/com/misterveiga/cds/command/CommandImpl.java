@@ -118,7 +118,7 @@ public class CommandImpl {
 						.append(" | ").append(bannedUser.getBannedUserReason()).append("\n");
 			});
 			sb.append("```");
-			message.getChannel().sendMessage(sb.toString()).addFile(generatedImage, "banned_users.jpg").queue();
+			message.getChannel().sendMessage(""/* sb.toString() */).addFile(generatedImage, "banned_users.jpg").queue();
 
 		} catch (final IOException e) {
 			log.error("Banned users table image could not be generated. Sending plaintext version.");
