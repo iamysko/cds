@@ -278,6 +278,8 @@ public class ReactionListener extends ListenerAdapter {
 
 	private void alertMods(final TextChannel alertChannel, final Member reactee, final Message message,
 			final Member messageAuthor, final Instant now) {
+		final ArrayList<MentionType> mentionTypes = new ArrayList<>();
+		mentionTypes.add(MentionType.ROLE);
 		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
 			lastAlertTime = now;
 			String messageContent = message.getContentStripped();
@@ -294,7 +296,7 @@ public class ReactionListener extends ListenerAdapter {
 					.append("\nPreview:\n> ").append(messageContent)
 					.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
 					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention()).append("*)*"))
-					.allowedMentions(new ArrayList<MentionType>()).queue(msg -> {
+					.allowedMentions(mentionTypes).queue(msg -> {
 						msg.delete().queueAfter(2, TimeUnit.HOURS);
 					}, failure -> {
 						// Do nothing.
