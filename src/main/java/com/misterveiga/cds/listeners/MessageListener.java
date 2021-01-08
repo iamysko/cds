@@ -153,13 +153,6 @@ public class MessageListener extends ListenerAdapter {
 
 				break;
 
-			} else if (messageText.matches(RegexConstants.SHOW_BANNED_USERS)) { // LIST BANNED USERS (-show_bans)
-				CommandImpl.executeListBannedUsers(message);
-				break;
-
-			} else if (messageText.matches(RegexConstants.SHOW_MUTED_USERS)) { // LIST MUTED USERS (-show_mutes)
-				CommandImpl.executeListMutedUsers(message);
-				break;
 			}
 
 		case 2: // SCS
@@ -333,16 +326,16 @@ public class MessageListener extends ListenerAdapter {
 	 * @param authorMention the author mention
 	 */
 	private void sendHelpMessage(final Message message, final String authorMention) {
-		message.getChannel().sendMessage(new StringBuilder().append(authorMention)
-				.append(" **Roblox Discord Services | Help**").append("\nPrefix for all commands: `rdss:<command>`")
-				.append("\nIf a command doesn't work for you, you may not have permission to run it.")
-				.append("\nHelp: \"rdss:help\" or \"rdss:?\"")
-				.append("\nWarn user(s): \"rdss:warn user1,user2,userN warning message\"")
-				.append("\nMute user(s): \"rdss:mute user1,user2,userN XdXhXm reason\"")
-				.append("\nUnmute user(s): \"rdss:unmute user1,user2,userN\"")
-				.append("\nBan user(s): \"rdss:ban user1,user2,userN reason (reason is optional)\"")
-				.append("\nUnban user(s): \"rdss:unban user1,user2,userN\"")
-				.append("\nShow active bans: \"rdss:show_bans\"").append("\nShow active mutes: \"rdss:show_mutes\""))
+		message.getChannel()
+				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
+						.append("\nPrefix for all commands: `rdss:<command>`")
+						.append("\nIf a command doesn't work for you, you may not have permission to run it.")
+						.append("\nHelp: \"rdss:help\" or \"rdss:?\"")
+						.append("\nWarn user(s): \"rdss:warn user1,user2,userN warning message\"")
+						.append("\nMute user(s): \"rdss:mute user1,user2,userN XdXhXm reason\"")
+						.append("\nUnmute user(s): \"rdss:unmute user1,user2,userN\"")
+						.append("\nBan user(s): \"rdss:ban user1,user2,userN reason (reason is optional)\"")
+						.append("\nUnban user(s): \"rdss:unban user1,user2,userN\""))
 				.queue();
 	}
 
