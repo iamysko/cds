@@ -287,17 +287,20 @@ public class ReactionListener extends ListenerAdapter {
 			if (messageContent.length() > 200) {
 				messageContent = messageContent.substring(0, 201) + "...";
 			}
-			alertChannel.sendMessage(new StringBuilder().append(
-					"⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n")
-					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention()).append(" ")
-					.append(RoleUtils.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
-							.getAsMention())
-					.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
-					.append(reactee.getId()).append(")\n against user ").append(messageAuthor.getAsMention())
-					.append(" (offender ID: ").append(messageAuthor.getId()).append("):\n").append(message.getJumpUrl())
-					.append("\nPreview:\n> ").append(messageContent)
-					.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
-					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention()).append("*)*"))
+			alertChannel
+					.sendMessage(new StringBuilder()
+							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
+							.append(" ")
+							.append(RoleUtils
+									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+									.getAsMention())
+							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
+							.append(reactee.getId()).append(")\n against user ").append(messageAuthor.getAsMention())
+							.append(" (offender ID: ").append(messageAuthor.getId()).append("):\n")
+							.append(message.getJumpUrl()).append("\nPreview:\n> ").append(messageContent)
+							.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
+							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
+							.append("*)*"))
 					.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 					.allowedMentions(mentionTypes).queue(msg -> {
 						msg.delete().queueAfter(2, TimeUnit.HOURS);
