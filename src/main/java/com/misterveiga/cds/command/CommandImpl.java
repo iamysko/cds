@@ -120,7 +120,7 @@ public class CommandImpl {
 							.append(bannedUser.getModeratorUserId()).append(" | ")
 							.append(bannedUser.getDate().toString()).append(" | ")
 							.append(bannedUser.getBannedUserReason()).append("\n");
-					if (c == 10 || sb.length() >= 1950) {
+					if (c == 10 || sb.length() >= 1500) {
 						break;
 					}
 				}
