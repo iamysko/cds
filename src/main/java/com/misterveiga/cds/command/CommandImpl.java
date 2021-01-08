@@ -111,29 +111,25 @@ public class CommandImpl {
 			sb.append("**Currently Banned Users**\n");
 			sb.append(
 					"```Banned User DiscordTag | Banned User ID | Moderator DiscordTag | Moderator ID | Ban Date | Ban Reason\n");
-			bannedUsers.forEach(bannedUser -> {
-				sb.append(bannedUser.getBannedUserDiscordTag()).append(" | ").append(bannedUser.getBannedUserId())
-						.append(" | ").append(bannedUser.getModeratorDiscordTag()).append(" | ")
-						.append(bannedUser.getModeratorUserId()).append(" | ").append(bannedUser.getDate().toString())
-						.append(" | ").append(bannedUser.getBannedUserReason()).append("\n");
-			});
-			sb.append("```");
-			message.getChannel().sendMessage("image").addFile(generatedImage, "banned_users.jpg").queue();
+			while (bannedUsers.size() != 0) {
+				int c = 0;
+				for (final BannedUser bannedUser : bannedUsers) {
+					c++;
+					sb.append(bannedUser.getBannedUserDiscordTag()).append(" | ").append(bannedUser.getBannedUserId())
+							.append(" | ").append(bannedUser.getModeratorDiscordTag()).append(" | ")
+							.append(bannedUser.getModeratorUserId()).append(" | ")
+							.append(bannedUser.getDate().toString()).append(" | ")
+							.append(bannedUser.getBannedUserReason()).append("\n");
+					if (c == 10 || sb.length() >= 1950) {
+						break;
+					}
+				}
+				sb.append("```");
+				message.getChannel().sendMessage(sb.toString()).addFile(generatedImage, "banned_users.jpg").queue();
+			}
 
 		} catch (final IOException e) {
-			log.error("Banned users table image could not be generated. Sending plaintext version.");
-			final StringBuilder sb = new StringBuilder();
-			sb.append("**Currently Banned Users**\n");
-			sb.append(
-					"```Banned User DiscordTag | Banned User ID | Moderator DiscordTag | Moderator ID | Ban Date | Ban Reason\n");
-			bannedUsers.forEach(bannedUser -> {
-				sb.append(bannedUser.getBannedUserDiscordTag()).append(" | ").append(bannedUser.getBannedUserId())
-						.append(" | ").append(bannedUser.getModeratorDiscordTag()).append(" | ")
-						.append(bannedUser.getModeratorUserId()).append(" | ").append(bannedUser.getDate().toString())
-						.append(" | ").append(bannedUser.getBannedUserReason()).append("\n");
-			});
-			sb.append("```");
-			message.getChannel().sendMessage(sb.toString()).queue();
+			log.error("Banned users could not be generated.");
 		}
 	}
 
