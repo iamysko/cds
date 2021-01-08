@@ -56,9 +56,11 @@ public class CdsDataImpl implements CdsData {
 	@Override
 	public void removeBannedUser(final Long userId) {
 		final MongoCollection<Document> banCollection = this.mongoTemplate.getCollection("bans");
+		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 		final BasicDBObject query = new BasicDBObject();
 		query.append("bannedUserId", userId);
-		banCollection.findOneAndDelete(query);
+		banCollection.withCodecRegistry(registry).findOneAndDelete(query);
 	}
 
 	/**
@@ -79,9 +81,11 @@ public class CdsDataImpl implements CdsData {
 	@Override
 	public void removeMutedUser(final Long userId) {
 		final MongoCollection<Document> muteCollection = this.mongoTemplate.getCollection("mutes");
+		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 		final BasicDBObject query = new BasicDBObject();
 		query.append("mutedUserId", userId);
-		muteCollection.findOneAndDelete(query);
+		muteCollection.withCodecRegistry(registry).findOneAndDelete(query);
 	}
 
 	/**
@@ -93,9 +97,11 @@ public class CdsDataImpl implements CdsData {
 	@Override
 	public MutedUser getMutedUser(final Long userId) {
 		final MongoCollection<Document> muteCollection = this.mongoTemplate.getCollection("mutes");
+		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 		final BasicDBObject query = new BasicDBObject();
 		query.append("mutedUserId", userId);
-		final MutedUser mutedUser = muteCollection.find(query, MutedUser.class).first();
+		final MutedUser mutedUser = muteCollection.withCodecRegistry(registry).find(query, MutedUser.class).first();
 		return mutedUser;
 	}
 
@@ -108,9 +114,11 @@ public class CdsDataImpl implements CdsData {
 	@Override
 	public BannedUser getBannedUser(final Long userId) {
 		final MongoCollection<Document> banCollection = this.mongoTemplate.getCollection("bans");
+		final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 		final BasicDBObject query = new BasicDBObject();
 		query.append("bannedUserId", userId);
-		final BannedUser bannedUser = banCollection.find(query, BannedUser.class).first();
+		final BannedUser bannedUser = banCollection.withCodecRegistry(registry).find(query, BannedUser.class).first();
 		return bannedUser;
 	}
 
