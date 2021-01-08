@@ -34,10 +34,10 @@ public class MuteMaintainerThread {
 	@Scheduled(fixedDelay = 30000)
 	public void checkMutes() {
 
-		log.info("[MuteMaintainerThread] Checking for mutes to expire...");
+		log.debug("[MuteMaintainerThread] Checking for mutes to expire...");
 
 		final List<MutedUser> mutedUsers = cdsData.getMutedUsers();
-		log.info("[MuteMaintainerThread] Found {} muted users.", mutedUsers.size());
+		log.debug("[MuteMaintainerThread] Found {} muted users.", mutedUsers.size());
 
 		if (mutedUsers.size() > 0) {
 			final List<MutedUser> usersToUnmute = new ArrayList<>();

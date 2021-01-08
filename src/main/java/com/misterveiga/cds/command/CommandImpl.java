@@ -33,50 +33,59 @@ public class CommandImpl {
 			final List<String> userIdsToMute, final Instant muteEndDate, final String reason) {
 		try {
 			for (final String userId : userIdsToMute) {
+
 				final Long id = Long.valueOf(userId);
-				try {
-					commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
-						final MutedUser mutedUser = new MutedUser();
-						mutedUser.setStartDate(Instant.now());
-						mutedUser.setEndDate(muteEndDate);
-						mutedUser.setModeratorUserId(author.getIdLong());
-						mutedUser.setModeratorDiscordTag(author.getUser().getAsTag());
-						mutedUser.setMutedUserId(id);
-						mutedUser.setMutedUserDiscordTag(
-								commandChannel.getGuild().retrieveMemberById(userId).complete().getUser().getAsTag());
-						mutedUser.setMuteReason(reason);
 
-						commandChannel.getGuild()
-								.addRoleToMember(id,
-										RoleUtils.getRoleByName(commandChannel.getGuild(), RoleUtils.ROLE_MUTED))
-								.queue(success -> {
-									cdsData.insertMutedUser(mutedUser);
-									log.info("Successfully muted user {} (mute executed by {})",
-											mutedUser.getMutedUserDiscordTag(), mutedUser.getModeratorDiscordTag());
-									commandChannel.sendMessage((new StringBuilder().append(authorMention)
-											.append(" Successfully muted ").append(mutedUser.getMutedUserDiscordTag())
-											.append("(").append(userId)
-											.append(")!\nThe mute will be lifted automatically on ")
-											.append(mutedUser.getEndDate().toString())
-											.append("\nTo unmute this user, use rdss:unban (see rdss:? for help).")))
-											.queue();
-								});
+				if (!cdsData.isMuted(id)) {
+					try {
+						commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
+							final MutedUser mutedUser = new MutedUser();
+							mutedUser.setStartDate(Instant.now());
+							mutedUser.setEndDate(muteEndDate);
+							mutedUser.setModeratorUserId(author.getIdLong());
+							mutedUser.setModeratorDiscordTag(author.getUser().getAsTag());
+							mutedUser.setMutedUserId(id);
+							mutedUser.setMutedUserDiscordTag(commandChannel.getGuild().retrieveMemberById(userId)
+									.complete().getUser().getAsTag());
+							mutedUser.setMuteReason(reason);
 
-					}, failure -> {
-						log.error("Rest Error -- User {} could not be received for mute.", userId);
-						commandChannel.sendMessage(new StringBuilder().append(authorMention)
-								.append(" Could not mute user ").append(userId)).queue();
-					});
-				} catch (final ErrorResponseException e) {
-					commandChannel
-							.sendMessage(new StringBuilder().append(authorMention).append("User ").append(userId)
-									.append(" could not be muted (User ID not resolvable or possible internal error)."))
-							.queue();
+							commandChannel.getGuild()
+									.addRoleToMember(id,
+											RoleUtils.getRoleByName(commandChannel.getGuild(), RoleUtils.ROLE_MUTED))
+									.queue(success -> {
+										cdsData.insertMutedUser(mutedUser);
+										log.info("Successfully muted user {} (mute executed by {})",
+												mutedUser.getMutedUserDiscordTag(), mutedUser.getModeratorDiscordTag());
+										commandChannel.sendMessage((new StringBuilder().append(authorMention)
+												.append(" Successfully muted ")
+												.append(mutedUser.getMutedUserDiscordTag()).append(" (").append(userId)
+												.append(")\nThe mute will be lifted automatically on ")
+												.append(mutedUser.getEndDate().toString())
+												.append(" (UTC)\n*To unmute this user manually, use rdss:unmute (see rdss:? for help).*")))
+												.queue();
+									});
+
+						}, failure -> {
+							log.error("Rest Error -- User {} could not be received for mute.", userId);
+							commandChannel.sendMessage(new StringBuilder().append(authorMention)
+									.append(" Could not mute user ").append(userId)).queue();
+						});
+					} catch (final ErrorResponseException e) {
+						commandChannel.sendMessage(
+								new StringBuilder().append(authorMention).append(" User ").append(userId).append(
+										" could not be muted (User ID not resolvable or possible internal error)."))
+								.queue();
+					}
+				} else {
+					commandChannel.sendMessage(new StringBuilder().append(authorMention).append(" User ").append(userId)
+							.append(" is already muted.")).queue();
 				}
+
 			}
 		} catch (final NumberFormatException e) {
+			log.error("Mute command NumberFormatException: {}", e.getMessage());
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
+					.append(" Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -108,8 +117,9 @@ public class CommandImpl {
 				}
 			}
 		} catch (final NumberFormatException e) {
+			log.error("Unmute command NumberFormatException: {}", e.getMessage());
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
+					.append(" Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -161,8 +171,9 @@ public class CommandImpl {
 				}
 			}
 		} catch (final NumberFormatException e) {
+			log.error("Ban command NumberFormatException: {}", e.getMessage());
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
+					.append(" Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 
@@ -192,15 +203,15 @@ public class CommandImpl {
 						});
 					});
 				} catch (final ErrorResponseException e) {
-					commandChannel
-							.sendMessage(new StringBuilder().append(authorMention)
-									.append("This user could not be banned (User ID not resolvable): ").append(userId))
+					commandChannel.sendMessage(new StringBuilder().append(authorMention)
+							.append("This user could not be unbanned (User ID not resolvable): ").append(userId))
 							.queue();
 				}
 			}
 		} catch (final NumberFormatException e) {
+			log.error("Unban command NumberFormatException: {}", e.getMessage());
 			commandChannel.sendMessage(new StringBuilder().append(authorMention)
-					.append("Command parameters incorrect. For more information, see rdss:?")).queue();
+					.append(" Command parameters incorrect. For more information, see rdss:?")).queue();
 		}
 	}
 

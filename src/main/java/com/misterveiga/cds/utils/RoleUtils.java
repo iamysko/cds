@@ -75,9 +75,12 @@ public class RoleUtils {
 	public static Role getRoleByName(final Guild guild, final String name) {
 
 		if (guild != null) {
-			final List<Role> roles = guild.getRoles();
+			// final List<Role> roles = guild.getRoles();
 
-			return roles.stream().filter(role -> role.getName().equals(name)).findFirst().orElse(null);
+			return guild.getRolesByName(name, true).get(0) != null ? guild.getRolesByName(name, true).get(0) : null;
+
+			// return roles.stream().filter(role ->
+			// role.getName().equals(name)).findFirst().orElse(null);
 		}
 
 		return null;

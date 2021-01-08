@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.misterveiga.cds.command.CommandImpl;
 import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.entities.Action;
+import com.misterveiga.cds.utils.DurationUtils;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -282,11 +283,12 @@ public class ReactionListener extends ListenerAdapter {
 		mentionTypes.add(MentionType.ROLE);
 		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
 			lastAlertTime = now;
-			String messageContent = message.getContentStripped();
+			String messageContent = message.getContentStripped().replace("\n", " ");
 			if (messageContent.length() > 200) {
-				messageContent = messageContent.replace("\n", " ").substring(0, 201) + "...";
+				messageContent = messageContent.substring(0, 201) + "...";
 			}
-			alertChannel.sendMessage(new StringBuilder()
+			alertChannel.sendMessage(new StringBuilder().append(
+					"⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n")
 					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention()).append(" ")
 					.append(RoleUtils.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
 							.getAsMention())
@@ -295,6 +297,7 @@ public class ReactionListener extends ListenerAdapter {
 					.append(" (offender ID: ").append(messageAuthor.getId()).append("):\n").append(message.getJumpUrl())
 					.append("\nPreview:\n> ").append(messageContent)
 					.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
+					.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 					.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention()).append("*)*"))
 					.allowedMentions(mentionTypes).queue(msg -> {
 						msg.delete().queueAfter(2, TimeUnit.HOURS);
@@ -468,6 +471,12 @@ public class ReactionListener extends ListenerAdapter {
 						.allowedMentions(new ArrayList<MentionType>()).queue();
 			});
 		}
+
+		final Instant muteEndDate = DurationUtils.addDurationStringToCurrentDate(muteDuration);
+		final List<String> ids = new ArrayList<>();
+		ids.add(messageAuthor.getId());
+		CommandImpl.executeMute(commandChannel, messageAuthor, messageAuthor.getAsMention(), ids, muteEndDate,
+				messageContent.replace("\n", " "));
 
 	}
 
