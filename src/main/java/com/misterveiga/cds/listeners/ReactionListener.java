@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import com.misterveiga.cds.command.CommandImpl;
 import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.entities.Action;
-import com.misterveiga.cds.utils.DurationUtils;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RoleUtils;
 
@@ -475,11 +474,11 @@ public class ReactionListener extends ListenerAdapter {
 			});
 		}
 
-		final Instant muteEndDate = DurationUtils.addDurationStringToCurrentDate(muteDuration);
-		final List<String> ids = new ArrayList<>();
-		ids.add(messageAuthor.getId());
-		CommandImpl.executeMute(commandChannel, messageAuthor, messageAuthor.getAsMention(), ids, muteEndDate,
-				messageContent.replace("\n", " "));
+//		final Instant muteEndDate = DurationUtils.addDurationStringToCurrentDate(muteDuration);
+//		final List<String> ids = new ArrayList<>();
+//		ids.add(messageAuthor.getId());
+//		CommandImpl.executeMute(commandChannel, messageAuthor, messageAuthor.getAsMention(), ids, muteEndDate,
+//				messageContent.replace("\n", " "));
 
 	}
 
