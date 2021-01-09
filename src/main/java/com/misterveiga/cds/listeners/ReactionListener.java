@@ -135,13 +135,10 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_PURGE_MESSAGES:
 
-							if (isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									|| isInStaffChannel(reactee, commandChannel, event.getChannel())) {
-								return;
-							}
-
-							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
+									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
 								purgeMessagesInChannel(messageAuthor, channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
@@ -154,13 +151,10 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_QM_30:
 
-							if (isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									|| isInStaffChannel(reactee, commandChannel, event.getChannel())) {
-								return;
-							}
-
-							if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
+									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
 
 								muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 								purgeMessagesInChannel(messageAuthor, channel);
@@ -176,13 +170,10 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_QM_60:
 
-							if (isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									|| isInStaffChannel(reactee, commandChannel, event.getChannel())) {
-								return;
-							}
-
-							if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-									RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
+									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
 
 								muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 								purgeMessagesInChannel(messageAuthor, channel);
