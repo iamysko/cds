@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Role;
 public class RoleUtils {
 
 	/** The Constant ROLE_TRIAL_SUPERVISOR. */
-	public static final String ROLE_TRIAL_SUPERVISOR = "Trial Supervisor";
+	public static final String ROLE_TRIAL_SUPERVISOR = "Trial Community Supervisor";
 
 	/** The Constant ROLE_COMMUNITY_SUPERVISOR. */
 	public static final String ROLE_COMMUNITY_SUPERVISOR = "Community Supervisor";

@@ -138,7 +138,7 @@ public class ReactionListener extends ListenerAdapter {
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
 								purgeMessagesInChannel(messageAuthor, channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
