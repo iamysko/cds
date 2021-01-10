@@ -269,34 +269,45 @@ public class ReactionListener extends ListenerAdapter {
 
 	private void alertMods(final TextChannel alertChannel, final Member reactee, final Message message,
 			final Member messageAuthor, final Instant now) {
-		final ArrayList<MentionType> mentionTypes = new ArrayList<>();
-		mentionTypes.add(MentionType.ROLE);
 		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
 			lastAlertTime = now;
-			String messageContent = message.getContentStripped().replace("\n", " ");
-			if (messageContent.length() > 200) {
-				messageContent = messageContent.substring(0, 201) + "...";
-			}
-			alertChannel
-					.sendMessage(new StringBuilder()
-							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
-							.append(" ")
-							.append(RoleUtils
-									.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
-									.getAsMention())
-							.append(" Alert received from ").append(reactee.getAsMention()).append(" (ID: ")
-							.append(reactee.getId()).append(")\n against user ").append(messageAuthor.getAsMention())
-							.append(" (offender ID: ").append(messageAuthor.getId()).append("):\n")
-							.append(message.getJumpUrl()).append("\nPreview:\n> ").append(messageContent)
-							.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
-							.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
-							.append("*)*"))
-					.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
-					.allowedMentions(mentionTypes).queue(msg -> {
-						msg.delete().queueAfter(2, TimeUnit.HOURS);
-					}, failure -> {
-						// Do nothing.
-					});
+			alertChannel.getHistory().retrievePast(100).queue(existingAlerts -> {
+				Boolean exists = false;
+				for (final Message msg : existingAlerts) {
+					if (message.getIdLong() == msg.getIdLong()) {
+						exists = true;
+					}
+				}
+				if (!exists) {
+					String messageContent = message.getContentStripped().replace("\n", " ");
+					if (messageContent.length() > 200) {
+						messageContent = messageContent.substring(0, 201) + "...";
+					}
+					final ArrayList<MentionType> mentionTypes = new ArrayList<>();
+					mentionTypes.add(MentionType.ROLE);
+					alertChannel
+							.sendMessage(new StringBuilder()
+									.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
+									.append(" ")
+									.append(RoleUtils
+											.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+											.getAsMention())
+									.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: ")
+									.append(reactee.getId()).append(")\n**Against:** ")
+									.append(messageAuthor.getAsMention()).append(" (ID: ").append(messageAuthor.getId())
+									.append(")\n").append(message.getJumpUrl()).append("\n**Preview:**\n> ")
+									.append(messageContent)
+									.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
+									.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
+									.append("*)*"))
+							.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
+							.allowedMentions(mentionTypes).queue(msg -> {
+								msg.delete().queueAfter(2, TimeUnit.HOURS);
+							}, failure -> {
+								// Do nothing.
+							});
+				}
+			});
 		}
 	}
 
