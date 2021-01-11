@@ -312,8 +312,8 @@ public class ReactionListener extends ListenerAdapter {
 													.getAsMention())
 											.append("*)*"))
 									.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
-									.allowedMentions(mentionTypes).queue(msg -> {
-										msg.delete().queueAfter(2, TimeUnit.HOURS);
+									.allowedMentions(mentionTypes).queue(m -> {
+										m.delete().queueAfter(2, TimeUnit.HOURS);
 									}, failure -> {
 										// Do nothing.
 									});
