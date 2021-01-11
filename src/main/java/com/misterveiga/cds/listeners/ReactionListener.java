@@ -10,6 +10,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -272,44 +274,84 @@ public class ReactionListener extends ListenerAdapter {
 		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
 			lastAlertTime = now;
 			alertChannel.getHistory().retrievePast(100).queue(existingAlerts -> {
-				boolean exists = false;
+				// boolean exists = false;
+
+				final String pattern = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+				final Pattern patt = Pattern.compile(pattern);
+
 				for (final Message msg : existingAlerts) {
+
+					final Matcher matcher = patt.matcher(msg.getContentRaw());
+
+					if (matcher.find()) {
+						if (message.getJumpUrl().contentEquals(matcher.group(1))) {
+							this.log.info("Found existing alert. Set to true for {}", matcher.group(1));
+							// exists = true;
+						} else {
+							String messageContent = message.getContentStripped().replace("\n", " ");
+							if (messageContent.length() > 200) {
+								messageContent = messageContent.substring(0, 201) + "...";
+							}
+							final ArrayList<MentionType> mentionTypes = new ArrayList<>();
+							mentionTypes.add(MentionType.ROLE);
+							alertChannel
+									.sendMessage(new StringBuilder()
+											.append(alertChannel
+													.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
+											.append(" ")
+											.append(RoleUtils.getRoleByName(
+													alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+													.getAsMention())
+											.append("\n**Alert from:** ").append(reactee.getAsMention())
+											.append(" (ID: ").append(reactee.getId()).append(")\n**Against:** ")
+											.append(messageAuthor.getAsMention()).append(" (ID: ")
+											.append(messageAuthor.getId()).append(")\n").append(message.getJumpUrl())
+											.append("\n**Preview:**\n> ").append(messageContent)
+											.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
+											.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE)
+													.getAsMention())
+											.append("*)*"))
+									.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
+									.allowedMentions(mentionTypes).queue(msg -> {
+										msg.delete().queueAfter(2, TimeUnit.HOURS);
+									}, failure -> {
+										// Do nothing.
+									});
+						}
+					}
 					this.log.info("Iterating through existing alerts...");
-					if (message.getIdLong() == msg.getIdLong()) {
-						this.log.info("Found existing alert. Set to true.");
-						exists = true;
-					}
+
 				}
-				if (exists != true) {
-					this.log.info("Found existing alert. Set to true.");
-					String messageContent = message.getContentStripped().replace("\n", " ");
-					if (messageContent.length() > 200) {
-						messageContent = messageContent.substring(0, 201) + "...";
-					}
-					final ArrayList<MentionType> mentionTypes = new ArrayList<>();
-					mentionTypes.add(MentionType.ROLE);
-					alertChannel
-							.sendMessage(new StringBuilder()
-									.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
-									.append(" ")
-									.append(RoleUtils
-											.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
-											.getAsMention())
-									.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: ")
-									.append(reactee.getId()).append(")\n**Against:** ")
-									.append(messageAuthor.getAsMention()).append(" (ID: ").append(messageAuthor.getId())
-									.append(")\n").append(message.getJumpUrl()).append("\n**Preview:**\n> ")
-									.append(messageContent)
-									.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
-									.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
-									.append("*)*"))
-							.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
-							.allowedMentions(mentionTypes).queue(msg -> {
-								msg.delete().queueAfter(2, TimeUnit.HOURS);
-							}, failure -> {
-								// Do nothing.
-							});
-				}
+//				if (exists != true) {
+//					this.log.info("Found existing alert. Set to true.");
+//					String messageContent = message.getContentStripped().replace("\n", " ");
+//					if (messageContent.length() > 200) {
+//						messageContent = messageContent.substring(0, 201) + "...";
+//					}
+//					final ArrayList<MentionType> mentionTypes = new ArrayList<>();
+//					mentionTypes.add(MentionType.ROLE);
+//					alertChannel
+//							.sendMessage(new StringBuilder()
+//									.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
+//									.append(" ")
+//									.append(RoleUtils
+//											.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+//											.getAsMention())
+//									.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: ")
+//									.append(reactee.getId()).append(")\n**Against:** ")
+//									.append(messageAuthor.getAsMention()).append(" (ID: ").append(messageAuthor.getId())
+//									.append(")\n").append(message.getJumpUrl()).append("\n**Preview:**\n> ")
+//									.append(messageContent)
+//									.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
+//									.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
+//									.append("*)*"))
+//							.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
+//							.allowedMentions(mentionTypes).queue(msg -> {
+//								msg.delete().queueAfter(2, TimeUnit.HOURS);
+//							}, failure -> {
+//								// Do nothing.
+//							});
+//				}
 			});
 		}
 	}
