@@ -9,7 +9,7 @@ package com.misterveiga.cds.utils;
 public class Properties {
 
 	/** The Constant ALERT_MODS_COOLDOWN. */
-	public static final Long ALERT_MODS_COOLDOWN = 30L; // Seconds
+	public static final Long ALERT_MODS_COOLDOWN = 10L; // Seconds
 
 	/** The Constant TELEGRAM_CHAT_ID. */
 	public static final String TELEGRAM_CHAT_ID = "-1001446733742";
