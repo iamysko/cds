@@ -280,7 +280,7 @@ public class ReactionListener extends ListenerAdapter {
 						exists = true;
 					}
 				}
-				if (!exists) {
+				if (exists != true) {
 					this.log.info("Found existing alert. Set to true.");
 					String messageContent = message.getContentStripped().replace("\n", " ");
 					if (messageContent.length() > 200) {
