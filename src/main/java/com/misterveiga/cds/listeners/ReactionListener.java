@@ -274,11 +274,14 @@ public class ReactionListener extends ListenerAdapter {
 			alertChannel.getHistory().retrievePast(100).queue(existingAlerts -> {
 				boolean exists = false;
 				for (final Message msg : existingAlerts) {
-					if (message.getId().equals(msg.getId())) {
+					this.log.info("Iterating through existing alerts...");
+					if (message.getIdLong() == msg.getIdLong()) {
+						this.log.info("Found existing alert. Set to true.");
 						exists = true;
 					}
 				}
 				if (!exists) {
+					this.log.info("Found existing alert. Set to true.");
 					String messageContent = message.getContentStripped().replace("\n", " ");
 					if (messageContent.length() > 200) {
 						messageContent = messageContent.substring(0, 201) + "...";
