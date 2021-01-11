@@ -272,9 +272,9 @@ public class ReactionListener extends ListenerAdapter {
 		if (alertChannel != null && ChronoUnit.SECONDS.between(lastAlertTime, now) > Properties.ALERT_MODS_COOLDOWN) {
 			lastAlertTime = now;
 			alertChannel.getHistory().retrievePast(100).queue(existingAlerts -> {
-				Boolean exists = false;
+				boolean exists;
 				for (final Message msg : existingAlerts) {
-					if (message.getIdLong() == msg.getIdLong()) {
+					if (message.getId().equals(msg.getId())) {
 						exists = true;
 					}
 				}
