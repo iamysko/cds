@@ -354,7 +354,7 @@ public class ReactionListener extends ListenerAdapter {
 	private void rejectBanRequest(final Member reactee, final Message message, final TextChannel commandChannel) {
 		try {
 
-			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
+			final String[] banRequestMessageContent = message.getContentStripped().replaceAll("\\s+", " ").split(" ");
 			final String reportedUserId = banRequestMessageContent[1];
 			final User reportedUser = commandChannel.getJDA().getUserById(reportedUserId);
 
@@ -396,7 +396,7 @@ public class ReactionListener extends ListenerAdapter {
 	private void approveBanRequest(final Member reactee, final Message message, final TextChannel commandChannel) {
 		try {
 
-			final String[] banRequestMessageContent = message.getContentStripped().split(" ");
+			final String[] banRequestMessageContent = message.getContentStripped().replaceAll("\\s+", " ").split(" ");
 			final StringBuilder sb = new StringBuilder();
 			sb.append("(approved by ").append(reactee.getUser().getAsTag()).append(" (").append(reactee.getId())
 					.append(")) ");
