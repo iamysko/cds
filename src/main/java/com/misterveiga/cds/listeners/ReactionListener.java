@@ -8,7 +8,9 @@ package com.misterveiga.cds.listeners;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,8 @@ public class ReactionListener extends ListenerAdapter {
 	public CdsDataImpl cdsData;
 
 	private Instant lastAlertTime = Instant.now();
+	
+	private Map<Long, Long> existingAlertsMap = new HashMap<>();
 
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
@@ -116,8 +120,10 @@ public class ReactionListener extends ListenerAdapter {
 					.retrieveMemberById(message.getAuthor().getId()).queue(messageAuthor -> {
 
 						if (emoteId.equals(ID_REACTION_ALERT_MODS)) {
-							alertMods(event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
-									message, messageAuthor, Instant.now());
+							if(existingAlertsMap.get(message.getIdLong()) == null) {
+								alertMods(event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID), reactee,
+										message, messageAuthor, Instant.now());
+							}
 						}
 
 						if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
@@ -294,7 +300,10 @@ public class ReactionListener extends ListenerAdapter {
 								.append("*)*"))
 						.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 						.allowedMentions(mentionTypes).queue(msg -> {
-							msg.delete().queueAfter(2, TimeUnit.HOURS);
+							existingAlertsMap.put(message.getIdLong(), msg.getIdLong());
+							msg.delete().queueAfter(2, TimeUnit.HOURS, success -> {
+								existingAlertsMap.remove(message.getIdLong());
+							});
 						}, failure -> {
 							// Do nothing.
 						});
