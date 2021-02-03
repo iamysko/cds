@@ -339,9 +339,9 @@ public class ReactionListener extends ListenerAdapter {
 			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, offenderId, evidence))
 					.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 
-			final List<String> usersToBan = new ArrayList<>();
-			usersToBan.add(offenderId);
-			CommandImpl.executeBan(commandChannel, reactee, reactee.getAsMention(), usersToBan, offenseReason);
+//			final List<String> usersToBan = new ArrayList<>();
+//			usersToBan.add(offenderId);
+//			CommandImpl.executeBan(commandChannel, reactee, reactee.getAsMention(), usersToBan, offenseReason);
 
 		} catch (final IndexOutOfBoundsException e) {
 
@@ -422,9 +422,9 @@ public class ReactionListener extends ListenerAdapter {
 				commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, userToBan, evidence))
 						.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove when appropriate
 
-				final List<String> usersToBan = new ArrayList<>();
-				usersToBan.add(userToBan);
-				CommandImpl.executeBan(commandChannel, reactee, reactee.getAsMention(), usersToBan, evidence);
+//				final List<String> usersToBan = new ArrayList<>();
+//				usersToBan.add(userToBan);
+//				CommandImpl.executeBan(commandChannel, reactee, reactee.getAsMention(), usersToBan, evidence);
 
 			} else {
 				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
