@@ -527,5 +527,4 @@ public class ReactionListener extends ListenerAdapter {
 		}
 		return false;
 	}
-	
 }
