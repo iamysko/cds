@@ -127,7 +127,7 @@ public class ReactionListener extends ListenerAdapter {
 
 						if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 								RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR,
-								RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+								RoleUtils.ROLE_TRIAL_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 							return; // Do nothing.
 						}
 
@@ -502,9 +502,9 @@ public class ReactionListener extends ListenerAdapter {
 
 	private boolean isStaffOnStaff(final Member reactee, final Member messageAuthor, final TextChannel commandChannel) {
 		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)
+				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)
 				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 					.append(" you cannot run commands on server staff.")).queue();
 			return true;
@@ -527,5 +527,5 @@ public class ReactionListener extends ListenerAdapter {
 		}
 		return false;
 	}
-
+	
 }
