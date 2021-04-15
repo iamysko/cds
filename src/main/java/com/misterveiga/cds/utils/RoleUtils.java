@@ -35,6 +35,9 @@ public class RoleUtils {
 	/** The Constant ROLE_INFRASTRUCTURE. */
 	public static final String ROLE_INFRASTRUCTURE = "Infrastructure";
 
+	/** The Constant ROLE_BOT. */
+	public static final String ROLE_BOT = "Bot";
+
 	public static final String ROLE_MUTED = "Muted";
 
 	/**

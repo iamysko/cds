@@ -143,7 +143,7 @@ public class ReactionListener extends ListenerAdapter {
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 								purgeMessagesInChannel(messageAuthor, channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
@@ -159,7 +159,7 @@ public class ReactionListener extends ListenerAdapter {
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 
 								muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 								purgeMessagesInChannel(messageAuthor, channel);
@@ -178,7 +178,7 @@ public class ReactionListener extends ListenerAdapter {
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR)) {
+											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 
 								muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 								purgeMessagesInChannel(messageAuthor, channel);
