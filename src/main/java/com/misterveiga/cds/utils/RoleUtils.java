@@ -51,6 +51,10 @@ public class RoleUtils {
 
 		if (member != null) {
 			final List<Role> roles = member.getRoles();
+			
+			for (Role role : roles) {
+				System.out.println("Member " + member.toString() + " roles: " + role.getName());	
+			}
 
 			return roles.stream().filter(role -> role.getName().equals(name)).findFirst().orElse(null);
 		}
