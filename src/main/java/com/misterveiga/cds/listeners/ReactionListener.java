@@ -110,7 +110,7 @@ public class ReactionListener extends ListenerAdapter {
 
 		if (!emoteId.equals(ID_REACTION_ALERT_MODS)
 				&& !RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 			return; // Do nothing.
 		}
 
