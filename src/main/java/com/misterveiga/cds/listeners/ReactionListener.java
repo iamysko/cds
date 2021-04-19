@@ -155,11 +155,7 @@ public class ReactionListener extends ListenerAdapter {
 							break;
 
 						case ID_REACTION_QM_30:
-							
-							System.out.print("isStaffOnStaff: " + isStaffOnStaff(reactee, messageAuthor, commandChannel) + ", ");
-							System.out.print("isInStaffChannel: " + isInStaffChannel(reactee, commandChannel, event.getChannel()) + ", ");
-							System.out.print("isAnyRole: " + RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT));
-
+						
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
