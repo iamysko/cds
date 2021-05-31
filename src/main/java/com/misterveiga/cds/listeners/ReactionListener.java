@@ -198,6 +198,7 @@ public class ReactionListener extends ListenerAdapter {
 									RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+									if (!reactee.getIdLong() == messageAuthor.getIdLong() {
 									clearAlert(commandChannel,
 											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
 											reactee, message, messageAuthor, Instant.now());
@@ -206,6 +207,7 @@ public class ReactionListener extends ListenerAdapter {
 									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
+									}
 								}
 
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
@@ -299,6 +301,7 @@ public class ReactionListener extends ListenerAdapter {
 								.append("*)*"))
 						.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 						.allowedMentions(mentionTypes).queue(msg -> {
+							msg.addReaction("z_approve:762388343253106688").queue();
 							existingAlertsMap.putIfAbsent(message.getIdLong(), msg.getIdLong());
 							msg.delete().queueAfter(2, TimeUnit.HOURS, success -> {
 								existingAlertsMap.remove(message.getIdLong());
