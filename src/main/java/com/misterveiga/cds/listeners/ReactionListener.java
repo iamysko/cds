@@ -198,7 +198,7 @@ public class ReactionListener extends ListenerAdapter {
 									RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
 
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
-									if (!reactee.getIdLong() == messageAuthor.getIdLong() {
+									if (!reactee.getIdLong() == messageAuthor.getIdLong()) {
 									clearAlert(commandChannel,
 											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
 											reactee, message, messageAuthor, Instant.now());
