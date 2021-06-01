@@ -32,7 +32,7 @@ public class Properties {
 	/** The Constant CHANNEL_CENSORED_AND_SPAM_LOGS_ID. */
 	public static final Long CHANNEL_CENSORED_AND_SPAM_LOGS_ID = 366624802024325120L;
 
-	public static final Long CHANNEL_MESSAGE_LOGS_ID = 366624514651717663;
+	public static final Long CHANNEL_MESSAGE_LOGS_ID = 366624514651717663L;
 
 	/** The Constant CHANNEL_MOD_ALERTS_ID. */
 	public static final Long CHANNEL_MOD_ALERTS_ID = 785821764839669791L;
