@@ -219,13 +219,14 @@ public class ReactionListener extends ListenerAdapter {
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 								} else if (event.getChannel()
-										.getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID) {
+										.getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID || 
+										event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
 
-									approveCensoredBan(reactee, message, commandChannel);
+									approveLogsBan(reactee, message, commandChannel);
 
 									commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
 									log.info(
-											"[Reaction Command] Censored message ban approved by {} ({}) (request: {})",
+											"[Reaction Command] Logs message ban approved by {} ({}) (request: {})",
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 								}
@@ -325,7 +326,7 @@ public class ReactionListener extends ListenerAdapter {
 	 * @param message        the message
 	 * @param commandChannel the command channel
 	 */
-	private void approveCensoredBan(final Member reactee, final Message message, final TextChannel commandChannel) {
+	private void approveLogsBan(final Member reactee, final Message message, final TextChannel commandChannel) {
 
 		try {
 
@@ -334,7 +335,7 @@ public class ReactionListener extends ListenerAdapter {
 			final String offenseReason = rawMessage.split("```")[1];
 
 			final StringBuilder sb = new StringBuilder();
-			sb.append("(Censored message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
+			sb.append("(Logs message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
 					.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
 			final String evidence = sb.toString();
 
@@ -348,7 +349,7 @@ public class ReactionListener extends ListenerAdapter {
 		} catch (final IndexOutOfBoundsException e) {
 
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-					" an unknown error occurred with your censored log ban approval. Please run the command manually."))
+					" an unknown error occurred with your logs ban approval. Please run the command manually."))
 					.queue();
 
 		}
