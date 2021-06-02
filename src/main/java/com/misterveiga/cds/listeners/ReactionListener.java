@@ -171,9 +171,7 @@ public class ReactionListener extends ListenerAdapter {
 										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
 								}
-							}
-
-							if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+							} else {
 								final String rawMessage = message.getContentRaw();
 								final String channelId = rawMessage.split("/")[6];
 								final String messageId = rawMessage.split("/")[7];
@@ -214,9 +212,7 @@ public class ReactionListener extends ListenerAdapter {
 										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
 								}
-							}
-
-							if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+							} else {
 								final String rawMessage = message.getContentRaw();
 								final String channelId = rawMessage.split("/")[6];
 								final String messageId = rawMessage.split("/")[7];
