@@ -352,11 +352,15 @@ public class ReactionListener extends ListenerAdapter {
 								.append(" (ID: `").append(messageAuthor.getId()).append("`)\n")
 								.append(message.getJumpUrl()).append("/\n**Preview:**\n> ").append(messageContent)
 								.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
-								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
+								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention()
+								.append", " alertChannel.getJDA().getEmoteById(ID_REACTION_QM_30).getAsMention())
+								.append" or " alertChannel.getJDA().getEmoteById(ID_REACTION_QM_60).getAsMention())
 								.append("*)*"))
 						.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 						.allowedMentions(mentionTypes).queue(msg -> {
 							msg.addReaction("z_approve:762388343253106688").queue();
+							msg.addReaction("z_qm30:760204798984454175").queue();
+							msg.addReaction("z_qm60:452813334429827072").queue();
 							existingAlertsMap.putIfAbsent(message.getIdLong(), msg.getIdLong());
 							msg.delete().queueAfter(2, TimeUnit.HOURS, success -> {
 								existingAlertsMap.remove(message.getIdLong());
