@@ -181,9 +181,7 @@ public class ReactionListener extends ListenerAdapter {
 									event.getGuild().retrieveMemberById(authorId).queue((author) -> {
 										muteUser(reactee, author, "30m", alertmessage, commandChannel);
 
-										event.getGuild().getTextChannelById(channelId).queue((messagechannel) -> {
-											purgeMessagesInChannel(author, messagechannel);
-										});
+										purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
 									});
 								});
 
@@ -229,9 +227,7 @@ public class ReactionListener extends ListenerAdapter {
 									event.getGuild().retrieveMemberById(authorId).queue((author) -> {
 										muteUser(reactee, author, "60m", alertmessage, commandChannel);
 
-										event.getGuild().getTextChannelById(channelId).queue((messagechannel) -> {
-											purgeMessagesInChannel(author, messagechannel);
-										});
+										purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
 									});
 								});
 
