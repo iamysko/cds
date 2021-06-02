@@ -157,7 +157,7 @@ public class ReactionListener extends ListenerAdapter {
 						case ID_REACTION_QM_30:
 						
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									&& !event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID
+									&& event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
@@ -199,7 +199,7 @@ public class ReactionListener extends ListenerAdapter {
 						case ID_REACTION_QM_60:
 
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									&& !event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID
+									&& event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
