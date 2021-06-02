@@ -171,7 +171,39 @@ public class ReactionListener extends ListenerAdapter {
 
 							}
 
-							break;
+							if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+								final String rawMessage = message.getContentRaw();
+								final String channelId = rawMessage.split("/")[6];
+								final String messageId = rawMessage.split("/")[7];
+
+								event.getGuild().getTextChannelById(channelId)channel.retrieveMessageById(id).queue((alertmessage) -> {
+									muteUser(reactee, messageAuthor, "30m", alertmessage, commandChannel);
+									
+								}, (failure) -> {
+									if (failure instanceof ErrorResponseException) {
+										ErrorResponseException ex = (ErrorResponseException) failure;
+										if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
+											commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+												" an unknown error occurred with your automated mute. Please run the command manually."))
+											.queue();
+										}
+									}
+								});
+
+									
+								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
+								clearAlert(commandChannel,
+										event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+										reactee, message, messageAuthor, Instant.now());
+
+								commandAction.setActionType("REACTION_ALERT_DONE");
+								log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
+								}
+							}
+
+						break;
 
 						case ID_REACTION_QM_60:
 
@@ -188,6 +220,38 @@ public class ReactionListener extends ListenerAdapter {
 								log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
 										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
+							}
+
+							if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
+								final String rawMessage = message.getContentRaw();
+								final String channelId = rawMessage.split("/")[6];
+								final String messageId = rawMessage.split("/")[7];
+
+								event.getGuild().getTextChannelById(channelId)channel.retrieveMessageById(id).queue((alertmessage) -> {
+									muteUser(reactee, messageAuthor, "60m", alertmessage, commandChannel);
+									
+								}, (failure) -> {
+									if (failure instanceof ErrorResponseException) {
+										ErrorResponseException ex = (ErrorResponseException) failure;
+										if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
+											commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+												" an unknown error occurred with your automated mute. Please run the command manually."))
+											.queue();
+										}
+									}
+								});
+
+									
+								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
+								clearAlert(commandChannel,
+										event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+										reactee, message, messageAuthor, Instant.now());
+
+								commandAction.setActionType("REACTION_ALERT_DONE");
+								log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
+								}
 							}
 
 							break;
