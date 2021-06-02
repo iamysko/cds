@@ -173,21 +173,12 @@ public class ReactionListener extends ListenerAdapter {
 								}
 							} else {
 								final String rawMessage = message.getContentRaw();
-								//final String channelId = rawMessage.split("/")[5];
-								//final String messageId = rawMessage.split("/")[6];
+								final String channelId = rawMessage.split("/")[5];
+								final String messageId = rawMessage.split("/")[6];
 
-								log.info(rawMessage.split("/")[1]);
-								log.info(rawMessage.split("/")[2]);
-								log.info(rawMessage.split("/")[3]);
-								log.info(rawMessage.split("/")[4]);
-								log.info(rawMessage.split("/")[5]);
-								log.info(rawMessage.split("/")[6]);
-								log.info(rawMessage.split("/")[7]);
-								log.info(rawMessage.split("/")[8]);
-
-								//event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-								//	muteUser(reactee, messageAuthor, "30m", alertmessage, commandChannel);
-								//});
+								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
+									muteUser(reactee, messageAuthor, "30m", alertmessage, commandChannel);
+								});
 
 									
 								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
@@ -225,6 +216,9 @@ public class ReactionListener extends ListenerAdapter {
 								final String rawMessage = message.getContentRaw();
 								final String channelId = rawMessage.split("/")[5];
 								final String messageId = rawMessage.split("/")[6];
+
+								log.info(channelId);
+								log.info(messageId);
 
 								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
 									muteUser(reactee, messageAuthor, "60m", alertmessage, commandChannel);
