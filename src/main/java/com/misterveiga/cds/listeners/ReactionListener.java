@@ -353,8 +353,8 @@ public class ReactionListener extends ListenerAdapter {
 								.append(message.getJumpUrl()).append("/\n**Preview:**\n> ").append(messageContent)
 								.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
 								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
-								.append(", " alertChannel.getJDA().getEmoteById(ID_REACTION_QM_30).getAsMention())
-								.append(" or " alertChannel.getJDA().getEmoteById(ID_REACTION_QM_60).getAsMention())
+								.append(", ").append(alertChannel.getJDA().getEmoteById(ID_REACTION_QM_30).getAsMention())
+								.append(" or ").append(alertChannel.getJDA().getEmoteById(ID_REACTION_QM_60).getAsMention())
 								.append("*)*"))
 						.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 						.allowedMentions(mentionTypes).queue(msg -> {
