@@ -176,7 +176,7 @@ public class ReactionListener extends ListenerAdapter {
 								final String channelId = rawMessage.split("/")[6];
 								final String messageId = rawMessage.split("/")[7];
 
-								event.getGuild().getTextChannelById(channelId)channel.retrieveMessageById(messageId).queue((alertmessage) -> {
+								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
 									muteUser(reactee, messageAuthor, "30m", alertmessage, commandChannel);
 									
 								}, (failure) -> {
@@ -227,7 +227,7 @@ public class ReactionListener extends ListenerAdapter {
 								final String channelId = rawMessage.split("/")[6];
 								final String messageId = rawMessage.split("/")[7];
 
-								event.getGuild().getTextChannelById(channelId)channel.retrieveMessageById(messageId).queue((alertmessage) -> {
+								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
 									muteUser(reactee, messageAuthor, "60m", alertmessage, commandChannel);
 									
 								}, (failure) -> {
