@@ -175,15 +175,12 @@ public class ReactionListener extends ListenerAdapter {
 								final String rawMessage = message.getContentRaw();
 								final String channelId = rawMessage.split("/")[5];
 								final String messageId = rawMessage.split("/")[6];
-								
-								log.info(rawMessage.split("`")[1]);
-								log.info(rawMessage.split("`")[2]);
-								log.info(rawMessage.split("`")[3]);
-								log.info(rawMessage.split("`")[4]);
+								final String authorId = rawMessage.split("`")[3];
 
-								//event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-								//	muteUser(reactee, alertmessage.getAuthor().getId(), "30m", alertmessage, commandChannel);
-								//});
+								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
+									muteUser(reactee, authorId, "30m", alertmessage, commandChannel);
+									alertmessage.delete();
+								});
 
 									
 								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
@@ -221,10 +218,12 @@ public class ReactionListener extends ListenerAdapter {
 								final String rawMessage = message.getContentRaw();
 								final String channelId = rawMessage.split("/")[5];
 								final String messageId = rawMessage.split("/")[6];
+								final String authorId = rawMessage.split("`")[3];
 
-								//event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-								//	muteUser(reactee, alertmessage.getAuthor().getId(), "60m", alertmessage, commandChannel);
-								//});
+								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
+									muteUser(reactee, authorId, "60m", alertmessage, commandChannel);
+									alertmessage.delete();
+								});
 
 									
 								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
