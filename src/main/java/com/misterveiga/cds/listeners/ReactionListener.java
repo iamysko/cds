@@ -178,16 +178,6 @@ public class ReactionListener extends ListenerAdapter {
 
 								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
 									muteUser(reactee, messageAuthor, "30m", alertmessage, commandChannel);
-									
-								}, (failure) -> {
-									if (failure instanceof ErrorResponseException) {
-										ErrorResponseException ex = (ErrorResponseException) failure;
-										if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
-											commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-												" an unknown error occurred with your automated mute. Please run the command manually."))
-											.queue();
-										}
-									}
 								});
 
 									
@@ -229,16 +219,6 @@ public class ReactionListener extends ListenerAdapter {
 
 								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
 									muteUser(reactee, messageAuthor, "60m", alertmessage, commandChannel);
-									
-								}, (failure) -> {
-									if (failure instanceof ErrorResponseException) {
-										ErrorResponseException ex = (ErrorResponseException) failure;
-										if (ex.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
-											commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-												" an unknown error occurred with your automated mute. Please run the command manually."))
-											.queue();
-										}
-									}
 								});
 
 									
