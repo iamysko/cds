@@ -176,9 +176,10 @@ public class ReactionListener extends ListenerAdapter {
 								final String channelId = rawMessage.split("/")[5];
 								final String messageId = rawMessage.split("/")[6];
 								
-								log.info(rawMessage.split("ID:")[1]);
-								log.info(rawMessage.split("ID:")[2]);
-								log.info(rawMessage.split("ID:")[3]);
+								log.info(rawMessage.split("`")[1]);
+								log.info(rawMessage.split("`")[2]);
+								log.info(rawMessage.split("`")[3]);
+								log.info(rawMessage.split("`")[4]);
 
 								//event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
 								//	muteUser(reactee, alertmessage.getAuthor().getId(), "30m", alertmessage, commandChannel);
@@ -341,9 +342,9 @@ public class ReactionListener extends ListenerAdapter {
 								.append(RoleUtils
 										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
 										.getAsMention())
-								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: ")
-								.append(reactee.getId()).append(")\n**Against:** ").append(messageAuthor.getAsMention())
-								.append(" (ID: ").append(messageAuthor.getId()).append(")\n")
+								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: `")
+								.append(reactee.getId()).append("`)\n**Against:** ").append(messageAuthor.getAsMention())
+								.append(" (ID: `").append(messageAuthor.getId()).append("`)\n")
 								.append(message.getJumpUrl()).append("/\n**Preview:**\n> ").append(messageContent)
 								.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
 								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
