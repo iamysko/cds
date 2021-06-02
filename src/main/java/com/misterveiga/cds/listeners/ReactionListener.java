@@ -155,92 +155,94 @@ public class ReactionListener extends ListenerAdapter {
 							break;
 
 						case ID_REACTION_QM_30:
-						
-							if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
-								if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
-									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
+								if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
+									if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
+										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 
-								muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-								purgeMessagesInChannel(messageAuthor, channel);
-								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-								commandAction.setOffendingUserId(messageAuthor.getIdLong());
-								commandAction.setActionType("REACTION_QM_30");
-								log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
-										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+									muteUser(reactee, messageAuthor, "30m", message, commandChannel);
+									purgeMessagesInChannel(messageAuthor, channel);
+									commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+									commandAction.setOffendingUserId(messageAuthor.getIdLong());
+									commandAction.setActionType("REACTION_QM_30");
+									log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
+											reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
-								}
-							} else {
-								final String rawMessage = message.getContentRaw();
-								final String channelId = rawMessage.split("/")[5];
-								final String messageId = rawMessage.split("/")[6];
-								final String authorId = rawMessage.split("`")[3];
+									}
+								} else {
+									final String rawMessage = message.getContentRaw();
+									final String channelId = rawMessage.split("/")[5];
+									final String messageId = rawMessage.split("/")[6];
+									final String authorId = rawMessage.split("`")[3];
 
-								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-									event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-										muteUser(reactee, author, "30m", alertmessage, commandChannel);
+									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
+										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
+											muteUser(reactee, author, "30m", alertmessage, commandChannel);
 
-										purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+										});
 									});
-								});
 
 									
-								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-								clearAlert(commandChannel,
-										event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
-										reactee, message, messageAuthor, Instant.now());
+									if (reactee.getIdLong() != messageAuthor.getIdLong()) {
+									clearAlert(commandChannel,
+											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+											reactee, message, messageAuthor, Instant.now());
 
-								commandAction.setActionType("REACTION_ALERT_DONE");
-								log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
-										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+									commandAction.setActionType("REACTION_ALERT_DONE");
+									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
+									}
 								}
 							}
 
 						break;
 
 						case ID_REACTION_QM_60:
+							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
+								if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
+									if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
+										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 
-							if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
-								if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
-									&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+									muteUser(reactee, messageAuthor, "1h", message, commandChannel);
+									purgeMessagesInChannel(messageAuthor, channel);
+									commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+									commandAction.setOffendingUserId(messageAuthor.getIdLong());
+									commandAction.setActionType("REACTION_QM_60");
+									log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
+											reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
-								muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-								purgeMessagesInChannel(messageAuthor, channel);
-								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-								commandAction.setOffendingUserId(messageAuthor.getIdLong());
-								commandAction.setActionType("REACTION_QM_60");
-								log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
-										reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+									}
+								} else {
+									final String rawMessage = message.getContentRaw();
+									final String channelId = rawMessage.split("/")[5];
+									final String messageId = rawMessage.split("/")[6];
+									final String authorId = rawMessage.split("`")[3];
 
-								}
-							} else {
-								final String rawMessage = message.getContentRaw();
-								final String channelId = rawMessage.split("/")[5];
-								final String messageId = rawMessage.split("/")[6];
-								final String authorId = rawMessage.split("`")[3];
+									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
+										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
+											muteUser(reactee, author, "60m", alertmessage, commandChannel);
 
-								event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-									event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-										muteUser(reactee, author, "60m", alertmessage, commandChannel);
-
-										purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+										});
 									});
-								});
 
 									
-								if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-								clearAlert(commandChannel,
-										event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
-										reactee, message, messageAuthor, Instant.now());
+									if (reactee.getIdLong() != messageAuthor.getIdLong()) {
+									clearAlert(commandChannel,
+											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+											reactee, message, messageAuthor, Instant.now());
 
-								commandAction.setActionType("REACTION_ALERT_DONE");
-								log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
-										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+									commandAction.setActionType("REACTION_ALERT_DONE");
+									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
+									}
 								}
 							}
 
