@@ -178,7 +178,7 @@ public class ReactionListener extends ListenerAdapter {
 									final String authorId = rawMessage.split("`")[3];
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-										if (!alertmessage != null) {
+										if (alertmessage != null) {
 											event.getGuild().retrieveMemberById(authorId).queue((author) -> {
 												muteUser(reactee, author, "30m", alertmessage, commandChannel);
 												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
