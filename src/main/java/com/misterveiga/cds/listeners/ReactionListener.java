@@ -178,11 +178,16 @@ public class ReactionListener extends ListenerAdapter {
 									final String authorId = rawMessage.split("`")[3];
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											muteUser(reactee, author, "30m", alertmessage, commandChannel);
-
-											purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
-										});
+										if (!alertmessage != null) {
+											event.getGuild().retrieveMemberById(authorId).queue((author) -> {
+												muteUser(reactee, author, "30m", alertmessage, commandChannel);
+												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											});
+										} else {
+											commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+												" the message does not exist or action has already been executed."))
+											.queue();
+										}
 									});
 
 									
@@ -225,11 +230,16 @@ public class ReactionListener extends ListenerAdapter {
 									final String authorId = rawMessage.split("`")[3];
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue((alertmessage) -> {
-										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											muteUser(reactee, author, "60m", alertmessage, commandChannel);
-
-											purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
-										});
+										if (alertmessage != null) {
+											event.getGuild().retrieveMemberById(authorId).queue((author) -> {
+												muteUser(reactee, author, "60m", alertmessage, commandChannel);
+												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											});
+										} else {
+											commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+												" the message does not exist or action has already been executed."))
+											.queue();
+										}
 									});
 
 									
