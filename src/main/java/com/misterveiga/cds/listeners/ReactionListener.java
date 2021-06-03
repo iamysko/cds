@@ -179,8 +179,10 @@ public class ReactionListener extends ListenerAdapter {
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue(alertmessage -> {
 										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											muteUser(reactee, author, "30m", alertmessage, commandChannel);
-											purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											if (!isStaffOnStaff(reactee, author, commandChannel)
+												muteUser(reactee, author, "30m", alertmessage, commandChannel);
+												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											}
 										});
 									}, alertfailure -> {
 										commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
@@ -229,8 +231,10 @@ public class ReactionListener extends ListenerAdapter {
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue(alertmessage -> {
 										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											muteUser(reactee, author, "60m", alertmessage, commandChannel);
-											purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											if (!isStaffOnStaff(reactee, author, commandChannel)
+												muteUser(reactee, author, "60m", alertmessage, commandChannel);
+												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
+											}
 										});
 									}, alertfailure -> {
 										commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
