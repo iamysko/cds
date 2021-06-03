@@ -179,14 +179,14 @@ public class ReactionListener extends ListenerAdapter {
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue(alertmessage -> {
 										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											if (!isStaffOnStaff(reactee, author, commandChannel)
+											if (!isStaffOnStaff(reactee, author, commandChannel))
 												muteUser(reactee, author, "30m", alertmessage, commandChannel);
 												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
-											}
+											};
 										});
 									}, alertfailure -> {
 										commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-											" the message does not exist or action has already been executed."))
+											" the message does not exist or action has already been taken."))
 										.queue();
 									});
 
@@ -231,14 +231,14 @@ public class ReactionListener extends ListenerAdapter {
 
 									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue(alertmessage -> {
 										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											if (!isStaffOnStaff(reactee, author, commandChannel)
+											if (!isStaffOnStaff(reactee, author, commandChannel))
 												muteUser(reactee, author, "60m", alertmessage, commandChannel);
 												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
-											}
+											};
 										});
 									}, alertfailure -> {
 										commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-											" the message does not exist or action has already been executed."))
+											" the message does not exist or action has already been taken."))
 										.queue();
 									});
 
