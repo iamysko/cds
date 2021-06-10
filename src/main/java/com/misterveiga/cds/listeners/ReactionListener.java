@@ -359,6 +359,10 @@ public class ReactionListener extends ListenerAdapter {
 								.append(RoleUtils
 										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
 										.getAsMention())
+							        .append(" ")
+							        .append(RoleUtils
+										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_TRIAL_SUPERVISOR)
+										.getAsMention()) // TODO: Remove this mention when the Trial Moderator process is over.
 								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: `")
 								.append(reactee.getId()).append("`)\n**Against:** ").append(messageAuthor.getAsMention())
 								.append(" (ID: `").append(messageAuthor.getId()).append("`)\n")
