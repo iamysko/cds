@@ -157,25 +157,20 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_QM_30:
 							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-								// Trial Moderators cannot use quick-mute reactions in any channel, they are excluded from this check
-								if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
-										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+								if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
-									// The muting process is different depending on the channel that is reacted in
-									// Reaction used in a public channel
 									if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
-
-										muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-										purgeMessagesInChannel(messageAuthor, channel);
-										commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-										commandAction.setOffendingUserId(messageAuthor.getIdLong());
-										commandAction.setActionType("REACTION_QM_30");
-										log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
-												reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel) {
+											muteUser(reactee, messageAuthor, "30m", message, commandChannel);
+											purgeMessagesInChannel(messageAuthor, channel);
+											commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+											commandAction.setOffendingUserId(messageAuthor.getIdLong());
+											commandAction.setActionType("REACTION_QM_30");
+											log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
+													reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+										}
 
 									} else {
-										// Reaction used in mod-alerts channel
 										final String rawMessage = message.getContentRaw();
 										final String channelId = rawMessage.split("/")[5];
 										final String messageId = rawMessage.split("/")[6];
@@ -218,25 +213,20 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_QM_60:
 							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-								// Trial Moderators cannot use quick-mute reactions in any channel, they are excluded from this check
-								if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
-										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+								if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
-									// The muting process is different depending on the channel that is reacted in
-									// Reaction used in a public channel
 									if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
-
-										muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-										purgeMessagesInChannel(messageAuthor, channel);
-										commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-										commandAction.setOffendingUserId(messageAuthor.getIdLong());
-										commandAction.setActionType("REACTION_QM_60");
-										log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
-												reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel) {
+											muteUser(reactee, messageAuthor, "1h", message, commandChannel);
+											purgeMessagesInChannel(messageAuthor, channel);
+											commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+											commandAction.setOffendingUserId(messageAuthor.getIdLong());
+											commandAction.setActionType("REACTION_QM_60");
+											log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
+													reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+										}
 
 									} else {
-										// Reaction used in mod-alerts channel
 										final String rawMessage = message.getContentRaw();
 										final String channelId = rawMessage.split("/")[5];
 										final String messageId = rawMessage.split("/")[6];
