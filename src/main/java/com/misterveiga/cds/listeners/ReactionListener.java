@@ -160,7 +160,7 @@ public class ReactionListener extends ListenerAdapter {
 								if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 									if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
-										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel) {
+										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)) {
 											muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 											purgeMessagesInChannel(messageAuthor, channel);
 											commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
@@ -216,7 +216,7 @@ public class ReactionListener extends ListenerAdapter {
 								if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
 									if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
-										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel) {
+										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)) {
 											muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 											purgeMessagesInChannel(messageAuthor, channel);
 											commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
