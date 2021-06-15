@@ -71,6 +71,7 @@ public class RoleUtils {
 			final List<Role> roles = member.getRoles();
 			return roles.stream().filter(role -> role.getIdLong() == roleId).findFirst().orElse(null);
 		}
+		return null;
 	}
 	/**	
 	 * Find whether a member has any of the roles passed in.
@@ -130,6 +131,7 @@ public class RoleUtils {
 		if (guild != null) {
 			return guild.getRoleById(roleId);
 		}
+		return null;
 	}
 
 }
