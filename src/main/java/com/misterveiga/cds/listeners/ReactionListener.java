@@ -365,11 +365,11 @@ public class ReactionListener extends ListenerAdapter {
 								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
 								.append(" ")
 								.append(RoleUtils
-										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+										.getRoleById(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
 										.getAsMention())
 								.append(" ").append(
 										RoleUtils
-												.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_TRIAL_SUPERVISOR)
+												.getRoleById(alertChannel.getGuild(), RoleUtils.ROLE_TRIAL_SUPERVISOR)
 												.getAsMention()) // TODO: Remove this mention when the Trial Moderator
 																	// process is over.
 								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: `")

@@ -51,7 +51,7 @@ public class CommandImpl {
 
 							commandChannel.getGuild()
 									.addRoleToMember(id,
-											RoleUtils.getRoleByName(commandChannel.getGuild(), RoleUtils.ROLE_MUTED))
+											RoleUtils.getRoleById(commandChannel.getGuild(), RoleUtils.ROLE_MUTED))
 									.queue(success -> {
 										cdsData.insertMutedUser(mutedUser);
 										log.info("Successfully muted user {} (mute executed by {})",
@@ -98,7 +98,7 @@ public class CommandImpl {
 					commandChannel.getGuild().retrieveMemberById(userId).queue(member -> {
 						commandChannel.getGuild()
 								.removeRoleFromMember(id,
-										RoleUtils.getRoleByName(commandChannel.getGuild(), RoleUtils.ROLE_MUTED))
+										RoleUtils.getRoleById(commandChannel.getGuild(), RoleUtils.ROLE_MUTED))
 								.queue(success -> {
 									cdsData.removeMutedUser(id);
 									log.info("Successfully unmuted user {} (mute executed by {})", id, authorMention);
