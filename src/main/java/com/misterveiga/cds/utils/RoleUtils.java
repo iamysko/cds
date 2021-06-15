@@ -15,30 +15,30 @@ import net.dv8tion.jda.api.entities.Role;
 public class RoleUtils {
 
 	/** The Constant ROLE_TRIAL_SUPERVISOR. */
-	public static final Long ROLE_TRIAL_SUPERVISOR = 218513797659230209L;
+	public static final long ROLE_TRIAL_SUPERVISOR = 218513797659230209L;
 
 	/** The Constant ROLE_COMMUNITY_SUPERVISOR. */
-	public static final Long ROLE_COMMUNITY_SUPERVISOR = 150093661231775744L;
+	public static final long ROLE_COMMUNITY_SUPERVISOR = 150093661231775744L;
 
 	/** The Constant ROLE_SENIOR_COMMUNITY_SUPERVISOR. */
-	public static final Long ROLE_SENIOR_COMMUNITY_SUPERVISOR = 234520161720205312L;
+	public static final long ROLE_SENIOR_COMMUNITY_SUPERVISOR = 234520161720205312L;
 
 	/** The Constant ROLE_SERVER_MANAGER. */
-	public static final Long ROLE_SERVER_MANAGER = 150074509393788929L;
+	public static final long ROLE_SERVER_MANAGER = 150074509393788929L;
 
 	/** The Constant ROLE_LEAD. */
-	public static final Long ROLE_LEAD = 310871622150258698L;
+	public static final long ROLE_LEAD = 310871622150258698L;
 
 	/** The Constant ROLE_PUBLIC_SECTOR. */
-	public static final Long ROLE_PUBLIC_SECTOR = 452841584749445131L;
+	public static final long ROLE_PUBLIC_SECTOR = 452841584749445131L;
 
 	/** The Constant ROLE_INFRASTRUCTURE. */
-	public static final Long ROLE_INFRASTRUCTURE = 366311313875533824L;
+	public static final long ROLE_INFRASTRUCTURE = 366311313875533824L;
 
 	/** The Constant ROLE_BOT. */
-	public static final Long ROLE_BOT = 150075195971862528L;
+	public static final long ROLE_BOT = 150075195971862528L;
 
-	public static final Long ROLE_MUTED = 320659703992680448L;
+	public static final long ROLE_MUTED = 320659703992680448L;
 
 	/**
 	 * Find a role owned by a member by role name.
