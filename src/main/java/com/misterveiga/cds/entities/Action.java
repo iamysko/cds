@@ -23,7 +23,7 @@ public class Action implements Serializable {
 	@JsonProperty
 	private String user;
 
-	/** The author discord tag. */
+	/** The author discord id. */
 	@JsonProperty
 	private Long discordId;
 
