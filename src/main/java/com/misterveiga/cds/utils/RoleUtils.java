@@ -100,7 +100,7 @@ public class RoleUtils {
 	 * Find whether a member has any of the roles passed in.
 	 *
 	 * @param member The member to search
-	 * @param roles The array of Role IDs
+	 * @param roles The varargs array of Role IDs
 	 * @return True if a member has any of the roles, otherwise false
 	 */	 
 	public static boolean isAnyRole(final Member member, final long... roles) {

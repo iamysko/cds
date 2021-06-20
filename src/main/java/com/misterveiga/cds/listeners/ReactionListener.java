@@ -159,7 +159,12 @@ public class ReactionListener extends ListenerAdapter {
 							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
 								if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
-									if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
+									if (event.getChannel().getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID
+										|| event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
+											quickMuteFromLogs(reactee, message, commandChannel, "30m");											
+										log.info("[Reaction Command] 30m Quick-Mute executed by {} ({}) (message: {})",
+										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+									} else if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
 										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)) {
 											muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 											purgeMessagesInChannel(messageAuthor, channel);
@@ -215,7 +220,12 @@ public class ReactionListener extends ListenerAdapter {
 							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
 								if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
 												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
-									if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
+									if (event.getChannel().getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID
+											|| event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
+										quickMuteFromLogs(reactee, message, commandChannel, "1h");
+										log.info("[Reaction Command] 1h Quick-Mute executed by {} ({}) (message: {})",
+													reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+									} else if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
 										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)) {
 											muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 											purgeMessagesInChannel(messageAuthor, channel);
@@ -370,8 +380,7 @@ public class ReactionListener extends ListenerAdapter {
 								.append(" ").append(
 										RoleUtils
 												.getRoleById(alertChannel.getGuild(), RoleUtils.ROLE_TRIAL_SUPERVISOR)
-												.getAsMention()) // TODO: Remove this mention when the Trial Moderator
-																	// process is over.
+												.getAsMention()) // XXX: Remove this mention when the Trial Moderator process is over.
 								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: `")
 								.append(reactee.getId()).append("`)\n**Against:** ")
 								.append(messageAuthor.getAsMention()).append(" (ID: `").append(messageAuthor.getId())
@@ -403,6 +412,41 @@ public class ReactionListener extends ListenerAdapter {
 	private void clearAlert(final TextChannel commandChannel, final TextChannel alertChannel, final Member reactee,
 			final Message message, final Member messageAuthor, final Instant now) {
 		message.delete().queue();
+	}
+
+	/**
+	 * Mute user from a deleted or censored message.
+	 *
+	 * @param reactee        the reactee
+	 * @param message        the logged message
+	 * @param commandChannel the command channel
+	 * @param muteDuration   the duration of the mute
+	 */
+	private void quickMuteFromLogs(final Member reactee, final Message message, final TextChannel commandChannel,
+			final String muteDuration) {
+
+		try {
+
+			final String rawMessage = message.getContentRaw();
+			final String offenderId = rawMessage.substring(rawMessage.indexOf("(`") + 2, rawMessage.indexOf("`)"));
+			final String offenseReason = rawMessage.split("```")[1];
+
+			final StringBuilder sb = new StringBuilder();
+			sb.append("(Logs mute approved by ").append(reactee.getUser().getAsTag()).append(" (")
+					.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
+			final String evidence = sb.toString();
+
+			commandChannel.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, offenderId, muteDuration, evidence))
+			.allowedMentions(new ArrayList<MentionType>()).queue();
+		} catch (final IndexOutOfBoundsException e) {
+
+			commandChannel
+					.sendMessage(new StringBuilder().append(reactee.getAsMention())
+							.append(" an unknown error occurred with your logs mute. Please run the command manually."))
+					.queue();
+
+		}
+
 	}
 
 	/**
