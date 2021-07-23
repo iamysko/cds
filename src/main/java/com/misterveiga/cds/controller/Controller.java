@@ -4,10 +4,7 @@
 package com.misterveiga.cds.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.misterveiga.cds.listeners.DiscordDownListener;
 import com.misterveiga.cds.listeners.DiscordUpListener;
@@ -15,6 +12,12 @@ import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 
 import net.dv8tion.jda.api.JDA;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * The Class Controller.
@@ -137,6 +140,38 @@ public class Controller {
 			return "Reaction Listener has been disabled.";
 		}
 		return "Reaction Listener is already disabled.";
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/panel/get-user-data", method = RequestMethod.GET)
+	public @ResponseBody String getUserData() throws IOException {
+
+		try {
+			URL url = new URL("https://rickandmortyapi.com/api/location");
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setRequestMethod("GET");
+
+			String line ="";
+
+			int status = con.getResponseCode();
+
+			InputStreamReader inputStreamReader = new InputStreamReader(con.getInputStream());
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			StringBuilder response = new StringBuilder();
+			while ((line=bufferedReader.readLine()) != null){
+				response.append(line);
+			}
+			bufferedReader.close();
+
+			return response.toString();
+
+		} catch (Exception e) {
+			System.out.println("Error in making get request");
+
+		}
+
+		return "Done";
 	}
 
 }
