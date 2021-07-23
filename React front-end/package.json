@@ -1,0 +1,75 @@
+{
+  "name": "v1",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^5.0.0-beta.0",
+    "@material-ui/styles": "^4.11.4",
+    "@types/node": "^15.0.3",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5",
+    "@types/react-helmet": "^6.1.1",
+    "axios": "^0.21.1",
+    "clsx": "^1.1.1",
+    "cors": "^2.8.5",
+    "cross-env": "7.x",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "history": "^5.0.0",
+    "js-cookie": "^2.2.1",
+    "npm-run-all": "4.x",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4",
+    "postcss": "8.x",
+    "postcss-cli": "8.x",
+    "postcss-preset-env": "6.x",
+    "react": "^17.0.2",
+    "react-cookie": "^4.0.3",
+    "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
+    "react-icons": "^4.2.0",
+    "react-redux": "^7.2.4",
+    "react-responsive": "^8.2.0",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "redux": "^4.1.0",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.3.0",
+    "typescript": "4.x"
+  },
+  "scripts": {
+    "start": "run-p react-scripts:start",
+    "build": "run-s react-scripts:build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "react-scripts:start": "react-scripts start",
+    "react-scripts:build": "react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react-redux": "^7.1.16",
+    "@types/react-router-config": "^5.0.2",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/redux": "^3.6.0",
+    "@types/redux-thunk": "^2.1.0"
+  }
+}

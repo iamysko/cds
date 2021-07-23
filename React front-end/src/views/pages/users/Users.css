@@ -1,0 +1,63 @@
+.UserInfoContainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5%;
+    background-color: black;
+    opacity: 50%;
+    height: 500px;
+    border-radius: 0.5%;
+
+}
+
+img{
+    max-width: 75%;
+}
+
+
+.UserBox{
+    flex-grow: 1;
+    width: 30%;
+
+}
+.UserDetails{
+
+
+}
+
+.RobloxDetails{
+
+
+}
+
+.UserServerDetails{
+
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+/* Zebra striping */
+tr:nth-of-type(odd) {
+    background: #111;
+}
+th {
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+td, th {
+    padding: 3px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+td img{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 5px;
+}

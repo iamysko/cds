@@ -1,0 +1,84 @@
+.Header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #111;
+    z-index:1000;
+}
+
+.Navbar {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1rem;
+}
+
+.Navbar__Logo {
+    margin-left: 1rem;
+}
+
+.Navbar__Logo a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.75rem;
+}
+
+.spacer {
+    flex:1 ;
+}
+
+.Navbar__Items a {
+    text-decoration: none;
+    color: white;
+}
+
+.Navbar__Items ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.Navbar__Items li {
+    font-size: 1.5rem;
+    padding: 0.5rem 0.5rem;
+    margin: 0;
+
+
+}
+
+.Navbar__Items img {
+    font-size: 1.5rem;
+    padding: 0 0.5rem;
+}
+
+
+.Discord__Button {
+    background-color: rgb(114, 137, 218);
+    border-radius: 5px;
+}
+
+.Discord__Button__Logo{
+    vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+    .Navbar__Items {
+        display: none;
+    }
+
+}
+
+
+@media (min-width: 769px) {
+    .Navbar-Toggle-Button {
+        display: none;
+    }
+
+    .Navbar__Logo {
+        margin-left: 0;
+    }
+
+}
