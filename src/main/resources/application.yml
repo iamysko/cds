@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: 862352717527646228
+            client-secret: 3f584d8c2c0f503707b3e59871237fd9a71a63b2c26da2eff11c08bf82450031
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            scope:
+              - identify
+            redirectUri: "http://localhost:8080/cds/rdss/login/oauth2/code/discord"
+            clientName: Test
+        provider:
+          discord:
+            authorizationUri: https://discordapp.com/api/oauth2/authorize
+            tokenUri: https://discordapp.com/api/oauth2/token
+            userInfoUri: https://discordapp.com/api/users/@me
+            usernameAttribute: username
