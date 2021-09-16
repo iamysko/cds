@@ -36,7 +36,7 @@ const Navbar = () => {
                             <ul>
                                 <li><Link to={"/dashboard"}>Dashboard</Link></li>
                                 <li><Link to={"/"}>Landing Section</Link></li>
-                                <li className={'Discord__Button'}><a href={""}>
+                                <li className={'Discord__Button'}><a href={"http://localhost:8080/cds/oauth2/authorization/discord"}>
                                     Login with Discord
 
                                     <img className={'Discord__Button__Logo'} height={25} width={25} src={DiscordLogo} alt={'Discord Logo'}/>

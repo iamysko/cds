@@ -8,8 +8,8 @@ body{
     height: 100%;
     margin-left: 0;
     margin-right: 0;
-
-    color: white;
+    background-color: #202020 !important;
+    color: white !important;
 }
 
 .App{
@@ -25,4 +25,8 @@ body{
 .responsiveImage {
     width: 100%;
     height: auto;
+}
+
+.Unauthorized{
+    margin-top: 100px;
 }

@@ -61,3 +61,18 @@ td img{
     vertical-align: middle;
     margin-right: 5px;
 }
+
+
+.memberRoles{
+    width: 90%;
+}
+.memberRole{
+    font-weight: bold;
+    border-radius: 10%;
+    padding: 10px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: lightgray;
+    float: left;
+}

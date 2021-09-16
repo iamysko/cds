@@ -1,4 +1,4 @@
-import React, {MouseEvent, FunctionComponent} from "react";
+import React from "react";
 
 import './DrawerToggleButton.css';
 
