@@ -399,7 +399,7 @@ public class ReactionListener extends ListenerAdapter {
 							msg.addReaction("z_qm30:760204798984454175").queue();
 							msg.addReaction("z_qm60:452813334429827072").queue();
 							existingAlertsMap.putIfAbsent(message.getIdLong(), msg.getIdLong());
-							msg.delete().queueAfter(2, TimeUnit.HOURS, success -> {
+							msg.delete().queueAfter(24, TimeUnit.HOURS, success -> {
 								existingAlertsMap.remove(message.getIdLong());
 							});
 						}, failure -> {
