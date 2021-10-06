@@ -12,6 +12,6 @@ All pull requests are put under review before merging, so don't worry about brea
 
 # Roblox Discord
 The current versions of this project are designed for use within the Roblox Discord, so many implementations are tied into Rowboat functionality rather than standalone.
-In the future, this project will hold its own solutions for message, user and infraction management.
+In the future, this project will hold its own solutions for message, user and infraction management. :)
 
 
