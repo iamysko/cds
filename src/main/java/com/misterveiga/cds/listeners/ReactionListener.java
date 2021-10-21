@@ -463,13 +463,33 @@ public class ReactionListener extends ListenerAdapter {
 			final String rawMessage = message.getContentRaw();
 			final String offenderId = rawMessage.substring(rawMessage.indexOf("(`") + 2, rawMessage.indexOf("`)"));
 			final String offenseReason = rawMessage.split("```")[1];
-
 			final StringBuilder sb = new StringBuilder();
-			sb.append("(Logs message ban approved by ").append(reactee.getUser().getAsTag()).append(" (")
-					.append(reactee.getId()).append(")) Evidence: ").append(offenseReason);
-			final String evidence = sb.toString();
 
-			commandChannel.sendMessage(String.format(COMMAND_BAN_USER_DEFAULT, offenderId, evidence))
+			// Construct the command to be sent before adding evidence, then check for evidence length. 
+			// Create and send a file and attach its URL to this stringbuilder if evidence length is at least 120 characters.
+			// If length is less than 120 characters, add the evidence as it's shown in logs to the stringbuilder.
+			// Once evidence is added, send the fully constructed command.
+			
+			sb.append(String.format(COMMAND_BAN_USER_DEFAULT, offenderId,
+				String.format("(Logs message ban approved by "))).append(reactee.getUser().getAsTag()).append(" (")
+				.append(reactee.getId()).append(") Evidence: ");
+
+			if (offenseReason.replace("\n", " ").length() < 120) {
+					sb.append(offenseReason.replace("\n", " "));
+			} else {
+				final String attachmentTitle = new StringBuilder().append("Evidence against ")
+						.append(commandChannel.getJDA().getUserById(offenderId).getName()).append(" (").append(offenderId).append(") on ")
+						.append(Instant.now().toString()).toString();
+	
+				commandChannel.sendFile(offenseReason.getBytes(), attachmentTitle + ".txt").queue(messageWithEvidence -> {
+					sb.append(offenseReason.replace("\n", " ").substring(0, 17) + "... Full evidence: "
+													+ messageWithEvidence.getAttachments().get(0).getUrl());	
+				});
+			}
+
+			
+			final String command = sb.toString();
+			commandChannel.sendMessage(command)
 					.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 
 //			final List<String> usersToBan = new ArrayList<>();
