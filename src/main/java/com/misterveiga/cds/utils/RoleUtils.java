@@ -14,14 +14,17 @@ import net.dv8tion.jda.api.entities.Role;
  */
 public class RoleUtils {
 
-	/** The Constant ROLE_TRIAL_SUPERVISOR. */
-	public static final long ROLE_TRIAL_SUPERVISOR = 218513797659230209L;
+	/** The Constant ROLE_MODERATOR_CANDIDATE */
+	public static final long ROLE_MODERATOR_CANDIDATE = 551184232404484097L;
 
-	/** The Constant ROLE_COMMUNITY_SUPERVISOR. */
-	public static final long ROLE_COMMUNITY_SUPERVISOR = 150093661231775744L;
+	/** The Constant ROLE_TRIAL_MODERATOR. */
+	public static final long ROLE_TRIAL_MODERATOR = 218513797659230209L;
 
-	/** The Constant ROLE_SENIOR_COMMUNITY_SUPERVISOR. */
-	public static final long ROLE_SENIOR_COMMUNITY_SUPERVISOR = 234520161720205312L;
+	/** The Constant ROLE_MODERATOR. */
+	public static final long ROLE_MODERATOR = 150093661231775744L;
+
+	/** The Constant ROLE_SENIOR_MODERATOR. */
+	public static final long ROLE_SENIOR_MODERATOR = 234520161720205312L;
 
 	/** The Constant ROLE_SERVER_MANAGER. */
 	public static final long ROLE_SERVER_MANAGER = 150074509393788929L;
