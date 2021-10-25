@@ -72,14 +72,14 @@ public class MessageListener extends ListenerAdapter {
 		if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER) != null) {
 			log.debug("Message received from a server manager.");
 			scanMessage(event.getMessage(), 3);
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR) != null) {
-			log.debug("Message received from a senior community supervisor.");
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR) != null) {
+			log.debug("Message received from a senior moderator.");
 			scanMessage(event.getMessage(), 2);
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR) != null) {
-			log.debug("Message received from a community supervisor.");
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_MODERATOR) != null) {
+			log.debug("Message received from a moderator.");
 			scanMessage(event.getMessage(), 1);
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_SUPERVISOR) != null) {
-			log.debug("Message received from a trial supervisor.");
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_MODERATOR) != null) {
+			log.debug("Message received from a trial moderator.");
 			if (!MessageFilter.filterMessage()) {
 				log.debug("Message filter triggered. Deleting.");
 				event.getMessage().delete().queue();

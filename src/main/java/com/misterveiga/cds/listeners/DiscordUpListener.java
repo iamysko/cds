@@ -33,7 +33,7 @@ public class DiscordUpListener extends ListenerAdapter {
 	@Override
 	public void onGuildAvailable(final GuildAvailableEvent event) {
 		TelegramService.sendToTelegram(Instant.now(), TelegramService.DISCORD_UP);
-		event.getGuild().getTextChannelById(Properties.CHANNEL_SUPERVISORS_ID).sendMessage(
+		event.getGuild().getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(
 				"The Roblox Discord is recovering from downtime. Please be aware of rule-breakers as automated moderation services might continue to be down.");
 	}
 
