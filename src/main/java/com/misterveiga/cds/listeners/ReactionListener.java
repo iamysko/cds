@@ -60,22 +60,22 @@ public class ReactionListener extends ListenerAdapter {
 	/** The log. */
 	private static Logger log = LoggerFactory.getLogger(ReactionListener.class);
 
-	private static final String ID_REACTION_ALERT_MODS = "625429388229345280"; // Alert mods emoji
+	private static final String ID_REACTION_ALERT_MODS = "864251538473091092"; // Alert mods emoji
 
 	/** The Constant ID_REACTION_QM_30. */
-	private static final String ID_REACTION_QM_30 = "760204798984454175"; // 30 minute quick-mute emoji
+	private static final String ID_REACTION_QM_30 = "864251539107086347"; // 30 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_QM_60. */
-	private static final String ID_REACTION_QM_60 = "452813334429827072"; // 60 minute quick-mute emoji
+	private static final String ID_REACTION_QM_60 = "864251537659002891"; // 60 minute quick-mute emoji
 
 	/** The Constant ID_REACTION_APPROVE_BAN_REQUEST. */
-	private static final String ID_REACTION_APPROVE = "762388343253106688"; // Ban request approval emoji
+	private static final String ID_REACTION_APPROVE = "864251674206011453"; // Ban request approval emoji
 
 	/** The Constant ID_REACTION_REJECT_BAN_REQUEST. */
-	private static final String ID_REACTION_REJECT = "764268551473070080"; // Ban request rejection emoji
+	private static final String ID_REACTION_REJECT = "864251741711892501"; // Ban request rejection emoji
 
 	/** The Constant ID_REACTION_PURGE_MESSAGES. */
-	private static final String ID_REACTION_PURGE_MESSAGES = "783030737552670801"; // Purge messages emoji
+	private static final String ID_REACTION_PURGE_MESSAGES = "864251571437437000"; // Purge messages emoji
 
 	/** The Constant COMMAND_MUTE_USER_DEFAULT. */
 	private static final String COMMAND_MUTE_USER_DEFAULT = ";mute %s %s %s";

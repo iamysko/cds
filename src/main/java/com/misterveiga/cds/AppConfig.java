@@ -99,7 +99,7 @@ public class AppConfig {
 	@Bean
 	MongoTemplate mongoTemplate(@Value("${mongo.pwd}") final String pwd) throws UnknownHostException {
 		return new MongoTemplate(MongoClients.create(
-				"mongodb+srv://admin:" + pwd + "@robloxdiscord.w7g7e.mongodb.net/rdss?retryWrites=true&w=majority"),
+				"mongodb://localhost"),
 				"rdss");
 	}
 
