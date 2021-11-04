@@ -15,13 +15,13 @@ import net.dv8tion.jda.api.entities.Role;
 public class RoleUtils {
 
 	/** The Constant ROLE_TRIAL_SUPERVISOR. */
-	public static final String ROLE_TRIAL_SUPERVISOR = "Trial Supervisor";
+	public static final String ROLE_TRIAL_MODERATOR = "Trial Supervisor";
 
 	/** The Constant ROLE_COMMUNITY_SUPERVISOR. */
-	public static final String ROLE_COMMUNITY_SUPERVISOR = "Moderator";
+	public static final String ROLE_MODERATOR = "Moderator";
 
 	/** The Constant ROLE_SENIOR_COMMUNITY_SUPERVISOR. */
-	public static final String ROLE_SENIOR_COMMUNITY_SUPERVISOR = "Senior Moderator";
+	public static final String ROLE_SENIOR_MODERATOR = "Senior Moderator";
 
 	/** The Constant ROLE_SERVER_MANAGER. */
 	public static final String ROLE_SERVER_MANAGER = "Manager";

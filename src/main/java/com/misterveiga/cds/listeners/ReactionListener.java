@@ -109,8 +109,8 @@ public class ReactionListener extends ListenerAdapter {
 		final String emoteId = emote.isEmote() ? emote.getId() : "";
 
 		if (!emoteId.equals(ID_REACTION_ALERT_MODS)
-				&& !RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-						RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+				&& !RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_MODERATOR,
+						RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_TRIAL_MODERATOR, RoleUtils.ROLE_BOT)) {
 			return; // Do nothing.
 		}
 
@@ -126,8 +126,8 @@ public class ReactionListener extends ListenerAdapter {
 						}
 
 						if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-								RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR,
-								RoleUtils.ROLE_TRIAL_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+								RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_SENIOR_MODERATOR,
+								RoleUtils.ROLE_TRIAL_MODERATOR, RoleUtils.ROLE_BOT)) {
 							return; // Do nothing.
 						}
 
@@ -143,7 +143,7 @@ public class ReactionListener extends ListenerAdapter {
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_TRIAL_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+											RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_TRIAL_MODERATOR, RoleUtils.ROLE_BOT)) {
 								purgeMessagesInChannel(messageAuthor, channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
@@ -160,7 +160,7 @@ public class ReactionListener extends ListenerAdapter {
 									if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+												RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
 
 									muteUser(reactee, messageAuthor, "30m", message, commandChannel);
 									purgeMessagesInChannel(messageAuthor, channel);
@@ -212,7 +212,7 @@ public class ReactionListener extends ListenerAdapter {
 									if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-												RoleUtils.ROLE_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+												RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
 
 									muteUser(reactee, messageAuthor, "1h", message, commandChannel);
 									purgeMessagesInChannel(messageAuthor, channel);
@@ -261,7 +261,7 @@ public class ReactionListener extends ListenerAdapter {
 						case ID_REACTION_APPROVE: // Used for ban requests, filtered log bans, and mod alerts.
 
 							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-									RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+									RoleUtils.ROLE_SENIOR_MODERATOR)) {
 
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
 									if (reactee.getIdLong() != messageAuthor.getIdLong()) {
@@ -297,8 +297,8 @@ public class ReactionListener extends ListenerAdapter {
 
 								}
 
-							} else if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-									RoleUtils.ROLE_TRIAL_SUPERVISOR)) {
+							} else if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_MODERATOR,
+									RoleUtils.ROLE_TRIAL_MODERATOR)) {
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
 									clearAlert(commandChannel,
 											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
@@ -315,7 +315,7 @@ public class ReactionListener extends ListenerAdapter {
 
 							if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR)) {
+											RoleUtils.ROLE_SENIOR_MODERATOR)) {
 
 								rejectBanRequest(reactee, message, commandChannel);
 								commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
@@ -357,7 +357,7 @@ public class ReactionListener extends ListenerAdapter {
 								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_ALERT_MODS).getAsMention())
 								.append(" ")
 								.append(RoleUtils
-										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_COMMUNITY_SUPERVISOR)
+										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_MODERATOR)
 										.getAsMention())
 								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: `")
 								.append(reactee.getId()).append("`)\n**Against:** ").append(messageAuthor.getAsMention())
@@ -575,10 +575,10 @@ public class ReactionListener extends ListenerAdapter {
 	}
 
 	private boolean isStaffOnStaff(final Member reactee, final Member messageAuthor, final TextChannel commandChannel) {
-		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-				RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)
-				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_COMMUNITY_SUPERVISOR,
-						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_COMMUNITY_SUPERVISOR, RoleUtils.ROLE_BOT)) {
+		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_MODERATOR,
+				RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT)
+				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_MODERATOR,
+						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT)) {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 					.append(" you cannot run commands on server staff.")).queue();
 			return true;
