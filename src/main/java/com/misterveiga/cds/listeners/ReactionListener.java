@@ -125,9 +125,8 @@ public class ReactionListener extends ListenerAdapter {
 							}
 						}
 
-						if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-								RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_SENIOR_MODERATOR,
-								RoleUtils.ROLE_TRIAL_MODERATOR, RoleUtils.ROLE_BOT)) {
+						if (!RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_MODERATOR,
+								RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_TRIAL_MODERATOR, RoleUtils.ROLE_BOT)) {
 							return; // Do nothing.
 						}
 
@@ -143,7 +142,8 @@ public class ReactionListener extends ListenerAdapter {
 							if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
 									&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
-											RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_TRIAL_MODERATOR, RoleUtils.ROLE_BOT)) {
+											RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_TRIAL_MODERATOR,
+											RoleUtils.ROLE_BOT)) {
 								purgeMessagesInChannel(messageAuthor, channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
@@ -158,17 +158,17 @@ public class ReactionListener extends ListenerAdapter {
 							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
 								if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
 									if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
-										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-												RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
+											&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+											&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+													RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
 
-									muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-									purgeMessagesInChannel(messageAuthor, channel);
-									commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-									commandAction.setOffendingUserId(messageAuthor.getIdLong());
-									commandAction.setActionType("REACTION_QM_30");
-									log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
-											reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+										muteUser(reactee, messageAuthor, "30m", message, commandChannel);
+										purgeMessagesInChannel(messageAuthor, channel);
+										commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+										commandAction.setOffendingUserId(messageAuthor.getIdLong());
+										commandAction.setActionType("REACTION_QM_30");
+										log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
+												reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
 									}
 								} else {
@@ -177,50 +177,52 @@ public class ReactionListener extends ListenerAdapter {
 									final String messageId = rawMessage.split("/")[6];
 									final String authorId = rawMessage.split("`")[3];
 
-									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue(alertmessage -> {
-										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											if (!isStaffOnStaff(reactee, author, commandChannel)) {
-												muteUser(reactee, author, "30m", alertmessage, commandChannel);
-												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
-											}
-										});
-									}, alertfailure -> {
-										commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-											" the message does not exist or action has already been taken."))
-										.queue();
-									});
+									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId)
+											.queue(alertmessage -> {
+												event.getGuild().retrieveMemberById(authorId).queue((author) -> {
+													if (!isStaffOnStaff(reactee, author, commandChannel)) {
+														muteUser(reactee, author, "30m", alertmessage, commandChannel);
+														purgeMessagesInChannel(author,
+																event.getGuild().getTextChannelById(channelId));
+													}
+												});
+											}, alertfailure -> {
+												commandChannel.sendMessage(
+														new StringBuilder().append(reactee.getAsMention()).append(
+																" the message does not exist or action has already been taken."))
+														.queue();
+											});
 
-									
 									if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-									clearAlert(commandChannel,
-											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
-											reactee, message, messageAuthor, Instant.now());
+										clearAlert(commandChannel,
+												event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+												reactee, message, messageAuthor, Instant.now());
 
-									commandAction.setActionType("REACTION_ALERT_DONE");
-									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
-											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+										commandAction.setActionType("REACTION_ALERT_DONE");
+										log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+												reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 									}
 								}
 							}
 
-						break;
+							break;
 
 						case ID_REACTION_QM_60:
 							if (reactee.getIdLong() != messageAuthor.getIdLong()) {
 								if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
 									if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)
-										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
-										&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
-												RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
+											&& !isInStaffChannel(reactee, commandChannel, event.getChannel())
+											&& RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER,
+													RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
 
-									muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-									purgeMessagesInChannel(messageAuthor, channel);
-									commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
-									commandAction.setOffendingUserId(messageAuthor.getIdLong());
-									commandAction.setActionType("REACTION_QM_60");
-									log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
-											reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+										muteUser(reactee, messageAuthor, "1h", message, commandChannel);
+										purgeMessagesInChannel(messageAuthor, channel);
+										commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
+										commandAction.setOffendingUserId(messageAuthor.getIdLong());
+										commandAction.setActionType("REACTION_QM_60");
+										log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
+												reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
 
 									}
 								} else {
@@ -229,28 +231,30 @@ public class ReactionListener extends ListenerAdapter {
 									final String messageId = rawMessage.split("/")[6];
 									final String authorId = rawMessage.split("`")[3];
 
-									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).queue(alertmessage -> {
-										event.getGuild().retrieveMemberById(authorId).queue((author) -> {
-											if (!isStaffOnStaff(reactee, author, commandChannel)) {
-												muteUser(reactee, author, "60m", alertmessage, commandChannel);
-												purgeMessagesInChannel(author, event.getGuild().getTextChannelById(channelId));
-											}
-										});
-									}, alertfailure -> {
-										commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-											" the message does not exist or action has already been taken."))
-										.queue();
-									});
+									event.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId)
+											.queue(alertmessage -> {
+												event.getGuild().retrieveMemberById(authorId).queue((author) -> {
+													if (!isStaffOnStaff(reactee, author, commandChannel)) {
+														muteUser(reactee, author, "60m", alertmessage, commandChannel);
+														purgeMessagesInChannel(author,
+																event.getGuild().getTextChannelById(channelId));
+													}
+												});
+											}, alertfailure -> {
+												commandChannel.sendMessage(
+														new StringBuilder().append(reactee.getAsMention()).append(
+																" the message does not exist or action has already been taken."))
+														.queue();
+											});
 
-									
 									if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-									clearAlert(commandChannel,
-											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
-											reactee, message, messageAuthor, Instant.now());
+										clearAlert(commandChannel,
+												event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+												reactee, message, messageAuthor, Instant.now());
 
-									commandAction.setActionType("REACTION_ALERT_DONE");
-									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
-											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+										commandAction.setActionType("REACTION_ALERT_DONE");
+										log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+												reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 									}
 								}
@@ -265,13 +269,13 @@ public class ReactionListener extends ListenerAdapter {
 
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_MOD_ALERTS_ID) {
 									if (reactee.getIdLong() != messageAuthor.getIdLong()) {
-									clearAlert(commandChannel,
-											event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
-											reactee, message, messageAuthor, Instant.now());
+										clearAlert(commandChannel,
+												event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID),
+												reactee, message, messageAuthor, Instant.now());
 
-									commandAction.setActionType("REACTION_ALERT_DONE");
-									log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
-											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+										commandAction.setActionType("REACTION_ALERT_DONE");
+										log.info("[Reaction Command] Mod alert marked done by {} ({}) (request: {})",
+												reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 									}
 								}
@@ -285,14 +289,13 @@ public class ReactionListener extends ListenerAdapter {
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 								} else if (event.getChannel()
-										.getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID || 
-										event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
+										.getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID
+										|| event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
 
 									approveLogsBan(reactee, message, commandChannel);
 
 									commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
-									log.info(
-											"[Reaction Command] Logs message ban approved by {} ({}) (request: {})",
+									log.info("[Reaction Command] Logs message ban approved by {} ({}) (request: {})",
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 								}
@@ -360,13 +363,16 @@ public class ReactionListener extends ListenerAdapter {
 										.getRoleByName(alertChannel.getGuild(), RoleUtils.ROLE_MODERATOR)
 										.getAsMention())
 								.append("\n**Alert from:** ").append(reactee.getAsMention()).append(" (ID: `")
-								.append(reactee.getId()).append("`)\n**Against:** ").append(messageAuthor.getAsMention())
-								.append(" (ID: `").append(messageAuthor.getId()).append("`)\n")
-								.append(message.getJumpUrl()).append("/\n**Preview:**\n> ").append(messageContent)
+								.append(reactee.getId()).append("`)\n**Against:** ")
+								.append(messageAuthor.getAsMention()).append(" (ID: `").append(messageAuthor.getId())
+								.append("`)\n").append(message.getJumpUrl()).append("/\n**Preview:**\n> ")
+								.append(messageContent)
 								.append("\n*(Access the jump URL to take action. Once finished, react to this message with* ")
 								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_APPROVE).getAsMention())
-								.append(", ").append(alertChannel.getJDA().getEmoteById(ID_REACTION_QM_30).getAsMention())
-								.append(" or ").append(alertChannel.getJDA().getEmoteById(ID_REACTION_QM_60).getAsMention())
+								.append(", ")
+								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_QM_30).getAsMention())
+								.append(" or ")
+								.append(alertChannel.getJDA().getEmoteById(ID_REACTION_QM_60).getAsMention())
 								.append("*)*"))
 						.append("\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")
 						.allowedMentions(mentionTypes).queue(msg -> {
@@ -418,8 +424,9 @@ public class ReactionListener extends ListenerAdapter {
 
 		} catch (final IndexOutOfBoundsException e) {
 
-			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
-					" an unknown error occurred with your logs ban approval. Please run the command manually."))
+			commandChannel
+					.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+							" an unknown error occurred with your logs ban approval. Please run the command manually."))
 					.queue();
 
 		}
@@ -577,8 +584,8 @@ public class ReactionListener extends ListenerAdapter {
 	private boolean isStaffOnStaff(final Member reactee, final Member messageAuthor, final TextChannel commandChannel) {
 		if (RoleUtils.isAnyRole(reactee, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_MODERATOR,
 				RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT)
-				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_MODERATOR,
-						RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT)) {
+				&& RoleUtils.isAnyRole(messageAuthor, RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_SERVER_MANAGER,
+						RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT)) {
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention())
 					.append(" you cannot run commands on server staff.")).queue();
 			return true;
@@ -589,7 +596,7 @@ public class ReactionListener extends ListenerAdapter {
 	private boolean isInStaffChannel(final Member reactee, final TextChannel commandChannel,
 			final MessageChannel channel) {
 		final Long[] staffChannelIds = new Long[] { Properties.CHANNEL_MOD_ALERTS_ID, Properties.CHANNEL_COMMANDS_ID,
-				Properties.CHANNEL_SUPERVISORS_ID, Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID,
+				Properties.CHANNEL_MODERATORS_ID, Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID,
 				Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID };
 		final Long channelId = channel.getIdLong();
 		for (final Long id : staffChannelIds) {

@@ -24,7 +24,7 @@ public class Properties {
 	public static final Long CHANNEL_COMMANDS_ID = 150250250471342080L;
 
 	/** The Constant CHANNEL_SUPERVISORS_ID. */
-	public static final Long CHANNEL_SUPERVISORS_ID = 150255535927721984L;
+	public static final Long CHANNEL_MODERATORS_ID = 150255535927721984L;
 
 	/** The Constant CHANNEL_BAN_REQUESTS_QUEUE_ID. */
 	public static final Long CHANNEL_BAN_REQUESTS_QUEUE_ID = 592580861543841802L;
