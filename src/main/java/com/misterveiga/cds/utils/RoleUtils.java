@@ -23,6 +23,9 @@ public class RoleUtils {
 	/** The Constant ROLE_MODERATOR. */
 	public static final long ROLE_MODERATOR = 150093661231775744L;
 
+	/** The Constant ROLE_MODERATOR_NAME. */
+	public static final String ROLE_MODERATOR_NAME = "Moderator";
+
 	/** The Constant ROLE_SENIOR_MODERATOR. */
 	public static final long ROLE_SENIOR_MODERATOR = 234520161720205312L;
 
@@ -66,9 +69,9 @@ public class RoleUtils {
 	 * Find a role owned by a member by role ID.
 	 *
 	 * @param member The member to search
-	 * @param roleId   The ID of the role
+	 * @param roleId The ID of the role
 	 * @return The role if the member has it, otherwise null
-	 */	 
+	 */
 	public static Role findRole(final Member member, final long roleId) {
 		if (member != null) {
 			final List<Role> roles = member.getRoles();
@@ -76,13 +79,14 @@ public class RoleUtils {
 		}
 		return null;
 	}
-	/**	
+
+	/**
 	 * Find whether a member has any of the roles passed in.
 	 *
 	 * @param member The member to search
-	 * @param roles The array of Role Names
+	 * @param roles  The array of Role Names
 	 * @return True if a member has any of the roles, otherwise false
-	 */	 
+	 */
 	public static boolean isAnyRole(final Member member, final String... roles) {
 
 		for (final String role : roles) {
@@ -103,9 +107,9 @@ public class RoleUtils {
 	 * Find whether a member has any of the roles passed in.
 	 *
 	 * @param member The member to search
-	 * @param roles The varargs array of Role IDs
+	 * @param roles  The varargs array of Role IDs
 	 * @return True if a member has any of the roles, otherwise false
-	 */	 
+	 */
 	public static boolean isAnyRole(final Member member, final long... roles) {
 		for (final long role : roles) {
 			if (findRole(member, role) != null) {
