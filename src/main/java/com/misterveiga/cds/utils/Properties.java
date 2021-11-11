@@ -12,7 +12,7 @@ public class Properties {
 	public static final Long ALERT_MODS_COOLDOWN = 60L; // Seconds
 
 	/** The Constant TELEGRAM_CHAT_ID. */
-	public static final String TELEGRAM_CHAT_ID = "-1001446733742";
+	public static final String TELEGRAM_CHAT_ID = "-759697626";
 
 	/** The Constant GUILD_ROBLOX_DISCORD_ID. */
 	public static final Long GUILD_ROBLOX_DISCORD_ID = 150074202727251969L;
