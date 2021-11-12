@@ -30,21 +30,21 @@ public class AlertMaintainerThread {
 
 	}
 
-	@Scheduled(fixedDelay = 20000)
+	@Scheduled(fixedDelay = 3600000)
 	public void checkMutes() {
 
 		log.debug("[AlertMaintainerThread] Checking for old alerts...");
 
 		final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
-		
-		guild.getTextChannelById(785821764839669791L).getHistoryFromBeginning(1).queue(messageHistory -> {
+
+		guild.getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID).getHistoryFromBeginning(1).queue(messageHistory -> {
 			final Message firstMessage = messageHistory.getRetrievedHistory().get(0);
 			final OffsetDateTime firstMessageDateTime = firstMessage.getTimeCreated();
 			final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
 
-			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusMinutes(0))) {
+			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
-				guild.getTextChannelById(459415849632268298L).sendMessage(new StringBuilder()
+				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(new StringBuilder()
 						.append(RoleUtils.getRoleByName(guild, RoleUtils.ROLE_MODERATOR_NAME).getAsMention())
 						.append("\n**!! Mod Alerts Pending !!**")
 						.append("\nThere are pending mod alerts in #mod-alerts!")
