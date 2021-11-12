@@ -23,11 +23,16 @@ import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.telegram.TelegramService;
+import com.misterveiga.cds.utils.Properties;
+import com.misterveiga.cds.utils.SlashCommandConstants;
 import com.mongodb.client.MongoClients;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -75,6 +80,13 @@ public class AppConfig {
 		try {
 			final JDA jda = builder.build();
 			jda.awaitReady();
+			final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
+			guild.updateCommands()
+			   .addCommands(new CommandData(SlashCommandConstants.COMMAND_HELP, "Shows all current commands"))
+			   .addCommands(new CommandData(SlashCommandConstants.COMMAND_ABOUT, "About the bot"))
+			   //.addCommands(new CommandData(SlashCommandConstants.COMMAND_ABOUT, "About the bot")
+			   //  .addOption(OptionType.USER, "user", "The user to ban", true))
+			   .queue();
 			return jda;
 		} catch (final LoginException e) {
 			TelegramService.sendToTelegram(Instant.now(), TelegramService.ERROR_UNKNOWN);

@@ -24,10 +24,12 @@ import com.misterveiga.cds.utils.MessageFilter;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
+import com.misterveiga.cds.utils.SlashCommandConstants;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -62,7 +64,48 @@ public class MessageListener extends ListenerAdapter {
 	 * On message received.
 	 *
 	 * @param event the event
-	 */
+	 */	
+	
+	@Override
+	  public void onSlashCommand(SlashCommandEvent event) {
+		try {
+		
+		boolean perm = false;
+		
+		if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER) != null) {
+			perm = true;
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR) != null) {
+			perm = true;
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_MODERATOR) != null) {
+			perm = true;
+		} else {
+			perm = false;
+		}
+	
+		if(perm) {
+		
+		final TextChannel commandChannel = event.getGuild().getTextChannelById(Properties.CHANNEL_COMMANDS_ID);
+		final Member author = event.getMember();
+		final String authorMention = author.getAsMention();
+		
+	    if (event.getName().equals(SlashCommandConstants.COMMAND_HELP)) {
+	    	event.reply(getHelpMessage(authorMention)).queue();
+	    }
+	    if (event.getName().equals(SlashCommandConstants.COMMAND_ABOUT)) {
+	    	event.reply(getAboutMessage(authorMention)).queue();
+	    } 
+	   }
+		else {
+	    	event.reply("Missing permissions!").queue();
+	  }
+		} catch(Exception e) {
+			event.reply("Something went wrong!").queue();
+		  }
+	}
+	
+	
+	
+	
 	@Override
 	public void onMessageReceived(final MessageReceivedEvent event) {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) { // Do nothing if sender is self.
@@ -208,10 +251,10 @@ public class MessageListener extends ListenerAdapter {
 		case 0: // TS
 			if (messageText.matches(RegexConstants.COMMAND_HELP)
 					|| messageText.matches(RegexConstants.COMMAND_HELP_ALT)) {
-				sendHelpMessage(message, authorMention);
+				message.getChannel().sendMessage(getHelpMessage(authorMention)).queue();
 				break;
 			} else if (messageText.matches(RegexConstants.COMMAND_ABOUT)) {
-				sendAboutMessage(message, authorMention);
+				message.getChannel().sendMessage(getAboutMessage(authorMention)).queue();
 				break;
 			} else {
 				sendUnknownCommandMessage(message, authorMention);
@@ -325,9 +368,8 @@ public class MessageListener extends ListenerAdapter {
 	 * @param message       the message
 	 * @param authorMention the author mention
 	 */
-	private void sendHelpMessage(final Message message, final String authorMention) {
-		message.getChannel()
-				.sendMessage(new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
+	private String getHelpMessage(final String authorMention) {
+		return new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
 						.append("\nPrefix for all commands: `rdss:<command>`")
 						.append("\nIf a command doesn't work for you, you may not have permission to run it.")
 						.append("\nHelp: \"rdss:help\" or \"rdss:?\"")
@@ -335,8 +377,7 @@ public class MessageListener extends ListenerAdapter {
 						.append("\nMute user(s): \"rdss:mute user1,user2,userN XdXhXm reason\"")
 						.append("\nUnmute user(s): \"rdss:unmute user1,user2,userN\"")
 						.append("\nBan user(s): \"rdss:ban user1,user2,userN reason (reason is optional)\"")
-						.append("\nUnban user(s): \"rdss:unban user1,user2,userN\""))
-				.queue();
+						.append("\nUnban user(s): \"rdss:unban user1,user2,userN\"").toString();
 	}
 
 	/**
@@ -345,12 +386,10 @@ public class MessageListener extends ListenerAdapter {
 	 * @param message       the message
 	 * @param authorMention the author mention
 	 */
-	private void sendAboutMessage(final Message message, final String authorMention) {
-		message.getChannel()
-				.sendMessage(new StringBuilder().append(authorMention).append(" **Community Discord Services | About**")
-						.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion)
-						.append("\n*Collaborate: https://github.com/misterveiga/cds*"))
-				.queue();
+	private String getAboutMessage(final String authorMention) {
+		return new StringBuilder().append(authorMention).append(" **Community Discord Services | About**")
+		.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion)
+		.append("\n*Collaborate: https://github.com/misterveiga/cds*").toString();
 	}
 
 	/**
