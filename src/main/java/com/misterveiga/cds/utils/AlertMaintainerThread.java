@@ -42,7 +42,7 @@ public class AlertMaintainerThread {
 			final OffsetDateTime firstMessageDateTime = firstMessage.getTimeCreated();
 			final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
 
-			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
+			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusMinutes(2L))) {
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
 				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(new StringBuilder()
 						.append(RoleUtils.getRoleByName(guild, RoleUtils.ROLE_MODERATOR_NAME).getAsMention())
