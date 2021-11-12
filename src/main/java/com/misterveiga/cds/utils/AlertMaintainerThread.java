@@ -37,12 +37,12 @@ public class AlertMaintainerThread {
 
 		final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
 
-		guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).getHistoryFromBeginning(1).queue(messageHistory -> {
+		guild.getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID).getHistoryFromBeginning(1).queue(messageHistory -> {
 			final Message firstMessage = messageHistory.getRetrievedHistory().get(0);
 			final OffsetDateTime firstMessageDateTime = firstMessage.getTimeCreated();
 			final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
 
-			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
+			if (!firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
 				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(new StringBuilder()
 						.append(RoleUtils.getRoleByName(guild, RoleUtils.ROLE_MODERATOR_NAME).getAsMention())
