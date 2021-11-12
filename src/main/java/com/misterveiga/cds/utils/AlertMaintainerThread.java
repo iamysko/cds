@@ -37,7 +37,7 @@ public class AlertMaintainerThread {
 
 		final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
 		
-		guild.getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID).getHistoryFromBeginning(1).queue(messageHistory -> {
+		guild.getTextChannelById(785821764839669791L).getHistoryFromBeginning(1).queue(messageHistory -> {
 			final Message firstMessage = messageHistory.getRetrievedHistory().get(0);
 			final OffsetDateTime firstMessageDateTime = firstMessage.getTimeCreated();
 			final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
