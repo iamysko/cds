@@ -44,7 +44,7 @@ public class AlertMaintainerThread {
 
 			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusMinutes(0))) {
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
-				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(new StringBuilder()
+				guild.getTextChannelById(459415849632268298L).sendMessage(new StringBuilder()
 						.append(RoleUtils.getRoleByName(guild, RoleUtils.ROLE_MODERATOR_NAME).getAsMention())
 						.append("\n**!! Mod Alerts Pending !!**")
 						.append("\nThere are pending mod alerts in #mod-alerts!")
