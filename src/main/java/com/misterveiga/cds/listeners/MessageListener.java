@@ -377,7 +377,7 @@ public class MessageListener extends ListenerAdapter {
 						.append("\nMute user(s): \"rdss:mute user1,user2,userN XdXhXm reason\"")
 						.append("\nUnmute user(s): \"rdss:unmute user1,user2,userN\"")
 						.append("\nBan user(s): \"rdss:ban user1,user2,userN reason (reason is optional)\"")
-						.append("\nUnban user(s): \"rdss:unban user1,user2,userN\"").toString();
+						.append("\nUnban \n\nuser(s): \"rdss:unban user1,user2,userN\"").toString();
 	}
 
 	/**
