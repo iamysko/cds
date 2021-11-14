@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.misterveiga.cds.utils.RoleUtils;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
@@ -17,7 +19,7 @@ public class UpdateRoleListener extends ListenerAdapter {
 	{
 		List<Role> roles = event.getRoles();
 		for(Role item : roles) {
-			if(Long.parseLong(item.getId()) == 864250017962131467L) {
+			if(Long.parseLong(item.getId()) == RoleUtils.ROLE_MUTED) {
 		
 				EmbedBuilder embed = new EmbedBuilder();
 				
@@ -27,7 +29,7 @@ public class UpdateRoleListener extends ListenerAdapter {
 						+ "\r\n"
 						+ "This mute does not affect your account on Roblox.com.\r\n\n");
 			
-				embed.addField( "<:ejheknh:864251674206011453> **Mute Reason**\r\n",
+				embed.addField( "<:info:452813376788234250> **Mute Reason**\r\n",
 						 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a @Moderator.\r\n", false);
 				embed.addField( "<:z_qm60:452813334429827072> **Mute Bypassing**\r\n",
 						 "Attempting to bypass a mute will result in you being banned from the server. :ban_hammer:", false);
