@@ -109,11 +109,11 @@ public class MessageListener extends ListenerAdapter {
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
 	    	event.replyEmbeds(embed.build()).queue();
 	    } else {
-	    	event.reply("Something went wrong").setEphemeral(true).queue();
+	    	event.reply("The Command you tried to execute does not exist!").queue();
 	    }
 	   }
 		else {
-	    	event.reply("Missing permissions!").queue();
+	    	event.reply("Missing permissions!").setEphemeral(true).queue();
 	  }
 	}
 	
