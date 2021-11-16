@@ -107,9 +107,9 @@ public class MessageListener extends ListenerAdapter {
 	    	RestAction<User> memberData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
 			User theUser = memberData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
-	    	event.replyEmbeds(embed.build()).addActionRow(Button.primary("Dicord Info","Discord Information"), Button.danger("Roblox Info", "Roblox Information")).queue();
+	    	event.replyEmbeds(embed.build()).queue();
 	    } else {
-	    	event.reply("Something went wrong").queue();
+	    	event.reply("Something went wrong").setEphemeral(true).queue();
 	    }
 	   }
 		else {
