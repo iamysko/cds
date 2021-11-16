@@ -6,7 +6,6 @@ import java.time.ZoneOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.log.LogDelegateFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +48,7 @@ public class AlertMaintainerThread {
 				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(new StringBuilder()
 						.append(RoleUtils.getRoleByName(guild, RoleUtils.ROLE_MODERATOR_NAME).getAsMention())
 						.append("\n**!! Mod Alerts Pending !!**")
-						.append("\nThere are pending mod alerts in #mod-alerts!")
+						.append("\nThere are pending mod alerts in <#" + Properties.CHANNEL_MOD_ALERTS_ID.toString() + ">!")
 						.append("\nPlease remember to monitor Mod alerts frequently in order to avoid an accumulation of messages (and untreated reports) in the channel.")
 						.append("\n\n*This message will only appear if there are alerts more than 2 hours old.*"))
 						.queue();
