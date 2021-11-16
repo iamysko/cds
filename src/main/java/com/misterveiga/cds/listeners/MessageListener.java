@@ -39,6 +39,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
@@ -105,7 +107,7 @@ public class MessageListener extends ListenerAdapter {
 	    	RestAction<User> memberData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
 			User theUser = memberData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
-	    	event.replyEmbeds(embed.build()).queue();
+	    	event.replyEmbeds(embed.build()).addActionRow(Button.primary("Dicord Info","Discord Information"), Button.danger("Roblox Info", "Roblox Information")).queue();
 	    } else {
 	    	event.reply("Something went wrong").queue();
 	    }
