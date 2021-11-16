@@ -4,7 +4,10 @@
 package com.misterveiga.cds.listeners;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +29,18 @@ import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
 import com.misterveiga.cds.utils.SlashCommandConstants;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
 /**
  * The listener interface for receiving message events. The class that is
@@ -68,7 +77,6 @@ public class MessageListener extends ListenerAdapter {
 	
 	@Override
 	  public void onSlashCommand(SlashCommandEvent event) {
-		try {
 		
 		boolean perm = false;
 		
@@ -90,21 +98,22 @@ public class MessageListener extends ListenerAdapter {
 		
 	    if (event.getName().equals(SlashCommandConstants.COMMAND_HELP)) {
 	    	event.reply(getHelpMessage(authorMention)).queue();
-	    }
-	    if (event.getName().equals(SlashCommandConstants.COMMAND_ABOUT)) {
+	    } else if (event.getName().equals(SlashCommandConstants.COMMAND_ABOUT)) {
 	    	event.reply(getAboutMessage(authorMention)).queue();
-	    } 
+	    } else if (event.getName().equals(SlashCommandConstants.COMMAND_USER_INFO)) {
+	    	Member theMember = event.getGuild().getMemberById(event.getOption("user").getAsString());
+	    	RestAction<User> memberData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
+			User theUser = memberData.complete();
+	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
+	    	event.replyEmbeds(embed.build()).queue();
+	    } else {
+	    	event.reply("Something went wrong").queue();
+	    }
 	   }
 		else {
 	    	event.reply("Missing permissions!").queue();
 	  }
-		} catch(Exception e) {
-			event.reply("Something went wrong!").queue();
-		  }
 	}
-	
-	
-	
 	
 	@Override
 	public void onMessageReceived(final MessageReceivedEvent event) {
@@ -256,6 +265,8 @@ public class MessageListener extends ListenerAdapter {
 			} else if (messageText.matches(RegexConstants.COMMAND_ABOUT)) {
 				message.getChannel().sendMessage(getAboutMessage(authorMention)).queue();
 				break;
+			} else if (messageText.matches(RegexConstants.COMMAND_USER_INFO)) {
+				message.getChannel().sendMessage("This command will show you the users info").queue();
 			} else {
 				sendUnknownCommandMessage(message, authorMention);
 				break;
@@ -401,6 +412,59 @@ public class MessageListener extends ListenerAdapter {
 	private void sendUnknownCommandMessage(final Message message, final String authorMention) {
 		message.getChannel().sendMessage(new StringBuilder().append(authorMention)
 				.append(" Sorry, I don't know that command.\n*Use rdss:? for assistance.*")).queue();
+	}
+	
+	private EmbedBuilder getUserInfoEmbed(Member member, User user) {
+		
+		EmbedBuilder embed = new EmbedBuilder();
+		
+		String userAvatarUrl; 
+		if(member != null) {
+			userAvatarUrl = member.getEffectiveAvatarUrl().toString();
+		} else {
+			userAvatarUrl = user.getAvatarUrl().toString();
+		}
+		embed.setAuthor(user.getName() + "#" + user.getDiscriminator(), userAvatarUrl, userAvatarUrl);
+		
+		if(member != null) {
+			if(member.getNickname() != null) 
+			{
+				embed.setDescription("This user is verified as: `" + member.getNickname() + "`");
+			} else {
+				embed.setDescription("This user is not verified");
+			}
+			
+		} else {
+			embed.setDescription("This user is not in this guild!");
+			embed.setColor(0xFF0000);
+		}
+		
+		if(member != null && member.getRoles() != null) {
+			String allRoles = "";
+			List<Role> roles = member.getRoles();
+			for(Role item : roles) {
+				allRoles += item.getAsMention().toString();	
+			}
+			
+			if(allRoles != "") {
+			embed.addField("Roles", allRoles, true);
+			}
+		}
+		
+		OffsetDateTime timeStamp = user.getTimeCreated();
+		long millisecondsSinceUnixEpoch = timeStamp.toInstant().toEpochMilli() / 1000;
+		embed.addField("Created at","<t:" + millisecondsSinceUnixEpoch +":F>\n" + "(<t:" + millisecondsSinceUnixEpoch +":R>)" , true);
+		
+		if(member != null && member.getTimeJoined() != null) {
+		OffsetDateTime timeStamp2 = member.getTimeJoined();
+		long millisecondsSinceUnixEpoch2 = timeStamp2.toInstant().toEpochMilli() / 1000;
+		embed.addField("Joined at", "<t:" + millisecondsSinceUnixEpoch2 +":F>\n" + "(<t:" + millisecondsSinceUnixEpoch2 +":R>)", true);
+		}
+		
+		embed.setFooter("ID: " + user.getId());
+		
+		return embed;
+	
 	}
 
 }
