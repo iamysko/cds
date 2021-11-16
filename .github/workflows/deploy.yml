@@ -14,7 +14,8 @@ jobs:
           host: ${{ secrets.MISTERVEIGA }}
           user: ${{ secrets.MISTERVEIGA_USER }}
           key: ${{ secrets.MISTERVEIGA_SSH }}
-          args: "-tt -vvv"
+          pass: ${{ secrets.MISTERVEIGA_PWD }}
+          args: "-tt"
       - name: Deploy
         uses: fifsky/ssh-action@master
         with:
@@ -22,5 +23,6 @@ jobs:
           host: ${{ secrets.MISTERVEIGA }}
           user: ${{ secrets.MISTERVEIGA_USER }}
           key: ${{ secrets.MISTERVEIGA_SSH }}
+          pass: ${{ secrets.MISTERVEIGA_PWD }}
           args: "-tt"
             
