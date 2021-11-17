@@ -117,7 +117,7 @@ public class MessageListener extends ListenerAdapter {
 			User theUser = userData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
 	    	ReplyAction reply = event.replyEmbeds(embed.build());
-	    	if(theMember.getNickname() != null) {
+	    	if(theMember != null && theMember.getNickname() != null) {
 
 	    		reply.addActionRow(Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(), "Roblox Information"));
 	    	}
