@@ -498,7 +498,16 @@ public class MessageListener extends ListenerAdapter {
 	}
 	
 	private EmbedBuilder getRobloxUserInfoEmbed(String RobloxUserName, String UserId) {
-			RobloxUserName = RobloxUserName.replace("/[^A-Za-z0-9]+/","");
+
+		RobloxUserName = RobloxUserName.replaceAll("[^\\x00-\\x7F]", "");
+ 
+		// erases all the ASCII control characters
+		RobloxUserName = RobloxUserName.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+     
+			// removes non-printable characters from Unicode
+		RobloxUserName = RobloxUserName.replaceAll("\\p{C}", "");
+
+
 		  EmbedBuilder embed = new EmbedBuilder();
 		  
    	  try {  
@@ -550,7 +559,9 @@ public class MessageListener extends ListenerAdapter {
    	  	return embed;
    	  } catch (Exception e) {
    		  System.out.println(e);
-   		  embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(" + UserId);
+   		    embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(");
+		  embed.setFooter( UserId + " " + RobloxUserName);
+
    		return embed;
    	  }
 	}
