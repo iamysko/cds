@@ -123,6 +123,15 @@ public class MessageListener extends ListenerAdapter {
 									"Roblox Information"));
 				}
 				reply.queue();
+			} else if (event.getName().equals(SlashCommandConstants.COMMAND_ROBLOX_USER_INFO)){
+				try {
+					EmbedBuilder embed = getRobloxUserInfoEmbed(event.getOption("username").getAsString(), null);
+					event.replyEmbeds(embed.build()).queue();
+				} catch (Exception e) {
+					event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
+							.queue();
+				}
+			
 			} else {
 				event.reply("The Command you tried to execute does not exist!").queue();
 			}
@@ -559,13 +568,14 @@ public class MessageListener extends ListenerAdapter {
 			}
 			embed.addField("**Created:**", "<t:" + unixCreated + ":F> \n <t:" + unixCreated + ":R> ", false);
 			embed.addField("**Roblox Profile Link:**", "https://www.roblox.com/users/" + RobloxId + "/profile", false);
-			embed.setFooter("ID: " + UserId);
+			if (UserId != null) {
+				embed.setFooter("ID: " + UserId);
+			}
 
 			return embed;
 		} catch (Exception e) {
 			System.out.println(e);
 			embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(");
-			embed.setFooter(UserId + " " + RobloxUserName);
 
 			return embed;
 		}

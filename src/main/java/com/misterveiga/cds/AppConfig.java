@@ -88,6 +88,7 @@ public class AppConfig {
 			   .addCommands(new CommandData(SlashCommandConstants.COMMAND_HELP, "Shows all current commands"))
 			   .addCommands(new CommandData(SlashCommandConstants.COMMAND_ABOUT, "About the bot"))
 			   .addCommands(new CommandData(SlashCommandConstants.COMMAND_USER_INFO, "Shows information about the user").addOption(OptionType.USER, "user", "The user to see the info", true))
+			   .addCommands(new CommandData(SlashCommandConstants.COMMAND_ROBLOX_USER_INFO, "Shows information about the Roblox user").addOption(OptionType.STRING, "username", "The username to see the info", true))
 			   .queue();
 			return jda;
 		} catch (final LoginException e) {
