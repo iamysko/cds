@@ -117,7 +117,8 @@ public class MessageListener extends ListenerAdapter {
 			User theUser = userData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
 	    	ReplyAction reply = event.replyEmbeds(embed.build());
-	    	if(theMember.getNickname() != null) {
+	    	if(theMember != null && theMember.getNickname() != null) {
+
 	    		reply.addActionRow(Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(), "Roblox Information"));
 	    	}
 	    	reply.queue();
@@ -497,14 +498,15 @@ public class MessageListener extends ListenerAdapter {
 	}
 	
 	private EmbedBuilder getRobloxUserInfoEmbed(String RobloxUserName, String UserId) {
-		
-    RobloxUserName = RobloxUserName.replaceAll("[^\\x00-\\x7F]", "");
+
+		RobloxUserName = RobloxUserName.replaceAll("[^\\x00-\\x7F]", "");
  
-    // erases all the ASCII control characters
-    RobloxUserName = RobloxUserName.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		// erases all the ASCII control characters
+		RobloxUserName = RobloxUserName.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
      
-    // removes non-printable characters from Unicode
-    RobloxUserName = RobloxUserName.replaceAll("\\p{C}", "");
+			// removes non-printable characters from Unicode
+		RobloxUserName = RobloxUserName.replaceAll("\\p{C}", "");
+
 
 		  EmbedBuilder embed = new EmbedBuilder();
 		  
@@ -558,7 +560,8 @@ public class MessageListener extends ListenerAdapter {
    	  } catch (Exception e) {
    		  System.out.println(e);
    		    embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(");
-		  embed.setFooter( UserId + " "+ RobloxUserName);
+		  embed.setFooter( UserId + " " + RobloxUserName);
+
    		return embed;
    	  }
 	}
