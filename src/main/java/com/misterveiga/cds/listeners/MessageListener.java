@@ -497,6 +497,7 @@ public class MessageListener extends ListenerAdapter {
 	}
 	
 	private EmbedBuilder getRobloxUserInfoEmbed(String RobloxUserName, String UserId) {
+		RobloxUserName = RobloxUserName.replace("/[^A-Za-z0-9]+/","");
 		  EmbedBuilder embed = new EmbedBuilder();
 		  
    	  try {  
