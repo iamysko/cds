@@ -550,7 +550,7 @@ public class MessageListener extends ListenerAdapter {
    	  } catch (Exception e) {
    		  System.out.println(e);
    		    embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(");
-		  embed.setFooter( UserId + " "+ RobloxUserName);
+		  embed.setFooter( UserId + " "+ RobloxUserName + RobloxUserName.Length());
    		return embed;
    	  }
 	}
