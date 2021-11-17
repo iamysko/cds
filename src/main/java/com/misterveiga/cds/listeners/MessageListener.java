@@ -3,10 +3,8 @@
  */
 package com.misterveiga.cds.listeners;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Date;
@@ -22,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -47,6 +45,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -117,7 +116,7 @@ public class MessageListener extends ListenerAdapter {
 	    	RestAction<User> userData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
 			User theUser = userData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
-	    	var reply = event.replyEmbeds(embed.build());
+	    	ReplyAction reply = event.replyEmbeds(embed.build());
 	    	if(theMember.getNickname() != null) {
 	    		reply.addActionRow(Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(), "Roblox Information"));
 	    	}
