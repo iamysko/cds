@@ -44,7 +44,7 @@ public class RoleUtils {
 	/** The Constant ROLE_BOT. */
 	public static final long ROLE_BOT = 150075195971862528L;
 
-	public static final long ROLE_VERIFIED = 245350640920952832L;
+	
 
 	public static final long ROLE_MUTED = 320659703992680448L;
 
