@@ -548,7 +548,7 @@ public class MessageListener extends ListenerAdapter {
    	  	return embed;
    	  } catch (Exception e) {
    		  System.out.println(e);
-   		    embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(" + e);
+   		    embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(" + RobloxUserName);
    		return embed;
    	  }
 	}
