@@ -3,7 +3,6 @@
  */
 package com.misterveiga.cds.listeners;
 
-
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -46,6 +45,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -116,7 +116,7 @@ public class MessageListener extends ListenerAdapter {
 	    	RestAction<User> userData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
 			User theUser = userData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
-	    	var reply = event.replyEmbeds(embed.build());
+	    	ReplyAction reply = event.replyEmbeds(embed.build());
 	    	if(theMember.getNickname() != null) {
 	    		reply.addActionRow(Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(), "Roblox Information"));
 	    	}
