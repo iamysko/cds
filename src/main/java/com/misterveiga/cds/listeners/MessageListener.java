@@ -118,6 +118,7 @@ public class MessageListener extends ListenerAdapter {
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
 	    	ReplyAction reply = event.replyEmbeds(embed.build());
 	    	if(theMember.getNickname() != null) {
+
 	    		reply.addActionRow(Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(), "Roblox Information"));
 	    	}
 	    	reply.queue();
@@ -497,6 +498,7 @@ public class MessageListener extends ListenerAdapter {
 	}
 	
 	private EmbedBuilder getRobloxUserInfoEmbed(String RobloxUserName, String UserId) {
+			RobloxUserName = RobloxUserName.replace("/[^A-Za-z0-9]+/","");
 		  EmbedBuilder embed = new EmbedBuilder();
 		  
    	  try {  
@@ -548,7 +550,7 @@ public class MessageListener extends ListenerAdapter {
    	  	return embed;
    	  } catch (Exception e) {
    		  System.out.println(e);
-   		  embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(");
+   		  embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(" + UserId);
    		return embed;
    	  }
 	}
