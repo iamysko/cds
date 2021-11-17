@@ -546,7 +546,6 @@ public class MessageListener extends ListenerAdapter {
    		  embed.addField("**Roblox Profile Link:**","https://www.roblox.com/users/"+ RobloxId + "/profile",false);
    		  embed.setFooter("ID: " + UserId);
 		
-
    	  	return embed;
    	  } catch (Exception e) {
    		  System.out.println(e);
@@ -554,5 +553,5 @@ public class MessageListener extends ListenerAdapter {
    		return embed;
    	  }
 	}
-	
 }
+
