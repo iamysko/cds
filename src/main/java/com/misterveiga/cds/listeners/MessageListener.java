@@ -3,8 +3,10 @@
  */
 package com.misterveiga.cds.listeners;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,6 +22,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.misterveiga.cds.command.CommandImpl;
 import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.utils.DurationUtils;
@@ -32,17 +38,21 @@ import com.misterveiga.cds.utils.SlashCommandConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.utils.TimeFormat;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;    
+
 
 /**
  * The listener interface for receiving message events. The class that is
@@ -104,10 +114,14 @@ public class MessageListener extends ListenerAdapter {
 	    	event.reply(getAboutMessage(authorMention)).queue();
 	    } else if (event.getName().equals(SlashCommandConstants.COMMAND_USER_INFO)) {
 	    	Member theMember = event.getGuild().getMemberById(event.getOption("user").getAsString());
-	    	RestAction<User> memberData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
-			User theUser = memberData.complete();
+	    	RestAction<User> userData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
+			User theUser = userData.complete();
 	    	EmbedBuilder embed = getUserInfoEmbed(theMember, theUser);
-	    	event.replyEmbeds(embed.build()).queue();
+	    	var reply = event.replyEmbeds(embed.build());
+	    	if(theMember.getNickname() != null) {
+	    		reply.addActionRow(Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(), "Roblox Information"));
+	    	}
+	    	reply.queue();
 	    } else {
 	    	event.reply("The Command you tried to execute does not exist!").queue();
 	    }
@@ -115,6 +129,19 @@ public class MessageListener extends ListenerAdapter {
 		else {
 	    	event.reply("Missing permissions!").setEphemeral(true).queue();
 	  }
+	}
+	
+	public void onButtonClick(ButtonClickEvent event) {
+		
+	      if (event.getComponentId().contains("RobloxInformation")) {
+	    	  String[] ComponentId = event.getComponentId().split("/");
+	    	  try {
+	    		  EmbedBuilder embed = getRobloxUserInfoEmbed(ComponentId[1], ComponentId[2]);
+	    		  event.replyEmbeds(embed.build()).queue();
+	    	  } catch (Exception e) {
+	    		  event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e).queue();
+	    	  }
+	      }
 	}
 	
 	@Override
@@ -434,6 +461,7 @@ public class MessageListener extends ListenerAdapter {
 				embed.setDescription("This user is verified as: `" + member.getNickname() + "`");
 			} else {
 				embed.setDescription("This user is not verified");
+				embed.setColor(0xFFFFFF);
 			}
 			
 		} else {
@@ -468,5 +496,62 @@ public class MessageListener extends ListenerAdapter {
 		return embed;
 	
 	}
+	
+	private EmbedBuilder getRobloxUserInfoEmbed(String RobloxUserName, String UserId) {
+		  EmbedBuilder embed = new EmbedBuilder();
+		  
+   	  try {  
+   		  OkHttpClient client = new OkHttpClient();
+     	  
+		  Request request = new Request.Builder()
+                  .url("https://users.roblox.com/v1/usernames/users")
+                  .post(RequestBody.create(MediaType.parse("application/json"),"{\"usernames\": [ \"" + RobloxUserName +"\"]}")).build();
+   		  Response response = client.newCall(request).execute();
+   		  ObjectNode obj = new ObjectMapper().readValue(response.body().string(), ObjectNode.class);
+   		  
+   		  String RobloxId = obj.get("data").get(0).get("id").toString();
+			
+   		  Request request2 = new Request.Builder()
+   				  .url("https://users.roblox.com/v1/users/" + RobloxId).build();
+   		  Response response2 = client.newCall(request2).execute(); 
+   		  ObjectNode obj2 = new ObjectMapper().readValue(response2.body().string(), ObjectNode.class);
+   		  
+   		  String displayName = obj2.get("displayName").toString().replace("\"", "");
+   		  String DateString = obj2.get("created").toString().replace("\"", "");
 
+   		  Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(DateString);
+   		  long unixCreated = date.toInstant().toEpochMilli() / 1000;
+   			  	  
+   		  Request request3 = new Request.Builder()
+   				  .url("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds= " + RobloxId + "&size=720x720&format=Png&isCircular=false").build();
+   		  Response response3 = client.newCall(request3).execute(); 
+   		  ObjectNode obj3 = new ObjectMapper().readValue(response3.body().string(), ObjectNode.class); 	
+   		  
+   		  String AvatarUrl = obj3.get("data").get(0).get("imageUrl").toString().replace("\"", "");
+   		  
+   		  Request request4 = new Request.Builder()
+ 				  .url("https://users.roblox.com/v1/users/" + RobloxId + "/username-history").build();
+ 		  Response response4 = client.newCall(request4).execute(); 
+ 		  JsonNode obj4 = new ObjectMapper().readValue(response4.body().string(), ObjectNode.class); 	
+ 		  JsonNode arrayNode = obj4.get("data");
+ 		
+ 		  String previousUsernames = "";
+ 		  for (JsonNode jsonNode : arrayNode) {
+             previousUsernames += "`" + jsonNode.get("name").asText() + "`\n";    
+             }
+   		  
+   		  embed.setAuthor(RobloxUserName + " (" + displayName + ")" , AvatarUrl, AvatarUrl);
+   		  if(previousUsernames != "") {embed.addField("**Username History:**",previousUsernames,true);}
+   		  embed.addField("**Created:**","<t:" + unixCreated + ":F> \n <t:" + unixCreated + ":R> ",false);
+   		  embed.addField("**Roblox Profile Link:**","https://www.roblox.com/users/"+ RobloxId + "/profile",false);
+   		  embed.setFooter("ID: " + UserId);
+		
+   	  	return embed;
+   	  } catch (Exception e) {
+   		  System.out.println(e);
+   		  embed.setTitle("It appears the Roblox API is currently not responding! Please Try again later! :(");
+   		return embed;
+   	  }
+	}
 }
+
