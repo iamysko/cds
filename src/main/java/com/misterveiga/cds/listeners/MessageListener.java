@@ -497,7 +497,7 @@ public class MessageListener extends ListenerAdapter {
 	}
 	
 	private EmbedBuilder getRobloxUserInfoEmbed(String RobloxUserName, String UserId) {
-		strips off all non-ASCII characters
+		
     RobloxUserName = RobloxUserName.replaceAll("[^\\x00-\\x7F]", "");
  
     // erases all the ASCII control characters
