@@ -134,7 +134,7 @@ public class MessageListener extends ListenerAdapter {
 				}
 			
 			} else if(event.getName().equals(SlashCommandConstants.COMMAND_SCAN_URL)) {
-				event.replyEmbeds(scanUrl(event.getOption("url").getAsString(), event.getGuild().getIconUrl()).build()).queue();
+				event.replyEmbeds(scanUrl(event.getOption("url").getAsString(), event.getJDA().getSelfUser().getEffectiveAvatarUrl()).build()).queue();
 			}
 			
 			
@@ -592,7 +592,7 @@ public class MessageListener extends ListenerAdapter {
 	@Value("${virus.total.token}")
 	public String virusTotalToken;
 	
-	private EmbedBuilder scanUrl(String url, String guildIcon) {
+	private EmbedBuilder scanUrl(String url, String botIcon) {
 		EmbedBuilder embed = new EmbedBuilder();
 		try {
 		OkHttpClient client = new OkHttpClient();
@@ -619,7 +619,7 @@ public class MessageListener extends ListenerAdapter {
 		String retrievedUrl = obj.get("url").toString().replace("\"", "");
 		int positives = obj.get("positives").asInt();
 		
-		embed.setAuthor("Malicious Log", null, guildIcon);
+		embed.setAuthor("Malicious Log", null, botIcon);
 		
 		if(positives == 0) {
 			embed.setTitle("Safe Link Detected");
