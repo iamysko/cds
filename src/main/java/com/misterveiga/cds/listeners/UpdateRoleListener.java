@@ -30,7 +30,7 @@ public class UpdateRoleListener extends ListenerAdapter {
 						+ "This mute does not affect your account on Roblox.com.\r\n\n");
 			
 				embed.addField( "<:info:452813376788234250> **Mute Reason**\r\n",
-						 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a @Moderator.\r\n", false);
+						 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a <@&150093661231775744>.\r\n", false);
 				embed.addField( "<:z_qm60:452813334429827072> **Mute Bypassing**\r\n",
 						 "Attempting to bypass a mute will result in you being banned from the server. <:ban_hammer:234839744092176384>", false);
 				
