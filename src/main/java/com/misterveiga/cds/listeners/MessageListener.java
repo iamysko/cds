@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -132,7 +133,12 @@ public class MessageListener extends ListenerAdapter {
 							.queue();
 				}
 			
-			} else {
+			} else if(event.getName().equals(SlashCommandConstants.COMMAND_SCAN_URL)) {
+				event.replyEmbeds(scanUrl(event.getOption("url").getAsString(), event.getGuild().getIconUrl()).build()).queue();
+			}
+			
+			
+			else {
 				event.reply("The Command you tried to execute does not exist!").queue();
 			}
 		} else {
@@ -579,5 +585,81 @@ public class MessageListener extends ListenerAdapter {
 
 			return embed;
 		}
+	}
+	
+	
+	/** The virus total token. */
+	@Value("${virus.total.token}")
+	public String virusTotalToken;
+	
+	private EmbedBuilder scanUrl(String url, String guildIcon) {
+		EmbedBuilder embed = new EmbedBuilder();
+		try {
+		OkHttpClient client = new OkHttpClient();
+		
+		MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+		RequestBody body = RequestBody.create(mediaType, "apikey=" + virusTotalToken + "&url=" + url);
+		Request request = new Request.Builder()
+		  .url("https://www.virustotal.com/vtapi/v2/url/scan")
+		  .post(body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/x-www-form-urlencoded")
+		  .build();
+		Response response = client.newCall(request).execute();
+		
+		Request request2 = new Request.Builder()
+		  .url("https://www.virustotal.com/vtapi/v2/url/report?apikey=" + virusTotalToken + "&resource=" + url + "&allinfo=false&scan=0")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .build();
+
+		Response response2 = client.newCall(request2).execute();
+		ObjectNode obj = new ObjectMapper().readValue(response2.body().string(), ObjectNode.class);
+		
+		String retrievedUrl = obj.get("url").toString().replace("\"", "");
+		int positives = obj.get("positives").asInt();
+		
+		embed.setAuthor("Malicious Log", null, guildIcon);
+		
+		if(positives == 0) {
+			embed.setTitle("Safe Link Detected");
+			embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/sign-check-icon.png");
+			embed.addField("Link:", "`" + retrievedUrl + "`", false);
+			embed.addField("State:", "`Safe`", false);
+			embed.setColor(0x2ecc71);
+		} else {
+			embed.setTitle("Malicious Link Detected");
+			embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-error-icon.png");
+			embed.setDescription("Do not click the link below as it has been flagged as malicious.");
+			embed.addField("Link:", "`" + retrievedUrl + "`", false);
+			embed.addField("State:", "`Malicious`", false);
+			embed.setColor(0xe74c3c);
+			
+			String Flags = "";
+			JsonNode arrayNode = obj.get("scans");
+			
+		    final Iterator<Map.Entry<String, JsonNode>> fields = arrayNode.fields();
+		    while (fields.hasNext()) {
+		      final Map.Entry<String, JsonNode> field = fields.next();
+		      
+		      final String fieldName = field.getKey();
+		      final JsonNode value = field.getValue();
+		      final String result = value.get("result").toString().replace("\"", "");
+		      
+		      if(value.get("detected").asBoolean() == true) {
+					Flags +=  "⊗ " + fieldName + "  : " + result + "\n";
+				}
+		    }
+			embed.addField("Flags:", "```" + Flags + "```", false);
+		}
+		
+		embed.setFooter("Always be safe on the internet. Do not click any suspicious links!");
+
+		} catch(Exception e) {
+			embed.setTitle("Something went wrong! Please try again later! :(");
+		}
+		
+		return embed;
+		
 	}
 }
