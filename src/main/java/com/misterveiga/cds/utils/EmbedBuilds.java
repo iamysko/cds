@@ -148,56 +148,67 @@ public class EmbedBuilds {
 		}
 	}
 
-	public static EmbedBuilder scanUrl(String url, String botIcon) {
-			EmbedBuilder embed = new EmbedBuilder();
-			try {
-				
-			VirusTotal.scanUrl(url);
-			ObjectNode obj = VirusTotal.getScannedUrlData(url);
-				
-			String retrievedUrl = obj.get("url").toString().replace("\"", "");
-			int positives = obj.get("positives").asInt();
-			
-			embed.setAuthor("Malicious Log", null, botIcon);
-			
-			if(positives == 0) {
-				embed.setTitle("Safe Link Detected");
-				embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/sign-check-icon.png");
-				embed.addField("Link:", "`" + retrievedUrl + "`", false);
-				embed.addField("State:", "`Safe`", false);
-				embed.setColor(0x2ecc71);
-			} else {
-				embed.setTitle("Malicious Link Detected");
-				embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-error-icon.png");
-				embed.setDescription("Do not click the link below as it has been flagged as malicious.");
-				embed.addField("Link:", "`" + retrievedUrl + "`", false);
-				embed.addField("State:", "`Malicious`", false);
-				embed.setColor(0xe74c3c);
-				
-				String Flags = "";
-				JsonNode arrayNode = obj.get("scans");
-				
-			    final Iterator<Map.Entry<String, JsonNode>> fields = arrayNode.fields();
-			    while (fields.hasNext()) {
-			      final Map.Entry<String, JsonNode> field = fields.next();
-			      
-			      final String fieldName = field.getKey();
-			      final JsonNode value = field.getValue();
-			      final String result = value.get("result").toString().replace("\"", "");
-			      
-			      if(value.get("detected").asBoolean() == true) {
-						Flags +=  "⊗ " + fieldName + "  : " + result + "\n";
-					}
-			    }
-				embed.addField("Flags:", "```" + Flags + "```", false);
-			}
-			
-			embed.setFooter("Always be safe on the internet. Do not click any suspicious links!");
+	public static EmbedBuilder scanUrl(String url, String botIcon) throws InterruptedException {
+		try {
+		ObjectNode obj = VirusTotal.getScannedUrlData(url);
+		String scanning = obj.get("verbose_msg").asText().toString().replace("\"", "");
 
-			} catch(Exception e) {
-				embed.setTitle("Something went wrong! Please try again later! :(");
+		System.out.println(scanning);
+		if (scanning.contains("queue")) {
+			Thread.sleep(5000);
+			obj = VirusTotal.getScannedUrlData(url);
+		}
+
+		EmbedBuilder embed = new EmbedBuilder();
+
+		String retrievedUrl = obj.get("url").toString().replace("\"", "");
+		int positives = obj.get("positives").asInt();
+
+		embed.setAuthor("Malicious Log", null, botIcon);
+
+		if (positives == 0) {
+			embed.setTitle("Safe Link Detected");
+			embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/sign-check-icon.png");
+			embed.addField("Link:", "`" + retrievedUrl + "`", false);
+			embed.addField("State:", "`Safe`", false);
+			embed.setColor(0x2ecc71);
+		} else {
+			embed.setTitle("Malicious Link Detected");
+			embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-error-icon.png");
+			embed.setDescription("Do not click the link below as it has been flagged as malicious.");
+			embed.addField("Link:", "`" + retrievedUrl + "`", false);
+			embed.addField("State:", "`Malicious`", false);
+			embed.setColor(0xe74c3c);
+
+			String Flags = "";
+			JsonNode arrayNode = obj.get("scans");
+
+			final Iterator<Map.Entry<String, JsonNode>> fields = arrayNode.fields();
+			while (fields.hasNext()) {
+				final Map.Entry<String, JsonNode> field = fields.next();
+
+				final String fieldName = field.getKey();
+				final JsonNode value = field.getValue();
+				final String result = value.get("result").toString().replace("\"", "");
+
+				if (value.get("detected").asBoolean() == true) {
+					Flags += "⊗ " + fieldName + "  : " + result + "\n";
+				}
 			}
-			
-			return embed;	
+			embed.addField("Flags:", "```" + Flags + "```", false);
+		}
+
+		embed.setFooter("Always be safe on the internet. Do not click any suspicious links!");
+
+		return embed;
+		} catch (Exception e) {
+			return ApiError();
+		}
+	}
+
+	public static EmbedBuilder ApiError() {
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setTitle("something went wrong! Please try again later.");
+		return embed;
 	}
 }

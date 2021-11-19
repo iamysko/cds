@@ -27,7 +27,7 @@ public class VirusTotal {
         VirusTotal.virusTotalTokenStatic = token;
     }
 
-	public static void scanUrl(String url) {
+	public static String scanUrl(String url) {
 		OkHttpClient client = new OkHttpClient();
 
 		MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
@@ -37,8 +37,10 @@ public class VirusTotal {
 				.build();
 		try {
 			Response response = client.newCall(request).execute();
+			 ObjectNode obj = new ObjectMapper().readValue(response.body().string(), ObjectNode.class);
+			 return obj.get("scan_id").toString().replace("\"", "");
 		} catch (IOException e) {
-			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -46,13 +48,11 @@ public class VirusTotal {
 		try {
 			OkHttpClient client = new OkHttpClient();
 			Request request = new Request.Builder().url("https://www.virustotal.com/vtapi/v2/url/report?apikey="
-					+ virusTotalTokenStatic + "&resource=" + url + "&allinfo=false&scan=0").get()
+					+ virusTotalTokenStatic + "&resource=" + url + "&allinfo=false&scan=1").get()
 					.addHeader("Accept", "application/json").build();
-		
 			Response response = client.newCall(request).execute();
 			return new ObjectMapper().readValue(response.body().string(), ObjectNode.class);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

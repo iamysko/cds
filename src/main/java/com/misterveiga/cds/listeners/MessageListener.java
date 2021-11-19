@@ -36,6 +36,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
@@ -112,21 +113,29 @@ public class MessageListener extends ListenerAdapter {
 									"Roblox Information"));
 				}
 				reply.queue();
-			} else if (event.getName().equals(SlashCommandConstants.COMMAND_ROBLOX_USER_INFO)){
+			} else if (event.getName().equals(SlashCommandConstants.COMMAND_ROBLOX_USER_INFO)) {
 				try {
-					EmbedBuilder embed = EmbedBuilds.getRobloxUserInfoEmbed(event.getOption("username").getAsString(), null);
+					EmbedBuilder embed = EmbedBuilds.getRobloxUserInfoEmbed(event.getOption("username").getAsString(),
+							null);
 					event.replyEmbeds(embed.build()).queue();
 				} catch (Exception e) {
 					event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
 							.queue();
 				}
-			
-			} else if(event.getName().equals(SlashCommandConstants.COMMAND_SCAN_URL)) {
-				event.replyEmbeds(EmbedBuilds.scanUrl(event.getOption("url").getAsString(), event.getJDA().getSelfUser().getEffectiveAvatarUrl()).build()).queue();
-			}
-			
-			
-			else {
+			} else if (event.getName().equals(SlashCommandConstants.COMMAND_SCAN_URL)) {
+				event.deferReply().queue();
+				InteractionHook hook = event.getHook();
+				new Thread(() -> {
+					EmbedBuilder embed = null;
+					try {
+						embed = EmbedBuilds.scanUrl(event.getOption("url").getAsString(),
+								event.getJDA().getSelfUser().getEffectiveAvatarUrl());
+					} catch (InterruptedException e) {
+						embed = EmbedBuilds.ApiError();
+					}
+					hook.editOriginalEmbeds(embed.build()).queue();
+				}).start();
+			} else {
 				event.reply("The Command you tried to execute does not exist!").queue();
 			}
 		} else {
