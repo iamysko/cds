@@ -307,7 +307,7 @@ public class ReactionListener extends ListenerAdapter {
 
 									approveMuteRequest(reactee, message, commandChannel);
 
-									commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
+									commandAction.setActionType("REACTION_APPROVE_MUTE_REQUEST");
 									log.info("[Reaction Command] Mute request approved by {} ({}) (request: {})",
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
@@ -353,7 +353,7 @@ public class ReactionListener extends ListenerAdapter {
 											RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_MODERATOR)) {
 
 								rejectBanRequest(reactee, message, commandChannel);
-								commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
+								commandAction.setActionType("REACTION_REJECT_MUTE_REQUEST");
 								log.info("[Reaction Command] Mute request rejected by {} ({}) (request: {})",
 										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
