@@ -85,6 +85,8 @@ public class MessageListener extends ListenerAdapter {
 			perm = true;
 		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_MODERATOR) != null) {
 			perm = true;
+		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_MODERATOR) != null) {
+			perm = true;
 		} else {
 			perm = false;
 		}
