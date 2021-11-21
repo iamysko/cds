@@ -303,6 +303,14 @@ public class ReactionListener extends ListenerAdapter {
 									log.info("[Reaction Command] Ban request approved by {} ({}) (request: {})",
 											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
+								} else if (event.getChannel().getIdLong() == Properties.CHANNEL_MUTE_REQUESTS_QUEUE_ID) {
+
+									approveMuteRequest(reactee, message, commandChannel);
+
+									commandAction.setActionType("REACTION_APPROVE_BAN_REQUEST");
+									log.info("[Reaction Command] Mute request approved by {} ({}) (request: {})",
+											reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
 								} else if (event.getChannel()
 										.getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID
 										|| event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
@@ -338,6 +346,15 @@ public class ReactionListener extends ListenerAdapter {
 								rejectBanRequest(reactee, message, commandChannel);
 								commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
 								log.info("[Reaction Command] Ban request rejected by {} ({}) (request: {})",
+										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
+
+							} else if (event.getChannel().getIdLong() == Properties.CHANNEL_MUTE_REQUESTS_QUEUE_ID
+									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
+											RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_MODERATOR)) {
+
+								rejectBanRequest(reactee, message, commandChannel);
+								commandAction.setActionType("REACTION_REJECT_BAN_REQUEST");
+								log.info("[Reaction Command] Mute request rejected by {} ({}) (request: {})",
 										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 
 							}
@@ -600,6 +617,49 @@ public class ReactionListener extends ListenerAdapter {
 
 			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
 					" the ban you tried to invoke was not correctly formatted. Please run the command manually."))
+					.queue();
+
+		}
+	}
+	
+	/**
+	 * Approve mute request.
+	 *
+	 * @param reactee        the reactee
+	 * @param message        the message
+	 * @param commandChannel the command channel
+	 */
+	private void approveMuteRequest(final Member reactee, final Message message, final TextChannel commandChannel) {
+		try {
+
+			final String[] muteRequestMessageContent = message.getContentStripped().replaceAll("\\s+", " ").split(" ");
+			final StringBuilder sb = new StringBuilder();
+			sb.append("(approved by ").append(reactee.getUser().getAsTag()).append(" (").append(reactee.getId())
+					.append(")) ");
+			for (Integer i = 2; i < muteRequestMessageContent.length; i++) {
+				sb.append(muteRequestMessageContent[i]).append(" ");
+			}
+
+			final String evidence = sb.toString();
+			final String userToMute = muteRequestMessageContent[1].matches(".*[a-z].*") ? muteRequestMessageContent[2] : muteRequestMessageContent[1];
+			final String muteDuration = muteRequestMessageContent[1].matches(".*[a-z].*") ? muteRequestMessageContent[1] : "";
+
+			if (muteRequestMessageContent[0].equalsIgnoreCase(";mute")
+					|| muteRequestMessageContent[0].equalsIgnoreCase(";tempmute")) {
+
+				commandChannel.sendMessage(String.format(COMMAND_MUTE_USER_DEFAULT, muteDuration, userToMute, evidence))
+						.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove when appropriate
+
+			} else {
+				commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+						" the mute you tried to invoke was not correctly formatted. Please run the command manually."))
+						.queue();
+			}
+
+		} catch (final IndexOutOfBoundsException e) {
+
+			commandChannel.sendMessage(new StringBuilder().append(reactee.getAsMention()).append(
+					" the mute you tried to invoke was not correctly formatted. Please run the command manually."))
 					.queue();
 
 		}
