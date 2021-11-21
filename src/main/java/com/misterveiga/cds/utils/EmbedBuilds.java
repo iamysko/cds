@@ -131,13 +131,14 @@ public class EmbedBuilds {
 
 			embed.setAuthor(RobloxUserName + " (" + displayName + ")", AvatarUrl, AvatarUrl);
 			if (previousUsernames != "") {
-				embed.addField("**Username History:**", previousUsernames, true);
+				embed.addField("Username History", previousUsernames, true);
 			}
-			embed.addField("**Created:**", "<t:" + unixCreated + ":F> \n <t:" + unixCreated + ":R> ", false);
-			embed.addField("**Roblox Profile Link:**", "https://www.roblox.com/users/" + RobloxId + "/profile", false);
+			embed.addField("Created", "<t:" + unixCreated + ":F> \n (<t:" + unixCreated + ":R>)", false);
+			embed.addField("Roblox Profile", "https://roblox.com/users/" + RobloxId, false);
 			if (UserId != null) {
 				embed.setFooter("ID: " + UserId);
 			}
+			embed.setColor(0x2e3136);
 
 			return embed;
 		} catch (Exception e) {
