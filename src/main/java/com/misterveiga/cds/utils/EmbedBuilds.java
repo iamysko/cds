@@ -168,7 +168,7 @@ public class EmbedBuilds {
 		embed.setAuthor("Malicious Log", null, botIcon);
 
 		if (positives == 0) {
-			embed.setTitle("Safe Link Detected");
+			embed.setTitle("No Malicious Content Detected");
 			embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/sign-check-icon.png");
 			embed.addField("Link:", "`" + retrievedUrl + "`", false);
 			embed.addField("State:", "`Safe`", false);
