@@ -171,7 +171,7 @@ public class EmbedBuilds {
 			embed.setTitle("No Malicious Content Detected");
 			embed.setThumbnail("https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/sign-check-icon.png");
 			embed.addField("Link:", "`" + retrievedUrl + "`", false);
-			embed.addField("State:", "`Safe`", false);
+			embed.addField("State:", "`No Malicious content was deteteced`", false);
 			embed.setColor(0x2ecc71);
 		} else {
 			embed.setTitle("Malicious Link Detected");
