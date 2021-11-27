@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.misterveiga.cds.data.CdsData;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -44,14 +45,10 @@ public class AlertMaintainerThread {
 			final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
 			
 			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
+				EmbedBuilder embed = EmbedBuilds.alertMaintainerEmbed();
+				
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
-				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage(new StringBuilder()
-						.append("@here")
-						.append("\n**!! Mod Alerts Pending !!**")
-						.append("\nThere are pending mod alerts in <#" + Properties.CHANNEL_MOD_ALERTS_ID.toString() + ">!")
-						.append("\nPlease remember to monitor Mod alerts frequently in order to avoid an accumulation of messages (and untreated reports) in the channel.")
-						.append("\n\n*This message will only appear if there are alerts more than 2 hours old.*"))
-						.queue();
+				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage("@here").queue(messageWithoutEmbed => messageWithoutEmbed.editMessageEmbeds(embed).queue());
 			}
 			}
 		});
