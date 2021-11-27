@@ -156,7 +156,7 @@ public class EmbedBuilds {
 		.setTitle("Moderation Alerts Pending")
 		.setDescription(new StringBuilder()
 				     
-				    .append("There are pending mod alerts in ")
+				    .append("There are pending moderation alerts in ")
 				    .append(String.format("<#%d>", Properties.CHANNEL_MOD_ALERTS_ID))
 				    .append("\n\n")
 				    .append("Please remember to monitor moderation alerts frequently in order to avoid an accumulation of messages (and untreated reports) in the channel."))
