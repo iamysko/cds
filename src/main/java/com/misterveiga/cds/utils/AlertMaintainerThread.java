@@ -44,8 +44,10 @@ public class AlertMaintainerThread {
 			final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
 			
 			if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
+        			EmbedBuilder embed = EmbedBuilds.alertMaintainerEmbed();
+
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
-        
+				guild.getTextChannelById(Properties.CHANNEL_TRIAL_MODERATORS_ID).sendMessage("@here Pending moderation alerts").setEmbeds(embed.build()).queue();
 			}
 			}
 		});
