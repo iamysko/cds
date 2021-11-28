@@ -153,7 +153,7 @@ public class EmbedBuilds {
 		EmbedBuilder embed = new EmbedBuilder()
 		
 		.setColor(0x748bd8)
-		.setTitle("Moderation Alerts Pending")
+		.setTitle("Moderation Alerts")
 		.setDescription(new StringBuilder()
 				     
 				    .append("There are pending moderation alerts in ")
