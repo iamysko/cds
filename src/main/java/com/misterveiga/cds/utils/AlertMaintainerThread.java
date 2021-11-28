@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.misterveiga.cds.data.CdsData;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 
