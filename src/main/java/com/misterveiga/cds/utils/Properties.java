@@ -22,6 +22,9 @@ public class Properties {
 
 	/** The Constant CHANNEL_COMMANDS_ID. */
 	public static final Long CHANNEL_COMMANDS_ID = 150250250471342080L;
+	
+	/** The Constant CHANNEL_TRIAL_MODERATORS_ID. */
+	public static final Long CHANNEL_TRIAL_MODERATORS_ID = 678671353473269799L;
 
 	/** The Constant CHANNEL_MODERATORS_ID. */
 	public static final Long CHANNEL_MODERATORS_ID = 150255535927721984L;
