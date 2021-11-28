@@ -148,23 +148,6 @@ public class EmbedBuilds {
 			return embed;
 		}
 	}
-	
-	public static EmbedBuilder alertMaintainerEmbed() {
-		EmbedBuilder embed = new EmbedBuilder()
-		
-		.setColor(0x748bd8)
-		.setTitle("Moderation Alerts")
-		.setDescription(new StringBuilder()
-				     
-				    .append("There are pending moderation alerts in ")
-				    .append(String.format("<#%d>", Properties.CHANNEL_MOD_ALERTS_ID))
-				    .append("\n\n")
-				    .append("Please remember to monitor moderation alerts frequently in order to avoid an accumulation of messages (and untreated reports) in the channel."))
-		
-		.setFooter("This message appears whenever there are alerts that are over 2 hours old.");
-		
-		return embed;
-	}
 
 	public static EmbedBuilder scanUrl(String url, String botIcon) throws InterruptedException {
 		try {
