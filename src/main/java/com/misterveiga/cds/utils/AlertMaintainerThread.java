@@ -48,7 +48,7 @@ public class AlertMaintainerThread {
         			EmbedBuilder embed = EmbedBuilds.alertMaintainerEmbed();
 
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
-				guild.getTextChannelById(Properties.CHANNEL_TRIAL_MODERATORS_ID).sendMessage(embed.build()).setContent("@here Pending moderation alerts").queue();
+				guild.getTextChannelById(Properties.CHANNEL_TRIAL_MODERATORS_ID).sendMessageEmbeds(embed.build()).setContent("@here Pending moderation alerts").queue();
 			}
 			}
 		});
