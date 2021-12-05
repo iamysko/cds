@@ -17,7 +17,7 @@ public class Properties {
 	/** The Constant GUILD_ROBLOX_DISCORD_ID. */
 	public static final Long GUILD_ROBLOX_DISCORD_ID = 150074202727251969L;
 
-	/** The Constant ROLE_COMMUNITY_MODERATOR_ID. */
+	/** The Constant ROLE_MODERATOR_ID. */
 	public static final Long ROLE_MODERATOR_ID = 150093661231775744L;
 
 	/** The Constant CHANNEL_COMMANDS_ID. */
@@ -28,6 +28,9 @@ public class Properties {
 	
 	/** The Constant CHANNEL_MODERATORS_ID. */
 	public static final Long CHANNEL_MODERATORS_ID = 150255535927721984L;
+	
+	/** The Constant CHANNEL_SENIOR_MODERATORS_ID. */
+	public static final Long CHANNEL_SENIOR_MODERATORS_ID = 678849276402466849L;
 
 	/** The Constant CHANNEL_BAN_REQUESTS_QUEUE_ID. */
 	public static final Long CHANNEL_BAN_REQUESTS_QUEUE_ID = 592580861543841802L;
