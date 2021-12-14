@@ -2,6 +2,8 @@ package com.misterveiga.cds.utils;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +36,10 @@ public class AlertMaintainerThread {
 	@Scheduled(fixedDelay = 3600000)
 	public void checkMutes() {
 
-		log.debug("[AlertMaintainerThread] Checking for old alerts...");
-
+		log.debug("[AlertMaintainerThread] Checking for old ban requests and moderation alerts...");
 		final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
 
+		// Alert the team if any moderation alerts are 2+ hours old
 		guild.getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID).getHistoryFromBeginning(1).queue(messageHistory -> {
 			if(!messageHistory.isEmpty()) {
 			final Message firstMessage = messageHistory.getRetrievedHistory().get(0);
@@ -48,9 +50,27 @@ public class AlertMaintainerThread {
         			EmbedBuilder embed = EmbedBuilds.alertMaintainerEmbed();
 
 				log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
-				guild.getTextChannelById(Properties.CHANNEL_TRIAL_MODERATORS_ID).sendMessage("@here Pending moderation alerts").setEmbeds(embed.build()).queue();
+				guild.getTextChannelById(Properties.CHANNEL_MODERATORS_ID).sendMessage("@here Pending moderation alerts").setEmbeds(embed.build()).queue();
 			}
 			}
 		});
+		
+		// Alert senior moderators if there are 25+ unreviewed ban requests
+		guild.getTextChannelById(Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID).getIterableHistory().takeAsync(200).thenAccept(messages -> {
+				final List<Message> banRequests = messages.stream()
+						.filter(message -> message.getReactions().isEmpty())
+						.collect(Collectors.toList());
+
+				if (banRequests.size() >= 25) {
+					StringBuilder sb = new StringBuilder()
+						.append(String.format("<@&%d> There are ", RoleUtils.ROLE_SENIOR_MODERATOR))
+						.append(String.format("%d unreviewed ban requests. ", banRequests.size()))
+						.append(String.format("Starting from this message:%n<%s>", banRequests.get(banRequests.size() - 1).getJumpUrl()));
+					
+					log.info("[AlertMaintainerThread] 25+ Ban requests found. Notifying senior moderators...");
+					guild.getTextChannelById(Properties.CHANNEL_SENIOR_MODERATORS_ID).sendMessage(sb.toString()).queue();
+				}
+		});
+		
 	}
 }
