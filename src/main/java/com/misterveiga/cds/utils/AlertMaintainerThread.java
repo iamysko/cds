@@ -58,7 +58,7 @@ public class AlertMaintainerThread {
 		// Alert senior moderators if there are 25+ unreviewed ban requests
 		guild.getTextChannelById(Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID).getIterableHistory().takeAsync(200).thenAccept(messages -> {
 				final List<Message> banRequests = messages.stream()
-						.filter(message -> message.getReactions().isEmpty())
+						.filter(message -> message.getReactions().isEmpty() && message.getContentRaw().matches("(?i)^;(force)?ban.*$"))
 						.collect(Collectors.toList());
 
 				if (banRequests.size() >= 25) {
