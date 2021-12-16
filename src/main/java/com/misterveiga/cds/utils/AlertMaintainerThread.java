@@ -45,7 +45,7 @@ public class AlertMaintainerThread {
 					.filter(message -> message.getReactions().isEmpty() && message.getContentRaw().matches("(?i)^;(force)?ban.*$"))
 					.collect(Collectors.toList());
 
-			if (banRequests.size() >= 5) {
+			if (banRequests.size() >= 25) {
 				StringBuilder sb = new StringBuilder()
 						.append(String.format("<@&%d> There are ", RoleUtils.ROLE_SENIOR_MODERATOR))
 						.append(String.format("%d unreviewed ban requests. ", banRequests.size()))
@@ -69,7 +69,7 @@ public class AlertMaintainerThread {
 				final OffsetDateTime firstMessageDateTime = firstMessage.getTimeCreated();
 				final ZoneOffset firstMessageZone = firstMessageDateTime.getOffset();
 
-				if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusSeconds(5L))) {
+				if (firstMessageDateTime.isBefore(OffsetDateTime.now(firstMessageZone).minusHours(2L))) {
 					EmbedBuilder embed = EmbedBuilds.alertMaintainerEmbed();
 
 					log.info("[AlertMaintainerThread] Alerts over 2 hours old found. Notifying the team...");
