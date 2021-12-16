@@ -34,7 +34,7 @@ public class AlertMaintainerThread {
 	}
 
 	@Scheduled(fixedDelay = 86400000)
-	public void BanRequestAlertMaintainer() {
+	public void checkBanRequests() {
 
 		log.debug("[AlertMaintainerThread] Checking for old ban requests...");
 		final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
@@ -58,7 +58,7 @@ public class AlertMaintainerThread {
 	}
 
 	@Scheduled(fixedDelay = 3600000)
-	public void ModAlertMaintainer() {
+	public void checkModAlerts() {
 
 		log.debug("[AlertMaintainerThread] Checking for old alerts...");
 		final Guild guild = jda.getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID);
