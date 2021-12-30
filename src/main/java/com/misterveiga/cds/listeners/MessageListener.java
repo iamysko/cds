@@ -486,7 +486,7 @@ public class MessageListener extends ListenerAdapter {
 							.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
 							.queue();
 				} else {
-					Pattern regexPattern = Pattern.compile(";(?:force)?ban\\s(\\d+)\\s.+");
+					Pattern regexPattern = Pattern.compile("(?i);(?:force)?ban\\s(\\d+)\\s.+");
 					Matcher matchedResults = regexPattern.matcher(message.getContentRaw());
 					matchedResults.find();
 
