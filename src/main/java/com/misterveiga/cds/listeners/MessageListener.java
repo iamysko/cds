@@ -481,13 +481,13 @@ public class MessageListener extends ListenerAdapter {
 	 * @param message       the message
 	 */
 	private void validateBanRequest(final Message message) {
-		if (!message.getContentRaw().matches("(?si);(?:force)?ban\\s\\d+\\s.+")) {
+		if (!message.getContentRaw().matches("(?si)^;(?:force)?ban\\s\\d+\\s.+$")) {
 			message.reply("Incorrect ban request format. Please use `;ban <user id> <reason>`")
 					.mentionRepliedUser(true)
 					.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
 					.queue();
 		} else {
-			Pattern regexPattern = Pattern.compile("(?si);(?:force)?ban\\s(\\d+)\\s.+");
+			Pattern regexPattern = Pattern.compile("(?si)^;(?:force)?ban\\s(\\d+)\\s.+$");
 			Matcher matchedResults = regexPattern.matcher(message.getContentRaw());
 			matchedResults.find();
 
