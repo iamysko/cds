@@ -209,7 +209,12 @@ public class MessageListener extends ListenerAdapter {
 
 		final String messageText = message.getContentRaw();
 		
-		validateBanRequest(message);
+		if (message.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
+			if (!RoleUtils.isAnyRole(message.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_MODERATOR,
+					RoleUtils.ROLE_LEAD, RoleUtils.ROLE_BOT)) {
+				validateBanRequest(message);
+			}
+		}
 
 		if (!messageText.matches(RegexConstants.GENERIC)) { // If not a command, do nothing.
 			return;
@@ -476,40 +481,34 @@ public class MessageListener extends ListenerAdapter {
 	 */
 	private void validateBanRequest(final Message message) {
 
-		if (message.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID) {
-			if (!RoleUtils.isAnyRole(message.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_MODERATOR,
-					RoleUtils.ROLE_LEAD, RoleUtils.ROLE_BOT)) {
+		if (!message.getContentRaw().matches("(?i);(?:force)?ban\\s\\d+\\s.+")) {
+			message.reply("Incorrect ban request format. Please use `;ban <user id> <reason>`")
+					.mentionRepliedUser(true)
+					.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
+					.queue();
+		} else {
+			Pattern regexPattern = Pattern.compile("(?i);(?:force)?ban\\s(\\d+)\\s.+");
+			Matcher matchedResults = regexPattern.matcher(message.getContentRaw());
+			matchedResults.find();
 
-				if (!message.getContentRaw().matches("(?i);(?:force)?ban\\s\\d+\\s.+")) {
-					message.reply("Incorrect ban request format. Please use `;ban <user id> <reason>`")
+			message.getJDA().getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).retrieveMemberById(matchedResults.group(1)).queue(targetedMember -> {
+
+				if (RoleUtils.isAnyRole(targetedMember, RoleUtils.ROLE_LEAD, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_MODERATOR,
+						RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT, RoleUtils.ROLE_TRIAL_MODERATOR)) {
+
+					message.reply("The provided ID belongs to a staff member.")
 							.mentionRepliedUser(true)
 							.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
 							.queue();
-				} else {
-					Pattern regexPattern = Pattern.compile("(?i);(?:force)?ban\\s(\\d+)\\s.+");
-					Matcher matchedResults = regexPattern.matcher(message.getContentRaw());
-					matchedResults.find();
-
-					message.getJDA().getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).retrieveMemberById(matchedResults.group(1)).queue(targetedMember -> {
-
-						if (RoleUtils.isAnyRole(targetedMember, RoleUtils.ROLE_LEAD, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_MODERATOR,
-								RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_BOT, RoleUtils.ROLE_TRIAL_MODERATOR)) {
-
-							message.reply("The provided ID belongs to a staff member.")
+				}
+			}, new ErrorHandler()
+					.ignore(ErrorResponse.UNKNOWN_MEMBER)
+					.handle(ErrorResponse.UNKNOWN_USER,
+							(error) -> message.reply("The provided ID is not a valid user ID")
 									.mentionRepliedUser(true)
 									.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
-									.queue();
-						}
-					}, new ErrorHandler()
-							.ignore(ErrorResponse.UNKNOWN_MEMBER)
-							.handle(ErrorResponse.UNKNOWN_USER,
-									(error) -> message.reply("The provided ID is not a valid user ID")
-											.mentionRepliedUser(true)
-											.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
-											.queue()));
+									.queue()));
 
-				}
-			}
 		}
 	}
 }
