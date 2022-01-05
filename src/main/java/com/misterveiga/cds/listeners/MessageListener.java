@@ -3,13 +3,6 @@
  */
 package com.misterveiga.cds.listeners;
 
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +28,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
@@ -156,7 +151,10 @@ public class MessageListener extends ListenerAdapter {
 				event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
 						.queue();
 			}
+		} else if (event.getComponentId().equals("DeleteMessage")) {
+			event.getMessage().delete().queue();
 		}
+
 	}
 
 	@Override
