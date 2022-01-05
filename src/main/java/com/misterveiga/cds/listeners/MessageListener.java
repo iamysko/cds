@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +40,6 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 
 /**
  * The listener interface for receiving message events. The class that is
@@ -160,8 +156,6 @@ public class MessageListener extends ListenerAdapter {
 				event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
 						.queue();
 			}
-		} else if (event.getComponentId().equals("DeleteMessage")) {
-			event.getMessage().delete().queue();
 		}
 	}
 
@@ -480,7 +474,6 @@ public class MessageListener extends ListenerAdapter {
 	 * @param message       the message
 	 */
 	private void validateBanRequest(final Message message) {
-
 		if (!message.getContentRaw().matches("(?si);(?:force)?ban\\s\\d+\\s.+")) {
 			message.reply("Incorrect ban request format. Please use `;ban <user id> <reason>`")
 					.mentionRepliedUser(true)
