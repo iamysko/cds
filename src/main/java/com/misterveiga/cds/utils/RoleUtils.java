@@ -37,6 +37,9 @@ public class RoleUtils {
 
 	/** The Constant ROLE_PUBLIC_SECTOR. */
 	public static final long ROLE_PUBLIC_SECTOR = 452841584749445131L;
+	
+	/** The Constant ROLE_PROJECT_MANAGER. */
+	public static final long ROLE_PROJECT_MANAGER = 922614306720317470L;
 
 	/** The Constant ROLE_INFRASTRUCTURE. */
 	public static final long ROLE_INFRASTRUCTURE = 366311313875533824L;
