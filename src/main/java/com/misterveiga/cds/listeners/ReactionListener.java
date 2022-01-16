@@ -281,7 +281,7 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_APPROVE: // Used for ban requests, event winner requests, filtered log bans, and mod alerts.
 								
-							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_PROJECT_MANAGER)) {
+							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_PROJECT_MANAGER, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_LEAD)) {
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_EVENT_WINNER_QUEUE_ID) {
 									awardChampionRoles(message);
 								}
@@ -339,7 +339,7 @@ public class ReactionListener extends ListenerAdapter {
 
 						case ID_REACTION_REJECT:
 								
-							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_PROJECT_MANAGER)) {
+							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_PROJECT_MANAGER, RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_LEAD)) {
 								if (event.getChannel().getIdLong() == Properties.CHANNEL_EVENT_WINNER_QUEUE_ID) {
 									removeChampionRoles(message, event.getReaction(), event.getUser());
 								}
