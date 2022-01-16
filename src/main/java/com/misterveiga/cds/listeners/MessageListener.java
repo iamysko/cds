@@ -216,6 +216,13 @@ public class MessageListener extends ListenerAdapter {
 				validateBanRequest(message);
 			}
 		}
+		
+		if (message.getChannel().getIdLong() == Properties.CHANNEL_EVENT_WINNER_QUEUE_ID) {
+			if (!RoleUtils.isAnyRole(message.getMember(), RoleUtils.ROLE_SERVER_MANAGER, RoleUtils.ROLE_SENIOR_MODERATOR, 
+						 RoleUtils.ROLE_PROJECT_MANAGER, RoleUtils.ROLE_BOT, RoleUtils.ROLE_LEAD)) {
+				validateEventWinnerRequest(message);
+			}
+		}
 
 		if (!messageText.matches(RegexConstants.GENERIC)) { // If not a command, do nothing.
 			return;
@@ -509,6 +516,43 @@ public class MessageListener extends ListenerAdapter {
 									.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
 									.queue()));
 
+		}
+	}
+	
+	
+	/**
+	 * Validate a event winner request by checking if the:
+	 * Correct format is used
+	 * User ID exists
+	 *
+	 * @param message       the message
+	 */
+	private void validateEventWinnerRequest(final Message message) {
+		if (!message.getContentRaw().matches("(?si)^.*<t:\\d+:?[rft]?>\\n\\n?(?:<@!?\\d{17,19}>[^\\n]*\\n*)+$")) {
+			message.reply("Invalid request format. Please use the following format:\n```Remove roles <t:UNIX_TIMESTAMAP:R>\n\n<@USER_ID> (USER_ID)\n<@USER_ID> (USER_ID)\n...```")
+					.mentionRepliedUser(true)
+					.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
+					.queue();
+		} else {
+			ArrayList<String> winners = new ArrayList<>();
+			Pattern pattern = Pattern.compile("(?si)<@!?(\\d{17,19})>");
+			Matcher matcher = pattern.matcher(message.getContentRaw());
+
+			while (matcher.find()) {
+				if (!winners.contains(matcher.group(1)))
+					winners.add(matcher.group(1));
+			}
+
+			for (String winnerId : winners) {
+				message.getJDA().getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).retrieveMemberById(winnerId).queue(null,
+						new ErrorHandler()
+								.ignore(ErrorResponse.UNKNOWN_MEMBER)
+								.handle(ErrorResponse.UNKNOWN_USER,
+										(error) -> message.reply("Cannot resolve one or more user IDs.")
+												.mentionRepliedUser(true)
+												.setActionRow(Button.primary("DeleteMessage", "Hide Alert"))
+												.queue()));
+			}
 		}
 	}
 }
