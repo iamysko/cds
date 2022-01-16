@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -277,7 +279,13 @@ public class ReactionListener extends ListenerAdapter {
 
 							break;
 
-						case ID_REACTION_APPROVE: // Used for ban requests, filtered log bans, and mod alerts.
+						case ID_REACTION_APPROVE: // Used for ban requests, event winner requests, filtered log bans, and mod alerts.
+								
+							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_PROJECT_MANAGER)) {
+								if (event.getChannel().getIdLong() == Properties.CHANNEL_EVENT_WINNER_QUEUE_ID) {
+									awardChampionRoles(message);
+								}
+							}
 
 							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
 									RoleUtils.ROLE_SENIOR_MODERATOR)) {
@@ -330,6 +338,12 @@ public class ReactionListener extends ListenerAdapter {
 							break;
 
 						case ID_REACTION_REJECT:
+								
+							if (RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR, RoleUtils.ROLE_PROJECT_MANAGER)) {
+								if (event.getChannel().getIdLong() == Properties.CHANNEL_EVENT_WINNER_QUEUE_ID) {
+									removeChampionRoles(message, event.getReaction(), event.getUser());
+								}
+							}
 
 							if (event.getChannel().getIdLong() == Properties.CHANNEL_BAN_REQUESTS_QUEUE_ID
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
@@ -603,6 +617,92 @@ public class ReactionListener extends ListenerAdapter {
 					.queue();
 
 		}
+	}
+	
+	/**
+	 * Give champion roles to the game night winners
+	 *
+	 * @param message        the message
+	 */
+	private void awardChampionRoles(final Message message) {
+		ArrayList<String> winners = new ArrayList<>();
+		Pattern pattern = Pattern.compile("(?si)<@!?(\\d{17,19})>");
+		Matcher matcher = pattern.matcher(message.getContentRaw());
+
+		while (matcher.find()) {
+			if (!winners.contains(matcher.group(1)))
+				winners.add(matcher.group(1));
+		}
+
+		for (int i = 0; i < winners.size(); i++) {
+			message.getJDA().getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).retrieveMemberById(winners.get(i)).queue(winner -> {
+				message.getGuild().addRoleToMember(winner.getIdLong(),
+						message.getGuild().getRoleById(RoleUtils.ROLE_GAME_NIGHT_CHAMPION)).queue();
+			});
+		}
+	}
+
+	/**
+	 * Remove champion roles from the game night winners
+	 *
+	 * @param message        the message
+	 */
+	private void removeChampionRoles(final Message message, final MessageReaction reaction, final User reactee) {
+		ArrayList<String> winners = new ArrayList<>();
+		Pattern winnerPattern = Pattern.compile("(?si)<@!?(\\d{17,19})>");
+		Matcher matchedWinners = winnerPattern.matcher(message.getContentRaw());
+
+		Pattern timestampPattern = Pattern.compile("(?si)<t:(\\d+):?[trf]?>");
+		Matcher matchedTimestamp = timestampPattern.matcher(message.getContentRaw());
+		matchedTimestamp.find();
+
+		long timestamp = Long.parseLong(matchedTimestamp.group(1));
+
+		if (timestamp * 1000L > System.currentTimeMillis()) {
+			message.getGuild().getTextChannelById(Properties.CHANNEL_PUBLIC_SECTOR_ID).sendMessage(
+					String.format("%s Cannot remove champion roles from winners, it is not <t:%s:f> yet.",
+							message.getAuthor().getAsMention(),
+							matchedTimestamp.group(1)
+					)
+			).queue();
+			reaction.removeReaction(reactee).queue();
+			return;
+		}
+
+		while (matchedWinners.find()) {
+			if (!winners.contains(matchedWinners.group(1)))
+				winners.add(matchedWinners.group(1));
+		}
+
+		message.getChannel().getIterableHistory().forEachAsync(msg -> {
+			String messageContent = msg.getContentRaw();
+
+			if (messageContent.matches("(?si)^.*<t:\\d+:?[rft]?>\\n\\n?(?:<@!?\\d{17,19}>[^\\n]*\\n*)+$") &&
+			msg.getIdLong() != message.getIdLong()) {
+
+				for (String winner : winners) {
+					if (messageContent.contains(winner)) {
+
+						Pattern newTimestampPattern = Pattern.compile("(?si)<t:(\\d+):?[trf]?>");
+						Matcher newMatchedTimestamp = newTimestampPattern.matcher(msg.getContentRaw());
+						newMatchedTimestamp.find();
+
+						long newTimestamp = Long.parseLong(newMatchedTimestamp.group(1));
+						if (newTimestamp > timestamp) winners.remove(winner);
+					}
+				}
+			}
+			return true;
+
+		}).whenComplete((a, b) -> {
+			for (String winnerId : winners) {
+				message.getJDA().getGuildById(Properties.GUILD_ROBLOX_DISCORD_ID).retrieveMemberById(winnerId).queue(winner -> {
+					message.getGuild().removeRoleFromMember(winner.getIdLong(),
+							message.getGuild().getRoleById(RoleUtils.ROLE_GAME_NIGHT_CHAMPION)).queue();
+				});
+			}
+			message.delete().queue();
+		});
 	}
 
 	/**
