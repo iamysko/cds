@@ -34,6 +34,9 @@ public class Properties {
 
 	/** The Constant CHANNEL_BAN_REQUESTS_QUEUE_ID. */
 	public static final Long CHANNEL_BAN_REQUESTS_QUEUE_ID = 592580861543841802L;
+	
+	/** The Constant CHANNEL_EVENT_WINNER_QUEUE_ID. */
+	public static final Long CHANNEL_EVENT_WINNER_QUEUE_ID = 0L;
 
 	/** The Constant CHANNEL_CENSORED_AND_SPAM_LOGS_ID. */
 	public static final Long CHANNEL_CENSORED_AND_SPAM_LOGS_ID = 366624802024325120L;
