@@ -36,7 +36,7 @@ public class RoleUtils {
 	public static final long ROLE_LEAD = 310871622150258698L;
 	
 	/** The Constant ROLE_GAME_NIGHT_CHAMPION. */
-	public static final long ROLE_GAME_NIGHT_CHAMPION = 810602745635274803L;
+	public static final long ROLE_GAME_NIGHT_CHAMPION = 933135286022590505L;
 
 	/** The Constant ROLE_PUBLIC_SECTOR. */
 	public static final long ROLE_PUBLIC_SECTOR = 452841584749445131L;
