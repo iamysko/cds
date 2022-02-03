@@ -414,6 +414,7 @@ public class ReactionListener extends ListenerAdapter {
 	private void clearAlert(final TextChannel commandChannel, final TextChannel alertChannel, final Member reactee,
 			final Message message, final Member messageAuthor, final Instant now) {
 		message.delete().queue();
+		existingAlertsMap.remove(message.getIdLong());
 	}
 
 	/**
