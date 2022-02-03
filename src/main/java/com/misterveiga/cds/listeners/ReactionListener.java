@@ -401,6 +401,8 @@ public class ReactionListener extends ListenerAdapter {
 							existingAlertsMap.putIfAbsent(message.getIdLong(), msg.getIdLong());
 							msg.delete().queueAfter(24, TimeUnit.HOURS, success -> {
 								existingAlertsMap.remove(message.getIdLong());
+							}, failure -> {
+								existingAlertsMap.remove(message.getIdLong());
 							});
 						}, failure -> {
 							// Do nothing.
