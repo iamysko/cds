@@ -30,8 +30,8 @@ public class UpdateRoleListener extends ListenerAdapter {
 							 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a Moderator.\r\n", false)
 					.addField( "<:z_qm60:452813334429827072> **Mute Bypassing**\r\n",
 							 "Attempting to bypass a mute will result in you being banned from the server. <:ban_hammer:234839744092176384>", false)
-					.setFooter("Roblox Unofficial Discord • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , event.getGuild().getIconUrl());
-					.build()).queue())
+					.setFooter("Roblox Unofficial Discord • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , event.getGuild().getIconUrl())
+					.build()).queue());
 				);
 			} 
 		}
