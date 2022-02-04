@@ -30,7 +30,9 @@ public class ButtonClickListener extends ListenerAdapter {
 			String[] ComponentId = event.getComponentId().split("/");
 			try {
 				EmbedBuilder embed = EmbedBuilds.getRobloxUserInfoEmbed(ComponentId[1], ComponentId[2]);
-				event.replyEmbeds(embed.build()).queue();
+				event.getHook().sendMessageEmbeds(embed.build()).queue();
+				event.editComponents().queue();
+				
 			} catch (Exception e) {
 				event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
 						.queue();
@@ -38,6 +40,5 @@ public class ButtonClickListener extends ListenerAdapter {
 		} else if (event.getComponentId().equals("DeleteMessage")) {
 			event.getMessage().delete().queue();
 		}
-
 	}
 }
