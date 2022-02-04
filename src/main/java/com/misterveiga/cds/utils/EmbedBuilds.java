@@ -1,6 +1,7 @@
 package com.misterveiga.cds.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -226,6 +228,21 @@ public class EmbedBuilds {
 	public static EmbedBuilder ApiError() {
 		EmbedBuilder embed = new EmbedBuilder();
 		embed.setTitle("something went wrong! Please try again later.");
+		return embed;
+	}
+	
+	public static EmbedBuilder getMutedDMEmbed(GuildMemberRoleAddEvent event) {
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setTitle("You have been muted. This means your chat permissions have been temporarily restricted.");
+		embed.setThumbnail(event.getGuild().getIconUrl());
+		embed.setDescription("Please use this time to read <#801557724503736335>. Once your mute expires, you will regain access to the chat and voice channels.\r\n"
+				+ "\r\n"
+				+ "This mute does not affect your account on Roblox.com.\r\n\n");
+		embed.addField( "<:info:452813376788234250> **Mute Reason**\r\n",
+				 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a Moderator.\r\n", false);
+		embed.addField( "<:z_qm60:452813334429827072> **Mute Bypassing**\r\n",
+				 "Attempting to bypass a mute will result in you being banned from the server. <:ban_hammer:234839744092176384>", false);
+		embed.setFooter("Roblox Unofficial Discord • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , event.getGuild().getIconUrl());
 		return embed;
 	}
 }

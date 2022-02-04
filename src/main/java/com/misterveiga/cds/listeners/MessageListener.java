@@ -14,36 +14,26 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.misterveiga.cds.command.CommandImpl;
-import com.misterveiga.cds.data.CdsDataImpl;
 import com.misterveiga.cds.utils.DurationUtils;
-import com.misterveiga.cds.utils.EmbedBuilds;
 import com.misterveiga.cds.utils.MessageFilter;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
-import com.misterveiga.cds.utils.SlashCommandConstants;
+import com.misterveiga.cds.utils.StringBuilds;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+
 
 /**
  * The listener interface for receiving message events. The class that is
@@ -59,112 +49,6 @@ public class MessageListener extends ListenerAdapter {
 
 	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(MessageListener.class);
-
-	/** The app name. */
-	@Value("${cds.name}")
-	public String appName;
-
-	/** The app version. */
-	@Value("${cds.version}")
-	public String appVersion;
-
-	/** The cds data. */
-	@Autowired
-	public CdsDataImpl cdsData;
-
-	/**
-	 * On message received.
-	 *
-	 * @param event the event
-	 */
-
-	@Override
-	public void onSlashCommand(SlashCommandEvent event) {
-
-		boolean perm = false;
-
-		if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER) != null) {
-			perm = true;
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_SENIOR_MODERATOR) != null) {
-			perm = true;
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_MODERATOR) != null) {
-			perm = true;
-		} else if (RoleUtils.findRole(event.getMember(), RoleUtils.ROLE_TRIAL_MODERATOR) != null) {
-			perm = true;
-		} else {
-			perm = false;
-		}
-
-		if (perm) {
-
-			final TextChannel commandChannel = event.getGuild().getTextChannelById(Properties.CHANNEL_COMMANDS_ID);
-			final Member author = event.getMember();
-			final String authorMention = author.getAsMention();
-
-			if (event.getName().equals(SlashCommandConstants.COMMAND_HELP)) {
-				event.reply(getHelpMessage(authorMention)).queue();
-			} else if (event.getName().equals(SlashCommandConstants.COMMAND_ABOUT)) {
-				event.reply(getAboutMessage(authorMention)).queue();
-			} else if (event.getName().equals(SlashCommandConstants.COMMAND_USER_INFO)) {
-				Member theMember = event.getGuild().getMemberById(event.getOption("user").getAsString());
-				RestAction<User> userData = event.getJDA().retrieveUserById(event.getOption("user").getAsString());
-				User theUser = userData.complete();
-				EmbedBuilder embed = EmbedBuilds.getUserInfoEmbed(theMember, theUser);
-				ReplyAction reply = event.replyEmbeds(embed.build());
-				if (theMember != null && theMember.getNickname() != null
-						&& RoleUtils.findRole(theMember, RoleUtils.ROLE_VERIFIED) != null) {
-
-					reply.addActionRow(
-							Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(),
-									"Roblox Information"));
-				}
-				reply.queue();
-			} else if (event.getName().equals(SlashCommandConstants.COMMAND_ROBLOX_USER_INFO)) {
-				try {
-					EmbedBuilder embed = EmbedBuilds.getRobloxUserInfoEmbed(event.getOption("username").getAsString(),
-							null);
-					event.replyEmbeds(embed.build()).queue();
-				} catch (Exception e) {
-					event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
-							.queue();
-				}
-			} else if (event.getName().equals(SlashCommandConstants.COMMAND_SCAN_URL)) {
-				event.deferReply().queue();
-				InteractionHook hook = event.getHook();
-				new Thread(() -> {
-					EmbedBuilder embed = null;
-					try {
-						embed = EmbedBuilds.scanUrl(event.getOption("url").getAsString(),
-								event.getJDA().getSelfUser().getEffectiveAvatarUrl());
-					} catch (InterruptedException e) {
-						embed = EmbedBuilds.ApiError();
-					}
-					hook.editOriginalEmbeds(embed.build()).queue();
-				}).start();
-			} else {
-				event.reply("The Command you tried to execute does not exist!").queue();
-			}
-		} else {
-			event.reply("Missing permissions!").setEphemeral(true).queue();
-		}
-	}
-
-	public void onButtonClick(ButtonClickEvent event) {
-
-		if (event.getComponentId().contains("RobloxInformation")) {
-			String[] ComponentId = event.getComponentId().split("/");
-			try {
-				EmbedBuilder embed = EmbedBuilds.getRobloxUserInfoEmbed(ComponentId[1], ComponentId[2]);
-				event.replyEmbeds(embed.build()).queue();
-			} catch (Exception e) {
-				event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
-						.queue();
-			}
-		} else if (event.getComponentId().equals("DeleteMessage")) {
-			event.getMessage().delete().queue();
-		}
-
-	}
 
 	@Override
 	public void onMessageReceived(final MessageReceivedEvent event) {
@@ -318,10 +202,10 @@ public class MessageListener extends ListenerAdapter {
 		case 0: // TS
 			if (messageText.matches(RegexConstants.COMMAND_HELP)
 					|| messageText.matches(RegexConstants.COMMAND_HELP_ALT)) {
-				message.getChannel().sendMessage(getHelpMessage(authorMention)).queue();
+				message.getChannel().sendMessage(StringBuilds.getHelpMessage(authorMention)).queue();
 				break;
 			} else if (messageText.matches(RegexConstants.COMMAND_ABOUT)) {
-				message.getChannel().sendMessage(getAboutMessage(authorMention)).queue();
+				message.getChannel().sendMessage(StringBuilds.getAboutMessage(authorMention)).queue();
 				break;
 			} else if (messageText.matches(RegexConstants.COMMAND_USER_INFO)) {
 				message.getChannel().sendMessage("This command will show you the users info").queue();
@@ -431,35 +315,6 @@ public class MessageListener extends ListenerAdapter {
 		return data;
 	}
 
-	/**
-	 * Send help message.
-	 *
-	 * @param message       the message
-	 * @param authorMention the author mention
-	 */
-	private String getHelpMessage(final String authorMention) {
-		return new StringBuilder().append(authorMention).append(" **Roblox Discord Services | Help**")
-				.append("\nPrefix for all commands: `rdss:<command>`")
-				.append("\nIf a command doesn't work for you, you may not have permission to run it.")
-				.append("\nHelp: \"rdss:help\" or \"rdss:?\"")
-				.append("\nWarn user(s): \"rdss:warn user1,user2,userN warning message\"")
-				.append("\nMute user(s): \"rdss:mute user1,user2,userN XdXhXm reason\"")
-				.append("\nUnmute user(s): \"rdss:unmute user1,user2,userN\"")
-				.append("\nBan user(s): \"rdss:ban user1,user2,userN reason (reason is optional)\"")
-				.append("\nUnban user(s): \"rdss:unban user1,user2,userN\"").toString();
-	}
-
-	/**
-	 * Send about message.
-	 *
-	 * @param message       the message
-	 * @param authorMention the author mention
-	 */
-	private String getAboutMessage(final String authorMention) {
-		return new StringBuilder().append(authorMention).append(" **Community Discord Services | About**")
-				.append("\nApplication: ").append(appName).append("\nVersion: ").append(appVersion)
-				.append("\n*Collaborate: https://github.com/misterveiga/cds*").toString();
-	}
 
 	/**
 	 * Send unknown command message.

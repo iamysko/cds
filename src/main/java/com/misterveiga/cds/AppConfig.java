@@ -18,10 +18,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.misterveiga.cds.listeners.ButtonClickListener;
 import com.misterveiga.cds.listeners.DiscordDownListener;
 import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
+import com.misterveiga.cds.listeners.SlashCommandListener;
 import com.misterveiga.cds.listeners.UpdateRoleListener;
 import com.misterveiga.cds.telegram.TelegramService;
 import com.misterveiga.cds.utils.Properties;
@@ -31,7 +33,6 @@ import com.mongodb.client.MongoClients;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -60,6 +61,8 @@ public class AppConfig {
 	 * @param reactionListener    the reaction listener
 	 * @param messageListener     the message listener
 	 * @param updateRoleListener  the role Listener
+	 * @param slashCommandListener the slashCommand Listener
+	 * @param buttonClickListener the buttonClick Listener
 	 * @param jdaToken            the jda token
 	 * @return the jda
 	 */
@@ -68,10 +71,12 @@ public class AppConfig {
 			@Qualifier("discordDownListener") final DiscordDownListener discordDownListener,
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
+			@Qualifier("slashCommandListener") final SlashCommandListener slashCommandListener,
+			@Qualifier("buttonClickListener") final ButtonClickListener buttonClickListener,
 			@Qualifier("updateRoleListener") final UpdateRoleListener updateRoleListener,
 			@Value("${jda.token}") final String jdaToken) {
 		final JDABuilder builder = JDABuilder.createDefault(jdaToken);
-		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener, updateRoleListener);
+		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener, slashCommandListener, buttonClickListener, updateRoleListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
