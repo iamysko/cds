@@ -399,6 +399,7 @@ public class ReactionListener extends ListenerAdapter {
 							msg.addReaction("z_qm30:760204798984454175").queue();
 							msg.addReaction("z_qm60:452813334429827072").queue();
 							existingAlertsMap.putIfAbsent(message.getIdLong(), msg.getIdLong());
+							log.info("[MOD ALERTS] Added a new mod alert message. Current in-memory alerts map size: {}", existingAlertsMap.size());
 							msg.delete().queueAfter(24, TimeUnit.HOURS, success -> {
 								existingAlertsMap.remove(message.getIdLong());
 							}, failure -> {
