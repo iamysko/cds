@@ -17,29 +17,22 @@ public class UpdateRoleListener extends ListenerAdapter {
 	
 	public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event)
 	{
-		List<Role> roles = event.getRoles();
-		for(Role item : roles) {
+		for(Role item : event.getRoles()) {
 			if(Long.parseLong(item.getId()) == RoleUtils.ROLE_MUTED) {
-		
-				EmbedBuilder embed = new EmbedBuilder();
-				
-				embed.setTitle("You have been muted. This means your chat permissions have been temporarily restricted.");
-				embed.setThumbnail(event.getGuild().getIconUrl());
-				embed.setDescription("Please use this time to read <#801557724503736335>. Once your mute expires, you will regain access to the chat and voice channels.\r\n"
-						+ "\r\n"
-						+ "This mute does not affect your account on Roblox.com.\r\n\n");
-			
-				embed.addField( "<:info:452813376788234250> **Mute Reason**\r\n",
-						 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a Moderator.\r\n", false);
-				embed.addField( "<:z_qm60:452813334429827072> **Mute Bypassing**\r\n",
-						 "Attempting to bypass a mute will result in you being banned from the server. <:ban_hammer:234839744092176384>", false);
-				
-				LocalDate currentdate = LocalDate.now();
-				embed.setFooter("Roblox Unofficial Discord • " + currentdate.getMonthValue() + "/" + currentdate.getDayOfMonth() +"/" + currentdate.getYear() , event.getGuild().getIconUrl());
-				
-				event.getUser().openPrivateChannel().flatMap(channel -> 
-				channel.sendMessage(embed.build()))
-		        .queue();
+				event.getUser().openPrivateChannel().flatMap(channel ->
+					channel.sendMessage(new EmbedBuilder()
+					.setTitle("You have been muted. This means your chat permissions have been temporarily restricted.")
+					.setThumbnail(event.getGuild().getIconUrl())
+					.setDescription("Please use this time to read <#801557724503736335>. Once your mute expires, you will regain access to the chat and voice channels.\r\n"
+							+ "\r\n"
+							+ "This mute does not affect your account on Roblox.com.\r\n\n")
+					.addField( "<:info:452813376788234250> **Mute Reason**\r\n",
+							 "If you are unsure why you have been muted, or you want to know how long you are muted for then please DM a Moderator.\r\n", false)
+					.addField( "<:z_qm60:452813334429827072> **Mute Bypassing**\r\n",
+							 "Attempting to bypass a mute will result in you being banned from the server. <:ban_hammer:234839744092176384>", false)
+					.setFooter("Roblox Unofficial Discord • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , event.getGuild().getIconUrl());
+					.build()).queue()
+				);
 			} 
 		}
 	}
