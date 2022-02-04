@@ -18,6 +18,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.misterveiga.cds.listeners.ButtonClickListener;
 import com.misterveiga.cds.listeners.DiscordDownListener;
 import com.misterveiga.cds.listeners.DiscordUpListener;
 import com.misterveiga.cds.listeners.MessageListener;
@@ -60,7 +61,8 @@ public class AppConfig {
 	 * @param reactionListener    the reaction listener
 	 * @param messageListener     the message listener
 	 * @param updateRoleListener  the role Listener
-	 * @param slashCommandListner the slashCommand Listener
+	 * @param slashCommandListener the slashCommand Listener
+	 * @param buttonClickListener the buttonClick Listener
 	 * @param jdaToken            the jda token
 	 * @return the jda
 	 */
@@ -70,10 +72,11 @@ public class AppConfig {
 			@Qualifier("reactionListener") final ReactionListener reactionListener,
 			@Qualifier("messageListener") final MessageListener messageListener,
 			@Qualifier("slashCommandListener") final SlashCommandListener slashCommandListener,
+			@Qualifier("buttonClickListener") final ButtonClickListener buttonClickListener,
 			@Qualifier("updateRoleListener") final UpdateRoleListener updateRoleListener,
 			@Value("${jda.token}") final String jdaToken) {
 		final JDABuilder builder = JDABuilder.createDefault(jdaToken);
-		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener, slashCommandListener, updateRoleListener);
+		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener, slashCommandListener, buttonClickListener, updateRoleListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 		builder.setMemberCachePolicy(MemberCachePolicy.ALL);

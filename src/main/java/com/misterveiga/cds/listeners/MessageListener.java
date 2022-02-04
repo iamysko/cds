@@ -19,18 +19,15 @@ import org.springframework.util.CollectionUtils;
 
 import com.misterveiga.cds.command.CommandImpl;
 import com.misterveiga.cds.utils.DurationUtils;
-import com.misterveiga.cds.utils.EmbedBuilds;
 import com.misterveiga.cds.utils.MessageFilter;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.RegexConstants;
 import com.misterveiga.cds.utils.RoleUtils;
 import com.misterveiga.cds.utils.StringBuilds;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -52,23 +49,6 @@ public class MessageListener extends ListenerAdapter {
 
 	/** The log. */
 	private final Logger log = LoggerFactory.getLogger(MessageListener.class);
-
-	public void onButtonClick(ButtonClickEvent event) {
-
-		if (event.getComponentId().contains("RobloxInformation")) {
-			String[] ComponentId = event.getComponentId().split("/");
-			try {
-				EmbedBuilder embed = EmbedBuilds.getRobloxUserInfoEmbed(ComponentId[1], ComponentId[2]);
-				event.replyEmbeds(embed.build()).queue();
-			} catch (Exception e) {
-				event.reply("It appears the Roblox API is currently not responding! Please Try again later! :(" + e)
-						.queue();
-			}
-		} else if (event.getComponentId().equals("DeleteMessage")) {
-			event.getMessage().delete().queue();
-		}
-
-	}
 
 	@Override
 	public void onMessageReceived(final MessageReceivedEvent event) {

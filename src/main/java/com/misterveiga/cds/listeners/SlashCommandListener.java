@@ -39,27 +39,6 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 @Component
 public class SlashCommandListener extends ListenerAdapter {
 
-	/** The log. */
-	private final Logger log = LoggerFactory.getLogger(SlashCommandListener.class);
-
-	/** The app name. */
-	@Value("${cds.name}")
-	public String appName;
-
-	/** The app version. */
-	@Value("${cds.version}")
-	public String appVersion;
-
-	/** The cds data. */
-	@Autowired
-	public CdsDataImpl cdsData;
-
-	/**
-	 * On message received.
-	 *
-	 * @param event the event
-	 */
-
 	@Override
 	public void onSlashCommand(SlashCommandEvent event) {
 
@@ -95,7 +74,6 @@ public class SlashCommandListener extends ListenerAdapter {
 				ReplyAction reply = event.replyEmbeds(embed.build());
 				if (theMember != null && theMember.getNickname() != null
 						&& RoleUtils.findRole(theMember, RoleUtils.ROLE_VERIFIED) != null) {
-
 					reply.addActionRow(
 							Button.danger("RobloxInformation/" + theMember.getNickname() + "/" + theMember.getId(),
 									"Roblox Information"));
