@@ -1,14 +1,10 @@
 package com.misterveiga.cds.listeners;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import com.misterveiga.cds.utils.EmbedBuilds;
 import com.misterveiga.cds.utils.RoleUtils;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
