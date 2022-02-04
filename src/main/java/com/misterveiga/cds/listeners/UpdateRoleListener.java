@@ -32,7 +32,6 @@ public class UpdateRoleListener extends ListenerAdapter {
 							 "Attempting to bypass a mute will result in you being banned from the server. <:ban_hammer:234839744092176384>", false)
 					.setFooter("Roblox Unofficial Discord • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , event.getGuild().getIconUrl())
 					.build())).queue();
-				);
 			} 
 		}
 	}
