@@ -174,6 +174,7 @@ public class ReactionListener extends ListenerAdapter {
 											commandAction.setActionType("REACTION_QM_30");
 											log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
 													reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+											deleteModAlert(messageLink, event);
 										}
 
 									} else {
@@ -190,7 +191,6 @@ public class ReactionListener extends ListenerAdapter {
 																	commandChannel);
 															purgeMessagesInChannel(author,
 																	event.getGuild().getTextChannelById(channelId));
-															deleteModAlert(messageLink, event);
 																
 														}
 													});
@@ -237,6 +237,7 @@ public class ReactionListener extends ListenerAdapter {
 											commandAction.setActionType("REACTION_QM_60");
 											log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
 													reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+											deleteModAlert(messageLink, event);
 										}
 
 									} else {
