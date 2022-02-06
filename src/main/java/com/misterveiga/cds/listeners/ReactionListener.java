@@ -254,7 +254,6 @@ public class ReactionListener extends ListenerAdapter {
 																	commandChannel);
 															purgeMessagesInChannel(author,
 																	event.getGuild().getTextChannelById(channelId));
-															deleteModAlert(messageLink, event);
 														}
 													});
 												}, alertfailure -> {
