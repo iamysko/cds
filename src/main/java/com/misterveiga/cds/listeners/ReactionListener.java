@@ -448,7 +448,8 @@ public class ReactionListener extends ListenerAdapter {
 					commandChannel
 							.sendMessage(
 									sb.append(offenseReason.replace("\n", " "))
-									.toString())
+									.toString()
+							)
 							.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 			} else {
 				final String attachmentTitle = new StringBuilder().append("Evidence against ")
@@ -457,10 +458,12 @@ public class ReactionListener extends ListenerAdapter {
 
 				commandChannel.sendFile(offenseReason.getBytes(), attachmentTitle + ".txt").queue(messageWithEvidence -> {
 					commandChannel
-							.sendMessage(sb.append(offenseReason.replace("\n", " ").substring(0, 17))
+							.sendMessage(
+									sb.append(offenseReason.replace("\n", " ").substring(0, 17))
 									.append("... Full evidence: ")
 									.append(messageWithEvidence.getAttachments().get(0).getUrl())
-									.toString())
+									.toString()
+							)
 							.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 				});
 			}
