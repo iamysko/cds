@@ -437,30 +437,36 @@ public class ReactionListener extends ListenerAdapter {
 			final StringBuilder sb = new StringBuilder();
 
 			// Construct the command to be sent before adding evidence, then check for evidence length. 
-			// Create and send a file and attach its URL to this stringbuilder if evidence length is at least 120 characters.
-			// If length is less than 120 characters, add the evidence as it's shown in logs to the stringbuilder.
-			// Once evidence is added, send the fully constructed command.
+			// Create and send a file and attach its URL to this stringbuilder if evidence length is at least 120 characters and send the command
+			// If length is less than 120 characters, add the evidence as it's shown in logs to the stringbuilder and send the command
 			
 			sb.append(String.format(COMMAND_MUTE_USER_DEFAULT, offenderId, muteDuration,
 				String.format("(Logs message mute approved by "))).append(reactee.getUser().getAsTag()).append(" (")
 				.append(reactee.getId()).append(") Evidence: ");
 
 			if (offenseReason.replace("\n", " ").length() < 120) {
-					sb.append(offenseReason.replace("\n", " "));
+					commandChannel
+							.sendMessage(
+									sb.append(offenseReason.replace("\n", " "))
+									.toString()
+							)
+							.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 			} else {
 				final String attachmentTitle = new StringBuilder().append("Evidence against ")
 						.append(commandChannel.getJDA().getUserById(offenderId).getName()).append(" (").append(offenderId).append(") on ")
 						.append(Instant.now().toString()).toString();
-	
+
 				commandChannel.sendFile(offenseReason.getBytes(), attachmentTitle + ".txt").queue(messageWithEvidence -> {
-					sb.append(offenseReason.replace("\n", " ").substring(0, 17) + "... Full evidence: "
-													+ messageWithEvidence.getAttachments().get(0).getUrl());	
+					commandChannel
+							.sendMessage(
+									sb.append(offenseReason.replace("\n", " ").substring(0, 17))
+									.append("... Full evidence: ")
+									.append(messageWithEvidence.getAttachments().get(0).getUrl())
+									.toString()
+							)
+							.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 				});
 			}
-			
-			final String command = sb.toString();
-			commandChannel.sendMessage(command)
-					.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 
 		} catch (final IndexOutOfBoundsException e) {
 			commandChannel
