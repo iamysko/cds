@@ -115,6 +115,7 @@ public class ReactionListener extends ListenerAdapter {
 		}
 
 		event.retrieveMessage().queue(message -> {
+			final String messageLink = message.getJumpUrl();
 			message.getJDA().getGuildById(message.getGuild().getIdLong())
 					.retrieveMemberById(message.getAuthor().getId()).queue(messageAuthor -> {
 
@@ -173,6 +174,7 @@ public class ReactionListener extends ListenerAdapter {
 											commandAction.setActionType("REACTION_QM_30");
 											log.info("[Reaction Command] 30m Quick-Mute executed by {} on {}",
 													reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+											deleteModAlert(messageLink, event);
 										}
 
 									} else {
@@ -189,6 +191,7 @@ public class ReactionListener extends ListenerAdapter {
 																	commandChannel);
 															purgeMessagesInChannel(author,
 																	event.getGuild().getTextChannelById(channelId));
+																
 														}
 													});
 												}, alertfailure -> {
@@ -234,6 +237,7 @@ public class ReactionListener extends ListenerAdapter {
 											commandAction.setActionType("REACTION_QM_60");
 											log.info("[Reaction Command] 1h Quick-Mute executed by {} on {}",
 													reactee.getUser().getAsTag(), messageAuthor.getUser().getAsTag());
+											deleteModAlert(messageLink, event);
 										}
 
 									} else {
@@ -702,5 +706,16 @@ public class ReactionListener extends ListenerAdapter {
 			}
 		}
 		return false;
+	}
+
+	private void deleteModAlert(String messageLink, MessageReactionAddEvent event) {
+		event.getGuild().getTextChannelById(Properties.CHANNEL_MOD_ALERTS_ID).getIterableHistory().takeAsync(1000).thenAccept(messages -> {
+			messages.forEach(message -> {
+				if(message.getContentRaw().contains(messageLink)) {
+					message.delete().queue();
+				}
+			}
+			);
+		});
 	}
 }
