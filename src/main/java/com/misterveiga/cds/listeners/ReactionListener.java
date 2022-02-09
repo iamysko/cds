@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +116,11 @@ public class ReactionListener extends ListenerAdapter {
 			return; // Do nothing.
 		}
 
+		final Action commandAction = new Action();
+		commandAction.setDate(Instant.now());
+		commandAction.setUser(reactee.getUser().getAsTag());
+		commandAction.setDiscordId(reactee.getIdLong());
+
 		event.retrieveMessage().queue(message -> {
 			final String messageLink = message.getJumpUrl();
 			message.getJDA().getGuildById(message.getGuild().getIdLong())
@@ -132,11 +139,6 @@ public class ReactionListener extends ListenerAdapter {
 							return; // Do nothing.
 						}
 
-						final Action commandAction = new Action();
-						commandAction.setDate(Instant.now());
-						commandAction.setUser(reactee.getUser().getAsTag());
-						commandAction.setDiscordId(reactee.getIdLong());
-
 						switch (emoteId) {
 
 						case ID_REACTION_PURGE_MESSAGES:
@@ -146,7 +148,7 @@ public class ReactionListener extends ListenerAdapter {
 									&& RoleUtils.isAnyRole(event.getMember(), RoleUtils.ROLE_SERVER_MANAGER,
 											RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_TRIAL_MODERATOR,
 											RoleUtils.ROLE_BOT)) {
-								purgeMessagesInChannel(messageAuthor, channel);
+								purgeMessagesInChannel(messageAuthor.getUser(), channel);
 								commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 								commandAction.setOffendingUserId(messageAuthor.getIdLong());
 								commandAction.setActionType("REACTION_PURGE_MESSAGES");
@@ -162,13 +164,13 @@ public class ReactionListener extends ListenerAdapter {
 												RoleUtils.ROLE_MODERATOR, RoleUtils.ROLE_BOT)) {
 									if (event.getChannel().getIdLong() == Properties.CHANNEL_CENSORED_AND_SPAM_LOGS_ID
 										|| event.getChannel().getIdLong() == Properties.CHANNEL_MESSAGE_LOGS_ID) {
-											quickMuteFromLogs(reactee, message, commandChannel, "30m");											
+											quickMuteFromLogs(reactee, message, commandChannel, "30m");
 										log.info("[Reaction Command] 30m Quick-Mute executed by {} ({}) (message: {})",
 										reactee.getEffectiveName(), reactee.getId(), message.getJumpUrl());
 									} else if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
 										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)) {
 											muteUser(reactee, messageAuthor, "30m", message, commandChannel);
-											purgeMessagesInChannel(messageAuthor, channel);
+											purgeMessagesInChannel(messageAuthor.getUser(), channel);
 											commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 											commandAction.setOffendingUserId(messageAuthor.getIdLong());
 											commandAction.setActionType("REACTION_QM_30");
@@ -189,9 +191,9 @@ public class ReactionListener extends ListenerAdapter {
 														if (!isStaffOnStaff(reactee, author, commandChannel)) {
 															muteUser(reactee, author, "30m", alertmessage,
 																	commandChannel);
-															purgeMessagesInChannel(author,
+															purgeMessagesInChannel(author.getUser(),
 																	event.getGuild().getTextChannelById(channelId));
-																
+
 														}
 													});
 												}, alertfailure -> {
@@ -231,7 +233,7 @@ public class ReactionListener extends ListenerAdapter {
 									} else if (event.getChannel().getIdLong() != Properties.CHANNEL_MOD_ALERTS_ID) {
 										if (!isStaffOnStaff(reactee, messageAuthor, commandChannel)) {
 											muteUser(reactee, messageAuthor, "1h", message, commandChannel);
-											purgeMessagesInChannel(messageAuthor, channel);
+											purgeMessagesInChannel(messageAuthor.getUser(), channel);
 											commandAction.setOffendingUser(messageAuthor.getUser().getAsTag());
 											commandAction.setOffendingUserId(messageAuthor.getIdLong());
 											commandAction.setActionType("REACTION_QM_60");
@@ -252,7 +254,7 @@ public class ReactionListener extends ListenerAdapter {
 														if (!isStaffOnStaff(reactee, author, commandChannel)) {
 															muteUser(reactee, author, "60m", alertmessage,
 																	commandChannel);
-															purgeMessagesInChannel(author,
+															purgeMessagesInChannel(author.getUser(),
 																	event.getGuild().getTextChannelById(channelId));
 														}
 													});
@@ -355,7 +357,20 @@ public class ReactionListener extends ListenerAdapter {
 
 						cdsData.insertAction(commandAction);
 
-					});
+					}, new ErrorHandler()
+							.handle(ErrorResponse.UNKNOWN_MEMBER, (no_member) -> {
+								if (emoteId.equals(ID_REACTION_PURGE_MESSAGES)) {
+									purgeMessagesInChannel(message.getAuthor(), channel);
+									commandAction.setOffendingUser(message.getAuthor().getAsTag());
+									commandAction.setOffendingUserId(message.getAuthor().getIdLong());
+									commandAction.setActionType("REACTION_PURGE_MESSAGES");
+
+									cdsData.insertAction(commandAction);
+									log.info("[Reaction Command] Message purge executed by {} on {}",
+											reactee.getUser().getAsTag(), message.getAuthor().getAsTag());
+								}
+							})
+					);
 
 		}, (failure) -> {
 			log.error("An error occurred obtaining a reaction event's message. Details: {}", failure.getMessage());
@@ -437,13 +452,13 @@ public class ReactionListener extends ListenerAdapter {
 
 			final String rawMessage = message.getContentRaw();
 			final String offenderId = rawMessage.substring(rawMessage.indexOf("(`") + 2, rawMessage.indexOf("`)"));
-			final String offenseReason = rawMessage.split("```")[1];			
+			final String offenseReason = rawMessage.split("```")[1];
 			final StringBuilder sb = new StringBuilder();
 
-			// Construct the command to be sent before adding evidence, then check for evidence length. 
+			// Construct the command to be sent before adding evidence, then check for evidence length.
 			// Create and send a file and attach its URL to this stringbuilder if evidence length is at least 120 characters and send the command
 			// If length is less than 120 characters, add the evidence as it's shown in logs to the stringbuilder and send the command
-			
+
 			sb.append(String.format(COMMAND_MUTE_USER_DEFAULT, offenderId, muteDuration,
 				String.format("(Logs message mute approved by "))).append(reactee.getUser().getAsTag()).append(" (")
 				.append(reactee.getId()).append(") Evidence: ");
@@ -495,7 +510,7 @@ public class ReactionListener extends ListenerAdapter {
 			final String offenderId = rawMessage.substring(rawMessage.indexOf("(`") + 2, rawMessage.indexOf("`)"));
 			final String offenseReason = rawMessage.split("```")[1];
 			final StringBuilder sb = new StringBuilder();
-			
+
 			sb.append(String.format(COMMAND_BAN_USER_DEFAULT, offenderId,
 				String.format("(Logs message ban approved by "))).append(reactee.getUser().getAsTag()).append(" (")
 				.append(reactee.getId()).append(") Evidence: ");
@@ -506,13 +521,13 @@ public class ReactionListener extends ListenerAdapter {
 				final String attachmentTitle = new StringBuilder().append("Evidence against ")
 						.append(commandChannel.getJDA().getUserById(offenderId).getName()).append(" (").append(offenderId).append(") on ")
 						.append(Instant.now().toString()).toString();
-	
+
 				commandChannel.sendFile(offenseReason.getBytes(), attachmentTitle + ".txt").queue(messageWithEvidence -> {
 					sb.append(offenseReason.replace("\n", " ").substring(0, 17) + "... Full evidence: "
-													+ messageWithEvidence.getAttachments().get(0).getUrl());	
+													+ messageWithEvidence.getAttachments().get(0).getUrl());
 				});
 			}
-			
+
 			final String command = sb.toString();
 			commandChannel.sendMessage(command)
 					.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
@@ -668,7 +683,7 @@ public class ReactionListener extends ListenerAdapter {
 	 * @param messageAuthor the message author
 	 * @param channel       the channel
 	 */
-	private void purgeMessagesInChannel(final Member messageAuthor, final MessageChannel channel) {
+	private void purgeMessagesInChannel(final User messageAuthor, final MessageChannel channel) {
 		channel.getIterableHistory().takeAsync(200).thenAccept(messages -> {
 			final List<Message> messagesToDelete = messages.stream()
 					.filter(msg -> msg.getAuthor().getIdLong() == messageAuthor.getIdLong())
