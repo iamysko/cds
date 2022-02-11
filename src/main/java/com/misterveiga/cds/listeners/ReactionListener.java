@@ -359,7 +359,9 @@ public class ReactionListener extends ListenerAdapter {
 
 					}, new ErrorHandler()
 							.handle(ErrorResponse.UNKNOWN_MEMBER, (no_member) -> {
-								if (emoteId.equals(ID_REACTION_PURGE_MESSAGES)) {
+								if (emoteId.equals(ID_REACTION_PURGE_MESSAGES)
+										&& !isInStaffChannel(reactee, commandChannel, event.getChannel())) {
+
 									purgeMessagesInChannel(message.getAuthor(), channel);
 									commandAction.setOffendingUser(message.getAuthor().getAsTag());
 									commandAction.setOffendingUserId(message.getAuthor().getIdLong());
