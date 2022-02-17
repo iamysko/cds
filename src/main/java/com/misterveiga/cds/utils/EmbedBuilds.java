@@ -55,7 +55,7 @@ public class EmbedBuilds {
 			String allRoles = "";
 			List<Role> roles = member.getRoles();
 			for (Role item : roles) {
-				allRoles += item.getAsMention().toString();
+				allRoles += item.getAsMention().toString() + " ";
 			}
 			if (allRoles != "") {
 				embed.addField("Roles", allRoles, true);
