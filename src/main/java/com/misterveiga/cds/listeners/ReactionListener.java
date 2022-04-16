@@ -195,10 +195,16 @@ public class ReactionListener extends ListenerAdapter {
 														}
 													});
 												}, alertfailure -> {
-													commandChannel.sendMessage(
-															new StringBuilder().append(reactee.getAsMention()).append(
-																	" the message does not exist or action has already been taken."))
-															.queue();
+													event.getJDA().retrieveUserById(authorId).queue((author) -> {
+														commandChannel.sendMessage(
+																new StringBuilder()
+																		.append(reactee.getAsMention())
+																		.append(" the message does not exist or action has already been taken. ")
+																		.append("Alert against: ").append(author.getAsMention())
+																		.append(" (`").append(author.getIdLong()).append("`)")
+														)
+														.queue();
+													});
 												});
 
 										if (reactee.getIdLong() != messageAuthor.getIdLong()) {
@@ -257,10 +263,16 @@ public class ReactionListener extends ListenerAdapter {
 														}
 													});
 												}, alertfailure -> {
-													commandChannel.sendMessage(
-															new StringBuilder().append(reactee.getAsMention()).append(
-																	" the message does not exist or action has already been taken."))
-															.queue();
+													event.getJDA().retrieveUserById(authorId).queue((author) -> {
+														commandChannel.sendMessage(
+																new StringBuilder()
+																		.append(reactee.getAsMention())
+																		.append(" the message does not exist or action has already been taken. ")
+																		.append("Alert against: ").append(author.getAsMention())
+																		.append(" (`").append(author.getIdLong()).append("`)")
+														)
+														.queue();
+													});
 												});
 
 										if (reactee.getIdLong() != messageAuthor.getIdLong()) {
