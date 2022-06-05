@@ -25,6 +25,7 @@ import com.misterveiga.cds.listeners.MessageListener;
 import com.misterveiga.cds.listeners.ReactionListener;
 import com.misterveiga.cds.listeners.SlashCommandListener;
 import com.misterveiga.cds.listeners.UpdateRoleListener;
+import com.misterveiga.cds.listeners.VoiceChannelListener;
 import com.misterveiga.cds.telegram.TelegramService;
 import com.misterveiga.cds.utils.Properties;
 import com.misterveiga.cds.utils.SlashCommandConstants;
@@ -63,6 +64,7 @@ public class AppConfig {
 	 * @param updateRoleListener  the role Listener
 	 * @param slashCommandListener the slashCommand Listener
 	 * @param buttonClickListener the buttonClick Listener
+	 * @param voiceChannelListener the voice channel Listener
 	 * @param jdaToken            the jda token
 	 * @return the jda
 	 */
@@ -74,13 +76,14 @@ public class AppConfig {
 			@Qualifier("slashCommandListener") final SlashCommandListener slashCommandListener,
 			@Qualifier("buttonClickListener") final ButtonClickListener buttonClickListener,
 			@Qualifier("updateRoleListener") final UpdateRoleListener updateRoleListener,
+			@Qualifier("voiceChannelListener") final VoiceChannelListener voiceChannelListener,
 			@Value("${jda.token}") final String jdaToken) {
 		final JDABuilder builder = JDABuilder.createDefault(jdaToken);
-		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener, slashCommandListener, buttonClickListener, updateRoleListener);
+		builder.addEventListeners(discordUpListener, discordDownListener, reactionListener, messageListener, slashCommandListener, buttonClickListener, updateRoleListener, voiceChannelListener);
 		builder.setActivity(Activity.watching("the Roblox Discord"));
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
-		builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE,
+		builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS,
 				CacheFlag.MEMBER_OVERRIDES);
 		builder.setChunkingFilter(ChunkingFilter.NONE);
 		builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
