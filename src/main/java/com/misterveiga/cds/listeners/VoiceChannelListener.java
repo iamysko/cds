@@ -35,15 +35,16 @@ public class VoiceChannelListener extends ListenerAdapter {
 
 	@Override
 	public void onGuildVoiceJoin(final GuildVoiceJoinEvent event) {
-		final TextChannel logsChannel = event.getGuild().getTextChannelById(983022264696078366L);
+		final TextChannel logsChannel = event.getGuild().getTextChannelById(VoiceChannelListener.CHANNEL_VOICE_LOGS);
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserJoinedVCEmbed(event).build()).queue();
 	}
 	
 	@Override
 	public void onGuildVoiceMove(final GuildVoiceMoveEvent event) {
-	
+		final TextChannel logsChannel = event.getGuild().getTextChannelById(983022264696078366L);
 
+		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserMovedVCEmbed(event).build()).queue();
 	}
 	
 	@Override
@@ -52,4 +53,5 @@ public class VoiceChannelListener extends ListenerAdapter {
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserLeftVCEmbed(event).build()).queue();
 	}
+
 }

@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -266,6 +267,18 @@ public class EmbedBuilds {
 		embed.addField("Member left voice channel", "**" + event.getMember().getUser().getAsTag() + "** joined #" + event.getChannelLeft().getName() + "(" + event.getChannelLeft().getAsMention() + ")", false);
 		embed.setFooter("ID: " + event.getMember().getId() +"• " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
 		embed.setColor(0xe74c3c);
+		
+		return embed;
+	}
+	
+	public static EmbedBuilder getUserMovedVCEmbed(GuildVoiceMoveEvent event) {
+		EmbedBuilder embed = new EmbedBuilder();
+		
+		embed.setAuthor(event.getMember().getUser().getAsTag() + " (" + event.getMember().getNickname() + ")", event.getMember().getEffectiveAvatarUrl(),  event.getMember().getEffectiveAvatarUrl());
+		embed.addField("Member changed voice channel","**Before ** #" + event.getChannelLeft().getName() + "(" + event.getChannelLeft().getAsMention() + ")"
+				+ "\n **+After **" + event.getChannelJoined().getName() + "("+ event.getChannelJoined().getAsMention() + ") ", false);
+		embed.setFooter("ID: " + event.getMember().getId() +"• " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
+		embed.setColor(0x7289da);
 		
 		return embed;
 	}
