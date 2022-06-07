@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.misterveiga.cds.utils.EmbedBuilds;
 
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
@@ -35,23 +36,29 @@ public class VoiceChannelListener extends ListenerAdapter {
 
 	@Override
 	public void onGuildVoiceJoin(final GuildVoiceJoinEvent event) {
+		if (event.getChannelJoined().getType() != ChannelType.STAGE) {
 		final TextChannel logsChannel = event.getGuild().getTextChannelById(VoiceChannelListener.CHANNEL_VOICE_LOGS);
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserJoinedVCEmbed(event).build()).queue();
+		}
 	}
 	
 	@Override
 	public void onGuildVoiceMove(final GuildVoiceMoveEvent event) {
+		if (event.getChannelJoined().getType() != ChannelType.STAGE) {
 		final TextChannel logsChannel = event.getGuild().getTextChannelById(VoiceChannelListener.CHANNEL_VOICE_LOGS);
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserMovedVCEmbed(event).build()).queue();
+		}
 	}
 	
 	@Override
 	public void onGuildVoiceLeave(final GuildVoiceLeaveEvent event) {
+		if (event.getChannelJoined().getType() != ChannelType.STAGE) {
 		final TextChannel logsChannel = event.getGuild().getTextChannelById(VoiceChannelListener.CHANNEL_VOICE_LOGS);
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserLeftVCEmbed(event).build()).queue();
+		}
 	}
 
 }
