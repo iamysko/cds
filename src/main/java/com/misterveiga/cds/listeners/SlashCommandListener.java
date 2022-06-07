@@ -90,17 +90,18 @@ public class SlashCommandListener extends ListenerAdapter {
 				}
 			} else if (event.getName().equals(SlashCommandConstants.COMMAND_SCAN_URL)) {
 				event.deferReply().queue();
-				InteractionHook hook = event.getHook();
-				new Thread(() -> {
-					EmbedBuilder embed = null;
-					try {
-						embed = EmbedBuilds.scanUrl(event.getOption("url").getAsString(),
-								event.getJDA().getSelfUser().getEffectiveAvatarUrl());
-					} catch (InterruptedException e) {
-						embed = EmbedBuilds.ApiError();
-					}
-					hook.editOriginalEmbeds(embed.build()).queue();
-				}).start();
+				event.reply("Command is currently disabled");
+//				InteractionHook hook = event.getHook();
+//				new Thread(() -> {
+//					EmbedBuilder embed = null;
+//					try {
+//						embed = EmbedBuilds.scanUrl(event.getOption("url").getAsString(),
+//								event.getJDA().getSelfUser().getEffectiveAvatarUrl());
+//					} catch (InterruptedException e) {
+//						embed = EmbedBuilds.ApiError();
+//					}
+//					hook.editOriginalEmbeds(embed.build()).queue();
+//				}).start();
 			} else {
 				event.reply("The Command you tried to execute does not exist!").queue();
 			}
