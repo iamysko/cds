@@ -253,8 +253,8 @@ public class EmbedBuilds {
 		EmbedBuilder embed = new EmbedBuilder();
 	
 		embed.setAuthor(event.getMember().getUser().getAsTag() + " (" + event.getMember().getNickname() + ")", event.getMember().getEffectiveAvatarUrl(),  event.getMember().getEffectiveAvatarUrl());
-		embed.addField("Member joined voice channel", "**" + event.getMember().getUser().getAsTag() + "** joined #" + event.getChannelJoined().getName() + "(" + event.getChannelJoined().getAsMention() + ")", false);
-		embed.setFooter("ID: " + event.getMember().getId() +"• " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
+		embed.addField("Member joined voice channel", "**" + event.getMember().getUser().getAsTag() + "** joined #" + event.getChannelJoined().getName() + " (" + event.getChannelJoined().getAsMention() + ")", false);
+		embed.setFooter("ID: " + event.getMember().getId() +" • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
 		embed.setColor(0x2ecc71);
 		
 		return embed;
@@ -264,8 +264,8 @@ public class EmbedBuilds {
 		EmbedBuilder embed = new EmbedBuilder();
 	
 		embed.setAuthor(event.getMember().getUser().getAsTag() + " (" + event.getMember().getNickname() + ")", event.getMember().getEffectiveAvatarUrl(),  event.getMember().getEffectiveAvatarUrl());
-		embed.addField("Member left voice channel", "**" + event.getMember().getUser().getAsTag() + "** joined #" + event.getChannelLeft().getName() + "(" + event.getChannelLeft().getAsMention() + ")", false);
-		embed.setFooter("ID: " + event.getMember().getId() +"• " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
+		embed.addField("Member left voice channel", "**" + event.getMember().getUser().getAsTag() + "** joined #" + event.getChannelLeft().getName() + " (" + event.getChannelLeft().getAsMention() + ")", false);
+		embed.setFooter("ID: " + event.getMember().getId() +" • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
 		embed.setColor(0xe74c3c);
 		
 		return embed;
@@ -275,9 +275,9 @@ public class EmbedBuilds {
 		EmbedBuilder embed = new EmbedBuilder();
 		
 		embed.setAuthor(event.getMember().getUser().getAsTag() + " (" + event.getMember().getNickname() + ")", event.getMember().getEffectiveAvatarUrl(),  event.getMember().getEffectiveAvatarUrl());
-		embed.addField("Member changed voice channel","**Before ** #" + event.getChannelLeft().getName() + "(" + event.getChannelLeft().getAsMention() + ")"
-				+ "\n **+After **" + event.getChannelJoined().getName() + "("+ event.getChannelJoined().getAsMention() + ") ", false);
-		embed.setFooter("ID: " + event.getMember().getId() +"• " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
+		embed.addField("Member changed voice channel","**Before ** #" + event.getChannelLeft().getName() + " (" + event.getChannelLeft().getAsMention() + ")"
+				+ "\n **+After **" + event.getChannelJoined().getName() + " ("+ event.getChannelJoined().getAsMention() + ") ", false);
+		embed.setFooter("ID: " + event.getMember().getId() +" • " + LocalDate.now().getMonthValue() + "/" + LocalDate.now().getDayOfMonth() +"/" + LocalDate.now().getYear() , null);
 		embed.setColor(0x7289da);
 		
 		return embed;
