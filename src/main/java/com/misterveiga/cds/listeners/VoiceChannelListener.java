@@ -45,7 +45,7 @@ public class VoiceChannelListener extends ListenerAdapter {
 	
 	@Override
 	public void onGuildVoiceMove(final GuildVoiceMoveEvent event) {
-		if (event.getChannelJoined().getType() != ChannelType.STAGE) {
+		if (event.getChannelJoined().getType() != ChannelType.STAGE && event.getChannelLeft().getType() != ChannelType.STAGE ) {
 		final TextChannel logsChannel = event.getGuild().getTextChannelById(VoiceChannelListener.CHANNEL_VOICE_LOGS);
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserMovedVCEmbed(event).build()).queue();
@@ -54,7 +54,7 @@ public class VoiceChannelListener extends ListenerAdapter {
 	
 	@Override
 	public void onGuildVoiceLeave(final GuildVoiceLeaveEvent event) {
-		if (event.getChannelJoined().getType() != ChannelType.STAGE) {
+		if (event.getChannelLeft().getType() != ChannelType.STAGE) {
 		final TextChannel logsChannel = event.getGuild().getTextChannelById(VoiceChannelListener.CHANNEL_VOICE_LOGS);
 
 		logsChannel.sendMessageEmbeds(EmbedBuilds.getUserLeftVCEmbed(event).build()).queue();
