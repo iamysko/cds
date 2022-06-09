@@ -508,26 +508,32 @@ public class ReactionListener extends ListenerAdapter {
 			final String offenseReason = rawMessage.split("```")[1];
 			final StringBuilder sb = new StringBuilder();
 			
-			sb.append(String.format(COMMAND_BAN_USER_DEFAULT, offenderId,
-				String.format("(Logs message ban approved by "))).append(reactee.getUser().getAsTag()).append(" (")
+			sb.append(String.format(COMMAND_BAN_USER_DEFAULT, offenderId, "(Logs message ban approved by "))
+				.append(reactee.getUser().getAsTag()).append(" (")
 				.append(reactee.getId()).append(") Evidence: ");
 
 			if (offenseReason.replace("\n", " ").length() < 120) {
-					sb.append(offenseReason.replace("\n", " "));
+				commandChannel
+						.sendMessage(
+								sb.append(offenseReason.replace("\n", " ")).toString()
+						)
+						.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 			} else {
 				final String attachmentTitle = new StringBuilder().append("Evidence against ")
 						.append(commandChannel.getJDA().getUserById(offenderId).getName()).append(" (").append(offenderId).append(") on ")
 						.append(Instant.now().toString()).toString();
-	
+
 				commandChannel.sendFile(offenseReason.getBytes(), attachmentTitle + ".txt").queue(messageWithEvidence -> {
-					sb.append(offenseReason.replace("\n", " ").substring(0, 17) + "... Full evidence: "
-													+ messageWithEvidence.getAttachments().get(0).getUrl());	
+					commandChannel
+							.sendMessage(
+									sb.append(offenseReason.replace("\n", " ").substring(0, 17))
+											.append("... Full evidence: ")
+											.append(messageWithEvidence.getAttachments().get(0).getUrl())
+											.toString()
+							)
+							.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 				});
 			}
-			
-			final String command = sb.toString();
-			commandChannel.sendMessage(command)
-					.allowedMentions(new ArrayList<MentionType>()).queue(); // XXX: Remove once appropriate.
 
 //			final List<String> usersToBan = new ArrayList<>();
 //			usersToBan.add(offenderId);
